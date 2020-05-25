@@ -139,12 +139,8 @@ vmovaps [mem], zmm0<br>vmovaps zmm0, [mem]|[mem] = zmm0<br>zmm0 = [mem]|mem‚Í16‚
 vmovups [mem], zmm0<br>vmovaps zmm0, [mem]|[mem] = zmm0<br>zmm0 = [mem]|mem‚Ì§–ñ‚Í‚È‚¢|
 vaddps zmm0, zmm1, zmm2|zmm0 = zmm1 + zmm2|float‚Æ‚µ‚Ä<br>vsubps, vmulps‚È‚Ç‚à“¯—l|
 vminps zmm0, zmm1, zmm2|zmm0 = min(zmm1, zmm2)|float‚Æ‚µ‚Ä|
-vpaddd zmm0, zmm1, zmm2|zmm0 = zmm1 + zmm2|uint32_t‚Æ‚µ‚Ä|
-vpslld zmm0, zmm1, imm|zmm0 = zmm1 << imm|uint32_t‚Æ‚µ‚Ä|
 vfmadd213ps zmm0, zmm1, zmm2|zmm0 = zmm0 * zmm1 + zmm2|float‚Æ‚µ‚Ä|
 vpbroadcastd zmm0, eax|eax‚ğ16ŒÂ•ªzmm0‚ÉƒRƒs[‚·‚é||
-vcvtps2dq zmm0, zmm1|zmm0 = round(zmm0)|Œ‹‰Ê‚ÍintŒ^|
-vcvtdq2ps zmm0, zmm1|zmm0 = float(zmm0)|Œ‹‰Ê‚ÍfloatŒ^|
 vrndscaleps zmm0, zmm1, 0|zmm0 = round(zmm1)|Œ‹‰Ê‚ÍfloatŒ^|
 vscalefps zmm0, zmm1, zmm2|zmm0 = zmm1 * 2^zmm2|zmm2‚ÍfloatŒ^‚ğfloor‚·‚é|
 

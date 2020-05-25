@@ -151,4 +151,7 @@ vaddpd zmm2{k5}{z}, zmm4, zmm2          --> vaddpd(zmm2 | k5 | T_z, zmm4, zmm2);
 vaddpd zmm2{k5}{z}, zmm4, zmm2,{rd-sae} --> vaddpd(zmm2 | k5 | T_z, zmm4, zmm2 | T_rd_sae);
 ```
 
+`and`, `xor`, `not`, `or`の命令のみ`and_`, `xor_`, `not_`, `or_`と記述します。
+これはこれらの単語がC++で予約語となっているためです。
+
 詳しい例は[Addressing](https://github.com/herumi/xbyak/#addressing)を参照してください。

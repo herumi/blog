@@ -14,22 +14,26 @@ void expf_vC(float *dst, const float *src, size_t n)
 
 ## コード
 [fmath2.hpp](https://github.com/herumi/fmath/blob/master/fmath2.hpp)にあります。
-`fmath::expf_v`で利用できます。
+
+```
+fmath::void expf_v(float *dst, const float *src, size_t n);
+```
+という関数が定義されていて、上記expf_vCと(誤差を除いて)同等の処理をします。
 
 ## ベンチマーク
 
 ### 速度
 ベンチマークは[exp_v.cpp](https://github.com/herumi/fmath/blob/master/exp_v.cpp)で行いました。
 
-`float x[3000];`に対してexpを求める計算をexpf_vCとexpf_vとで比較しました。
+`float x[16384];`に対してexpを求める計算をexpf_vCとexpf_vとで比較しました。
 
 環境はOS : Ubuntu 19.10, CPU : Xeon Platinum 8280 2.7GHz, compiler : gcc-9.2.1 -Ofastです。
 
 関数|std::exp|expf_v
 :-|:-|:-
-時間(clk)|22.6K|1.8K
+時間(clk)|140.8k|10.6k
 
-clkはrdtscによるCPUクロックの計測で、概ね10倍以上高速化されています。
+clkはrdtscによるCPUクロックの計測で10倍以上高速化されています。
 
 ### 誤差
 
@@ -325,9 +329,3 @@ evalf(s,20);
 remez(exp(x),5,[-log(2)/2,log(2)/2]);
 ```
 で求めるやり方もあります(個人的には2乗誤差を小さくする前者の方がよい印象 : 数値計算専門の方教えてください)。
-
-## まとめ
-
-exp(x)の近似計算の方法とAVX-512特有の命令の紹介をしました。
-端数処理をうまくできるマスクレジスタは便利ですね。
-昔に比べてSIMDレジスタの幅が大きくなっているのでテーブル引きをせずに計算した方が速くなることが多いようです。

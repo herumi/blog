@@ -49,11 +49,11 @@
   - 設定された値を超えた部分は0で埋められる
   - tileloaddt1はデータキャッシュのヒントつきtileloadd
 - メモリアドレッシングがsibmemという新しい方法
-- これは常にSIB encodingを使うということ?
+  - これは常にSIB encodingを使うということ?
 - `rax + rcx * 4`はそのポインタを表すのではなく
   - membegin = rax ; 先頭ポインタ
   - stride = rcx * 4 ; 次の列へのオフセット
-  - membeginのi番目の列(`[membegin + strig * i]`)を意味する
+  - membeginのi番目の列(`[membegin + stride * i]`)を意味する
 
 ### `tilestored`
 - tmmを部分行列として書き出す

@@ -50,8 +50,8 @@
   - tileloaddt1はデータキャッシュのヒントつきtileloadd
 - メモリアドレッシングがsibmemという新しい方法
   - これは常にSIB encodingを使うということ?
-- `rax + rcx * 4`はそのポインタを表すのではなく
-  - membegin = rax ; 先頭ポインタ
+- `rax + rcx * 4 + disp`はそのポインタを表すのではなく
+  - membegin = rax + disp; 先頭ポインタ
   - stride = rcx * 4 ; 次の列へのオフセット
   - membeginのi番目の列(`[membegin + stride * i]`)を意味する
 

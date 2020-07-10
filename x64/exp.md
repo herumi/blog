@@ -74,6 +74,7 @@ xの型はfloatです(ここではx64が対象なのでfloatは32bit浮動小数点数とします)。
 調べてみるとx = -87.3より小さいとfloatで正しく扱える最小の数FLT_MIN=1.17e-38より小さく、
 逆にx = 88.72より大きいと最大の数FLT_MAX=3.4e38よりも大きくなってinfになります。
 従ってxは-87.3 <= x <= 88.72としてよいでしょう。
+  - 当初安全のためにクリッピングをしていましたが通常のデータを扱う場合は削除しても問題ありません。
 
 ### 近似計算
 2の整数巾乗2^nはビットシフトを使って高速に計算できます。
@@ -109,7 +110,7 @@ e^b = 1 + b + b^2/2! + b^3/3! + b^4/4! + b^5/5!
 input : x
 output : e^x
 
-1. x = max(min(x, expMax), expMin)
+1. // x = max(min(x, expMax), expMin)
 2. x = x * log_2(e)
 3. n = round(x) ; 四捨五入
 4. a = x - n
@@ -209,8 +210,6 @@ ripで相対アドレスを利用し、Cのoffsetofマクロでクラスメンバのオフセット値を加算し
 ### メインコード
 
 ```
-vminps(zm0, expMax); // x = min(x, expMax)
-vmaxps(zm0, expMin); // x = max(x, expMin)
 vmulps(zm0, log2_e); // x *= log_2(e)
 vrndscaleps(zm1, zm0, 0); // n = round(x)
 vsubps(zm0, zm1); // a = x - n
@@ -218,7 +217,6 @@ vmulps(zm0, log2); // a *= log2
 ```
 
 アルゴリズムの1から5行目に対応します。
-vminps, vmaxpsで入力値を[expMin, expMax]の範囲内にクリッピングします。
 vmulpsでlog_2(e)倍します。
 vrndscalepsで整数へ最近似丸め(round)します。第3引数の0が最近似丸めを表します。
 結果はfloat型です。

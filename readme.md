@@ -13,7 +13,7 @@
 ## SVE目次
 
 - [aarch64の呼び出し規約](aarch64/convension.md)
-
+- [配列の単純な加算](aarch64/sum.md)
 
 ## 著者
 

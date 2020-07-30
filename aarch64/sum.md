@@ -160,4 +160,4 @@ C|360nsec
 -|-
 SVE|277nsec
 
-1024/16 = 64回のループなので1ループあたり4.3nsec。2GHzなら9clk(clock cycle)ぐらい。
+1024/16 = 64回のループなので1ループあたり4.3nsec。2GHzなら8.6clk(clock cycle)。

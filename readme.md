@@ -2,6 +2,7 @@
 
 ## x64目次
 
+- [メモリオーダー](https://github.com/herumi/misc/blob/master/cpp/fence.md)
 - Xbyak
   - [Xbyakのチュートリアル](x64/xbyak.md)
 - AMX

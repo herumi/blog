@@ -16,6 +16,14 @@ void intAdd(int *z, const int *x, const int *y, size_t n)
 これを[xbyak_aarch64](https://github.com/fujitsu/xbyak_aarch64/tree/master)で記述する。
 fjmasterブランチは名前空間や一部のクラスがちょっと変わっている(masterになりしだい変更する)。
 
+```
+// workaround.hpp
+#define Xbyak Xbyak_aarch64
+#define CodeGenerator CodeGeneratorAArch64
+#define Label LabelAArch64
+```
+というファイルを用意して`-include workaround.hpp`するとfjmasterを従来通りの形で扱える(2020/7/30現在のバージョン)。
+
 SVEのマニュアルは[The Scalable Vector Extension (SVE), for ARMv8-A]( https://static.docs.arm.com/ddi0584/a/DDI0584A_a_SVE_supp_armv8A.pdf)など参照。
 
 ```

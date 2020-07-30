@@ -1,6 +1,6 @@
 # 最適化
 
-## x64目次
+## x64
 
 - [メモリオーダー](https://github.com/herumi/misc/blob/master/cpp/fence.md)
 - Xbyak
@@ -11,7 +11,7 @@
   - [int8とbfloat16の積和演算](x64/int8-bfloat16.md)
   - [floatの指数関数のAVX-512による実装](x64/exp.md)
 
-## SVE目次
+## SVE
 
 - [aarch64の呼び出し規約](aarch64/convension.md)
 - [配列の単純な加算](aarch64/sum.md)

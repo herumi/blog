@@ -64,6 +64,8 @@ Label lp = L();
     add(out, out, 64 * N);
     sub(n, n, 16 * N);
 L(skip);
+    cmp(n, 16 * N);
+    bge(lp);
 ```
 
 ## ベンチマーク

@@ -64,3 +64,33 @@ SVE|D|P|B|X|U|EXP|C|W
 - fdiv ; 98(float x 16‚Ì‚Æ‚«)
 - fexpa, frecpe, frsqrte ; 4
 - frecps, frsqrts ; 9
+
+## –½—ß
+
+–½—ß‚É‚æ‚Á‚Äˆø”‚Ìƒ^ƒCƒv‚ªˆÙ‚È‚é
+
+- `op(dst, src1, src2)` ; dst = op(src1, src2)
+- `op(dst, pred, src)` ; dst = op(src) with pred
+- `op(dst, pred, src1, src2)` ; dst = op(src1, src2) with pred
+
+### Ï˜a
+
+```
+fmad(dst, pred, src1, src2); // dst = dst * src1 + src2
+```
+
+```
+movprfx(dst, pred, src3);
+fmad(dst, pred, src1, src2); // dst = src3 * src1 + src2
+```
+
+### œZ
+
+```
+fdiv(dst, pred, src2); // dst /= src2;
+```
+
+```
+movprfx(dst, pred, src1);
+fdiv(dst, pred, src2); // dst = src1 / src2
+```

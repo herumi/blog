@@ -1,39 +1,6 @@
 # Xbyakのノウハウ
 ここではインラインアセンブラや外部アセンブラと異なるXbyak特有の気をつけるべきことを紹介します。
 
-## アクセス保護の制御
-`Xbyak::CodeGenerator`はデフォルトではメモリを確保して、その領域にread/write/exec属性を付与します。
-しかし、最近はそのようなメモリ領域は攻撃対象となりやすく嫌われる傾向にあります。
-OSの設定によっては禁止されていることもあります。
-
-そのため少しでも攻撃リスクを減らすために、実行属性(exec)と書き込み属性(write)を同時につけないようにするとよいです。
-
-そのためには`CodeGenerator`のコンストラクタに`DontSetProtectRWE`を指定します。
-
-```
-struct Code : Xbyak::CodeGenerator {
-    Code()
-        : Xbyak::CodeGenerator(4096, Xbyak::DontSetProtectRWE)
-    {
-        mov(eax, 123);
-        ret();
-    }
-};
-```
-
-この場合Xbyakはmalloc(またはmmap)した領域にバイトコードを書き込むだけでメモリの属性は変更しません。
-コード生成が完了したら、`getCode`する前に`setProtectModeRE`を呼び出して実行権限を与えます。
-
-```
-Code c;
-c.setProtectModeRE();
-auto f = c.getCode<int (*)()>();
-printf("f=%d\n", f());
-```
-
-`c.setProtectModeRE();`を呼ばないと(当たり前ですが)Segmentation faultを起こすので注意してください。
-再度コードを書き換える場合は`c.setProtectModeRW();`でメモリを読み書きできるようにします。
-
 ## グローバル変数へのアクセス
 
 コード生成している関数の中からグローバル変数や定数を参照したいことはよくあります。
@@ -255,3 +222,35 @@ struct Code : Xbyak::CodeGenerator {
 ```
     protect(g_dataCode.code, sizeof(g_dataCode.code), Xbyak::CodeArray::PROTECT_RE);
 ```
+## アクセス保護の制御
+`Xbyak::CodeGenerator`はデフォルトではメモリを確保して、その領域にread/write/exec属性を付与します。
+しかし、最近はそのようなメモリ領域は攻撃対象となりやすく嫌われる傾向にあります。
+OSの設定によっては禁止されていることもあります。
+
+そのため少しでも攻撃リスクを減らすために、実行属性(exec)と書き込み属性(write)を同時につけないようにするとよいです。
+
+そのためには`CodeGenerator`のコンストラクタに`DontSetProtectRWE`を指定します。
+
+```
+struct Code : Xbyak::CodeGenerator {
+    Code()
+        : Xbyak::CodeGenerator(4096, Xbyak::DontSetProtectRWE)
+    {
+        mov(eax, 123);
+        ret();
+    }
+};
+```
+
+この場合Xbyakはmalloc(またはmmap)した領域にバイトコードを書き込むだけでメモリの属性は変更しません。
+コード生成が完了したら、`getCode`する前に`setProtectModeRE`を呼び出して実行権限を与えます。
+
+```
+Code c;
+c.setProtectModeRE();
+auto f = c.getCode<int (*)()>();
+printf("f=%d\n", f());
+```
+
+`c.setProtectModeRE();`を呼ばないと(当たり前ですが)Segmentation faultを起こすので注意してください。
+再度コードを書き換える場合は`c.setProtectModeRW();`でメモリを読み書きできるようにします。

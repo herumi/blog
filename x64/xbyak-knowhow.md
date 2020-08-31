@@ -145,9 +145,9 @@ struct Code : Xbyak::CodeGenerator {
 
 ```
     mov(rax, lpL);
-    jmp(ptr[rax + sf.p[0] * 8]);
+    jmp(ptr[rax + x * 8]);
 ```
-ラベル`lpL`から8byteずつ並んでいるポインタの配列の`sf.p[0]`番目を取り出します。
+ラベル`lpL`から8byteずつ並んでいるポインタの配列の`x`番目を取り出します。
 まともに使うときは値が配列のサイズに入っているかちゃんと確認する必要があります。
 
 ```

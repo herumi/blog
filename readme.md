@@ -4,6 +4,7 @@
 
 - Xbyak
   - [Xbyakのチュートリアル](x64/xbyak.md)
+  - [Xbyakのノウハウ](x64/xbyak-knowhow.md)
 - AMX
   - [AMX所感](x64/amx.md)
 - AVX-512

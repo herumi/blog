@@ -106,6 +106,8 @@ struct Code : Xbyak::CodeGenerator {
 本当は4096byteずらしてコードとデータを明確に分けるとよいです。
 cf. Intel最適化マニュアル 3.6.8 Mixing Code and Data Coding Rule 51.
 
+[データとコードの配置](#%E3%83%87%E3%83%BC%E3%82%BF%E3%81%A8%E3%82%B3%E3%83%BC%E3%83%89%E3%81%AE%E9%85%8D%E7%BD%AE)も参照してください。
+
 浮動小数点数の値を書き込む場合はビットパターンを整数に変換する関数を用意しておくとよいでしょう。
 
 ```

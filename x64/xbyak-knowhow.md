@@ -163,7 +163,7 @@ uint64_t *lpL[] = {
     case0L, case1L, case2L, case3L
 };
 ```
-に相当します。
+に相当します([lookup.cpp](sample/lookup.cpp))。
 
 ## データとコードの配置
 比較的大きめのプログラムになるとデータとコードをきちんと管理したくなります。

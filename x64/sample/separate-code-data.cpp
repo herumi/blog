@@ -22,6 +22,10 @@ struct Code : Xbyak::CodeGenerator {
         ret();
         protect(g_dataCode.code, sizeof(g_dataCode.code), Xbyak::CodeArray::PROTECT_RE);
     }
+    ~Code()
+    {
+        protect(g_dataCode.code, sizeof(g_dataCode.code), Xbyak::CodeArray::PROTECT_RW);
+    }
 };
 
 int main()

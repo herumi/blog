@@ -4,7 +4,7 @@
 struct Code : Xbyak::CodeGenerator {
     Code()
     {
-        Xbyak::util::StackFrame sf(this, 1);
+        Xbyak::util::StackFrame sf(this, 1, /* tNum= */0, /* stackSizeByte= */0, /* makeEpilog= */false);
         Xbyak::Label lpL, case0L, case1L, case2L, case3L;
         mov(rax, lpL);
         jmp(ptr[rax + sf.p[0] * 8]);

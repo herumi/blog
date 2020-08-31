@@ -101,7 +101,7 @@ struct Code : Xbyak::CodeGenerator {
 `L(dataL);`でdataLを設定し、そこに`dd`で`uint32_t(123)`を4byteとして書き込んでいます。
 結果的に`eax`に123が設定されて返る関数です。
 
-`align(32)`はなくても動作するのですが、CPUが`ret`の後ろのデータもデコードしようとしないよう開けています。
+`align(32)`はなくても動作するのですが、CPUが`ret`の後ろのデータもデコードしようとしないよう開けています(気持ちの問題)。
 
 本当は4096byteずらしてコードとデータを明確に分けるとよいです。
 cf. Intel最適化マニュアル 3.6.8 Mixing Code and Data Coding Rule 51.

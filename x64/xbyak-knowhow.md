@@ -111,10 +111,14 @@ struct Code : Xbyak::CodeGenerator {
 ```
     Code()
     {
-        Xbyak::util::StackFrame sf(this, 1);
         Xbyak::Label lpL, case0L, case1L, case2L, case3L;
+#ifdef XBYAK64_WIN
+        const auto& x = rcx;
+#elif defined(XBYAK64_GCC)
+        const auto& x = rdi;
+#endif
         mov(rax, lpL);
-        jmp(ptr[rax + sf.p[0] * 8]);
+        jmp(ptr[rax + x * 8]);
         align(32);
     L(lpL);
         putL(case0L);
@@ -136,8 +140,8 @@ struct Code : Xbyak::CodeGenerator {
     }
 ```
 
-`Xbyak::util::StackFrame sf(this, 1);`はWindowsとLinuxの呼び出し規約の差を吸収するためです。
-`sf.p[0]`が生成された関数の第一引数のレジスタを表します。Linuxなら直接rdi(Windowsならrcx)と書いてもよいです。
+生成する関数の第一引数はLinuxならrdi、Windowsならrcxです。
+呼び出し規約については<a href="http://herumi.in.coocan.jp/prog/x64.html">x64 アセンブリ言語プログラミング</a>も参照してください。
 
 ```
     mov(rax, lpL);

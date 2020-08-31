@@ -1,13 +1,16 @@
 #include <xbyak/xbyak.h>
-#include <xbyak/xbyak_util.h>
 
 struct Code : Xbyak::CodeGenerator {
     Code()
     {
-        Xbyak::util::StackFrame sf(this, 1, /* tNum= */0, /* stackSizeByte= */0, /* makeEpilog= */false);
         Xbyak::Label lpL, case0L, case1L, case2L, case3L;
+#ifdef XBYAK64_WIN
+        const auto& x = rcx;
+#elif defined(XBYAK64_GCC)
+        const auto& x = rdi;
+#endif
         mov(rax, lpL);
-        jmp(ptr[rax + sf.p[0] * 8]);
+        jmp(ptr[rax + x * 8]);
         align(32);
     L(lpL);
         putL(case0L);

@@ -78,7 +78,7 @@ JITコードから抜けるときは退避したレジスタを復元します�
   ret();
 ```
 
-`ldp(x29, x30, post_ptr(sp, saveSize));`はx29, x30をスタックから退避した後`sp += saveSize`します(`post_ptr`)。
+`ldp(x29, x30, post_ptr(sp, saveSize));`はx29, x30をスタックから復元した後`sp += saveSize`します(`post_ptr`)。
 通常のAArch64アセンブリ言語では
 
 ```

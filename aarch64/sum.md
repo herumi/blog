@@ -13,22 +13,14 @@ void intAdd(int *z, const int *x, const int *y, size_t n)
 ```
 
 ## SVEで実装
-これを[xbyak_aarch64](https://github.com/fujitsu/xbyak_aarch64/tree/master)で記述する。
-fjmasterブランチは名前空間や一部のクラスがちょっと変わっている(masterになりしだい変更する)。
-
-```
-// workaround.hpp
-#define Xbyak Xbyak_aarch64
-#define CodeGenerator CodeGeneratorAArch64
-#define Label LabelAArch64
-```
-というファイルを用意して`-include workaround.hpp`するとfjmasterを従来通りの形で扱える(2020/7/30現在のバージョン)。
+これを[xbyak_aarch64](https://github.com/fujitsu/xbyak_aarch64/)で記述する。
+昔のバージョンと名前空間や一部のクラスが変わっている場合があるので注意する(mainブランチ以降は大丈夫のはず)。
 
 SVEのマニュアルは[The Scalable Vector Extension (SVE), for ARMv8-A]( https://static.docs.arm.com/ddi0584/a/DDI0584A_a_SVE_supp_armv8A.pdf)など参照。
 
 ```
 #include <xbyak_aarch64/xbyak_aarch64.h>
-using namespace Xbyak;
+using namespace Xbyak_aarch64;
 
 struct Code : CodeGenerator {
     Code()
@@ -61,7 +53,7 @@ int main()
     ...
 ```
 ## コード生成
-- CodeGeneratorクラスを継承する。
+- Xbyak_aarch64::CodeGeneratorクラスを継承する。
 - その中で関数呼び出しの形でニーモニックを記述する。
 
 ```
@@ -69,7 +61,7 @@ int main()
     c.ready();
     auto f = c.getCode<void (*)(int *, const int *, const int *, size_t)>();
 ```
-内部でコードの書き換えをするため`read()`メソッドはCPUの命令キャッシュをフラッシュする。
+`read()`内部で実行時コード生成した領域に実行属性を付与してCPUの命令キャッシュをフラッシュする。
 
 ## 関数の引数
 

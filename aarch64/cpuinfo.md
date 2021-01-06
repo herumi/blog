@@ -2,6 +2,7 @@
 
 AArch64のCPUがAESやSHA2命令をサポートしているかの判定方法を紹介します。
 x86/64ではcpuidを利用していましたがAArch64ではいろいろな特殊レジスタを利用します。
+ただし下記の方法はM1 macではその命令に対応していないようで動きませんでした。
 
 ## AES/SHA2
 
@@ -42,6 +43,18 @@ if (isar0.aes == 2) {
 }
 ```
 
+FX700での結果。
+
+```
+aes=2
+sha1=1
+sha2=1
+crc32=1
+atomic=2
+rdm=1
+dp=0
+```
+
 ## SVE
 
 SVEが利用できるかは[ID_AA64PFR0_EL1](https://developer.arm.com/documentation/100403/0200/register-descriptions/aarch64-system-registers/id-aa64pfr0-el1--aarch64-processor-feature-register-0--el1)を見ます。
@@ -76,6 +89,21 @@ Type_id_aa64pfr0_el1 pfr0 = get_id_aa64pfr0_el1();
 if (pfr0.sve == 1) {
   // SVEが使える
 }
+```
+
+FX700での結果
+
+```
+ctest:module=aa64pfr0_el1
+el0=1
+el1=1
+el2=0
+el3=0
+fp=1
+advsimd=1
+gic=0
+ras=0
+sve=1
 ```
 
 ## SVEのビット長

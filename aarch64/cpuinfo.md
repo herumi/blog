@@ -124,7 +124,7 @@ uint64_t get_zcr_el1()
 
 ```
 
-しかしFX700で試したところIllegal instructionで落ちました。
+しかしFX700で試したところIllegal instructionで落ちました(qemuでも落ちた)。
 
 Linuxならシステムコールprctlが使えます。
 

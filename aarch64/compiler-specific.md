@@ -92,3 +92,16 @@ getLen()
   return (int)x;
 }
 ```
+
+@kaityo256さんからintrinsic関数を使う手がありますとの指摘。
+
+```
+#include <arm_sve.h>
+int getLen()
+{
+  return (int)svcntb();
+}
+```
+
+こちらはgcc-8やclang-10では非対応。gcc-10、clang-11やFCCでは対応してました。
+新しいコンパイラを使うならこのほうがよいですね。

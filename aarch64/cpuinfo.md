@@ -150,3 +150,20 @@ sve len=00000040
 % env QEMU_LD_PREFIX=/usr/aarch64-linux-gnu qemu-aarch64 -cpu max,sve2048=on ./a.out
 sve len=00000100
 ```
+
+### cntbを使う方法
+@kaityo256さんからcntbを使うやりかたを教えていただきました。
+[cntb reg, ALL](https://developer.arm.com/docs/ddi0596/i/a64-sve-instructions-alphabetic-order/cntb-cntd-cnth-cntw-set-scalar-to-multiple-of-predicate-constraint-element-count)はSVEレジスタをすべて使う場合のバイトの要素数が返ります。
+この8倍がSVEレジスタのビット長になります。
+
+```
+int getLen()
+{
+  uint64_t x = 0;
+  asm __volatile__("cntb %[x]" : [ x ] "=r"(x));
+  return (int)x;
+}
+```
+
+いくつかのコンパイラで上記コードを動かそうとしたらいろいろはまりました。
+詳細は[コンパイラの定義マクロの違い](compiler-specific.md)

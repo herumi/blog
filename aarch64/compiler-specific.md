@@ -19,7 +19,8 @@ A64FXはarmv8.2-aベースなので
 ```
 と指定するとSVEが使えるようになります。
 SVEが使えるときは`__ARM_FEATURE_SVE`が定義されるのでそれで区別できます。
-ただしclangはclang-10までは有効になっていてもこのマクロは定義されていません。
+ただしclangはclang-10まではSVEが有効になっていてもこのマクロは定義されていません。
+したがってコンパイラマクロでオプションが有効になっているか判別できません。
 clang-11以降を使うのがよさそうです。
 
 どんなマクロが定義されているかは`-dM -E`オプションで分かります。
@@ -29,7 +30,7 @@ echo |gcc -dM -E -
 ```
 
 FCCはデフォルトでSVEが有効ですがclang互換オプション`-Nclang`を指定するとデフォルトoffになります。
-そして`-march=armv8.2-a+sve`オプションを追加すると`__ARM_FEATURE_SVE`は定義されるのでinline asmの中でSVE命令が使えません。
+そして`-march=armv8.2-a+sve`オプションを追加すると`__ARM_FEATURE_SVE`は定義されるのにinline asmの中でSVE命令を使えません。
 これはどうすればよいんでしょうね。何かオプションがあるのかな。
 
 ○ SVEの利用可否
@@ -53,7 +54,7 @@ inlineアセンブラを使う場合に`.inst`で命令をバイトコードで�
 - gcc : `__attribute__((optimize("O0")))`
 - clang : `__attribute__((optnone))`
 
-を使います。FCCのclang互換モードはclangと同じですがデフォルトモードでの設定方法は知りません。
+を使います。FCCのclang互換モードではclangと同じですが、デフォルトモードでのattributeの設定方法を私は知りません。
 
 結局SVEのcntbを使ってSVEのレジスタ長を得るには次のような煩雑な方法になりました。
 `__CLANG_FUJITSU`はFCCで`-Nclang`を指定したときだけ定義されるマクロです。

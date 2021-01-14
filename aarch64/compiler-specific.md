@@ -33,12 +33,14 @@ FCCはデフォルトでSVEが有効ですがclang互換オプション`-Nclang`
 そして`-march=armv8.2-a+sve`オプションを追加すると`__ARM_FEATURE_SVE`は定義されるのにinlineアセンブラの中でSVE命令を使えません。
 これはどうすればよいんでしょうね。何かオプションがあるのかな。
 
+(2021/1/14追記) これはFCC v1.0.0での話. FCC v.1.1.0ではOKでした。
+
 ○ SVEの利用可否
 
-コンパイラ|gcc-8≧|clang-10≦|clang-11≧|FCC|FCC -Nclang
--|-|-|-|-|-
-デフォルト|-|-|-|○|-
-`-march=armv8.2-a+sve`|○|△|○|○|×
+コンパイラ|gcc-8≧|clang-10≦|clang-11≧|FCC v1.0|FCC v1.0 -Nclang|FCC v1.1|FCC v1.1 -Nclang
+-|-|-|-|-|-|-|-
+デフォルト|-|-|-|○|-|○|-
+`-march=armv8.2-a+sve`|○|△|○|○|×|○|○
 
 - ○ : SVEが使えて`__ARM_FEATURE_SVE`が定義される
 - △ : SVEが使えて`__ARM_FEATURE_SVE`が定義されない

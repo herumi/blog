@@ -50,7 +50,7 @@ Dump of assembler code from 0x7ffff7ffb001 to 0x7ffff7ffb081:
 ```
 // ~/.gdbinit
 define dis
-  x/11i $pc
+  x/10i $pc
 end
 ```
 

@@ -131,7 +131,8 @@ gdbで実行
 ```
 valgrind --vgdb=yes --vgdb-error=0 対象プログラム
 ```
-その状態でgdbを起動してvgdbに接続します。
+
+そして別のターミナルでgdbを起動してvgdbに接続します。
 
 ```
 gdb 対象プログラム
@@ -141,4 +142,32 @@ target remote | vgdb
 実行プログラムが落ちてたまにvalgrindが帰ってこなくなることがあります。
 `ctrl-c`を押しても駄目なときはpsコマンドで該当プロセスを探してその実行プロセスだけkillします。
 
-詳細は[Debugging your program using Valgrind gdbserver and GDB](https://www.valgrind.org/docs/manual/manual-core-adv.html)。
+詳細は[Debugging your program using Valgrind gdbserver and GDB](https://www.valgrind.org/docs/manual/manual-core-adv.html)を参照してください。
+
+## Intel SDEでデバッグ
+SDEはIntelが提供するエミュレータです。
+Haswell(-hsw)やSkylake(-skl)など専用命令を正しくハンドルできるか調べるときに便利です。
+SDEもgdbと一緒にデバッグできます。
+
+```
+sde -debug -- 対象プログラム
+```
+
+で起動すると
+
+```
+Application stopped until continued from debugger.
+Start GDB, then issue this command at the (gdb) prompt:
+  target remote :50407
+```
+
+と表示されます(数値は毎回変わります)。
+そこで別のターミナルでgdbを実行し、
+
+```
+gdb
+target remote:50407
+```
+と上記番号を指定します。
+
+詳細は[Debugging applications with Intel SDE](https://software.intel.com/content/www/us/en/develop/articles/debugging-applications-with-intel-sde.html)を参照してください。

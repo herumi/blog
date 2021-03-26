@@ -139,7 +139,7 @@ gdb 対象プログラム
 target remote | vgdb
 ```
 
-実行プログラムが落ちてたまにvalgrindが帰ってこなくなることがあります。
+実行プログラムが落ちてたまにvalgrindが返って来なくなることがあります。
 `ctrl-c`を押しても駄目なときはpsコマンドで該当プロセスを探してその実行プロセスだけkillします。
 
 詳細は[Debugging your program using Valgrind gdbserver and GDB](https://www.valgrind.org/docs/manual/manual-core-adv.html)を参照してください。

@@ -79,17 +79,10 @@ Program received signal SIGTRAP, Trace/breakpoint trap.
 0x0000ffffbe7e0000 in ?? ()
 1: x/i $pc
 => 0xffffbe7e0000:      brk     #0x0
-(gdb) set $pc+=4
-(gdb) x/i $pc
-=> 0xffffbe7e0004:      stp     x29, x30, [sp, #-32]!
-(gdb) ni
-0x0000ffffbe7e0008 in ?? ()
-1: x/i $pc
-=> 0xffffbe7e0008:      stp     x19, x20, [sp, #16]
 ```
 
 x64の`int3`と異なり、ここでcontinueしても同じ`brk`で止まります。
-`set $pc+=4`でプログラムカウンタを進めることで次の命令から再開できます。
+そこで`set $pc+=4`としてプログラムカウンタを進めることで次の命令から再開できます。
 
 gdbで実行
 

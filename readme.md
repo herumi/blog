@@ -22,6 +22,8 @@
 - [アンロール](aarch64/unroll.md)
 - [Brainfuck JITコンパイラ](aarch64/bf.md)
 
+## [JITのデバッグ方法](jit-debug.md)
+
 ## 著者
 
 光成滋生(herumi : herumi@nifty.com)

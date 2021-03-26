@@ -38,7 +38,7 @@ ret();
 ./a.out
 Program received signal SIGTRAP, Trace/breakpoint trap.
 0x00007ffff7ffb001 in ?? ()
-(gdb) disas
+(gdb) dis
 Dump of assembler code from 0x7ffff7ffb001 to 0x7ffff7ffb081:
 => 0x00007ffff7ffb001:  mov    eax,0x5
    0x00007ffff7ffb006:  mov    eax,0x3

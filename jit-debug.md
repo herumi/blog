@@ -122,3 +122,23 @@ gdbで実行
 1: x/i $pc
 => 0xffffbe7e0010:      mov     x20, x1
 ```
+
+## Valgrindでデバッグ
+先日valgrind上で実行すると落ちるバグを調べることになりました。
+次のようにするとvalgrindとgdbを組み合わせられます。
+
+まずvalgrindで該当プログラムを動かします。
+```
+valgrind --vgdb=yes --vgdb-error=0 対象プログラム
+```
+その状態でgdbを起動してvgdbに接続します。
+
+```
+gdb 対象プログラム
+target remote | vgdb
+```
+
+実行プログラムが落ちてたまにvalgrindが帰ってこなくなることがあります。
+`ctrl-c`を押しても駄目なときはpsコマンドで該当プロセスを探してその実行プロセスだけkillします。
+
+詳細は[Debugging your program using Valgrind gdbserver and GDB](https://www.valgrind.org/docs/manual/manual-core-adv.html)。

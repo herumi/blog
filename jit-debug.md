@@ -38,25 +38,23 @@ ret();
 ./a.out
 Program received signal SIGTRAP, Trace/breakpoint trap.
 0x00007ffff7ffb001 in ?? ()
-(gdb) jit
+(gdb) disas
 Dump of assembler code from 0x7ffff7ffb001 to 0x7ffff7ffb081:
 => 0x00007ffff7ffb001:  mov    eax,0x5
    0x00007ffff7ffb006:  mov    eax,0x3
    0x00007ffff7ffb00b:  ret
 ```
 
-ちなみに私が適当につけた`jit`は現在のripから128byteを逆アセンブル命令のaliasです。
+ちなみに私が適当につけた`dis`は現在のインストラクションポインタから10個分の命令を逆アセンブルする命令aliasです。
 
 ```
 // ~/.gdbinit
-define jit
-    if sizeof(void*) == 8
-      disassemble $rip,+128
-    else
-      disassemble $eip,+128
-    end
+define dis
+  x/11i $pc
 end
 ```
+
+`.gdbcom`に`display/i $pc`としておくと常に現在の命令が表示されるので便利です。
 
 aarch64では`brk(0);`とします。
 

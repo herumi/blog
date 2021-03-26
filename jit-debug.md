@@ -56,7 +56,28 @@ end
 
 `.gdbcom`に`display/i $pc`としておくと常に現在の命令が表示されるので便利です。
 
-aarch64では`brk(0);`とします。
+また`.gdbinit`に
+
+```
+define reg
+  printf "rax:%016lx rbx:%016lx rcx:%016lx rdx:%016lx\n", $rax, $rbx, $rcx, $rdx
+  printf "rdi:%016lx rsi:%016lx rbp:%016lx rsp:%016lx\n", $rdi, $rsi, $rbp, $rsp
+  printf " r8:%016lx  r9:%016lx r10:%016lx r11:%016lx\n", $r8, $r9, $r10, $r11
+  printf "r12:%016lx r13:%016lx r14:%016lx r15:%016lx\n", $r12, $r13, $r14, $r15
+```
+や
+```
+define reg
+  printf "x0 :%016lx x1 :%016lx x2 :%016lx x3 :%016lx\n", $x0, $x1, $x2, $x3
+  printf "x4 :%016lx x5 :%016lx x6 :%016lx x7 :%016lx\n", $x4, $x5, $x6, $x7
+  printf "x8 :%016lx x9 :%016lx x10:%016lx x11:%016lx\n", $x8, $x9, $x10, $x11
+  printf "x12:%016lx x13:%016lx x14:%016lx x15:%016lx\n", $x12, $x13, $x14, $x15
+  ...
+end
+```
+としておくと`reg`でまとめてレジスタを表示できるので、これも便利です。
+
+aarch64では`int3();`ではなく`brk(0);`とします。
 
 JITコード
 

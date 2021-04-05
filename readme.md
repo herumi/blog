@@ -21,6 +21,7 @@
 - [A64FXのアーキテクチャ](aarch64/a64fx.md)
 - [アンロール](aarch64/unroll.md)
 - [Brainfuck JITコンパイラ](aarch64/bf.md)
+- [ノーマルじゃない数値との演算](aarch64/compare.md)
 
 ## [JITのデバッグ方法](jit-debug.md)
 

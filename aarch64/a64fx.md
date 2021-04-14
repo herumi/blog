@@ -67,6 +67,8 @@ SVE|D|P|B|X|U|EXP|C|W
 
 ## 命令
 
+SVEの命令一覧は[A64 -- SVE Instructions (alphabetic order)](https://developer.arm.com/documentation/ddi0596/2020-12/SVE-Instructions)を参照。
+
 命令によって引数のタイプが異なる
 
 - `op(dst, src1, src2)` ; dst = op(src1, src2)
@@ -77,6 +79,7 @@ SVE|D|P|B|X|U|EXP|C|W
 
 ```
 fmad(dst, pred, src1, src2); // dst = dst * src1 + src2
+fmls(dst, pred, src1, src2); // dst = dst - src1 * src2
 ```
 
 ```

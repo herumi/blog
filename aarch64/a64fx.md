@@ -78,8 +78,15 @@ SVE‚Ì–½—ßˆê——‚Í[A64 -- SVE Instructions (alphabetic order)](https://developer.ar
 ### Ï˜a
 
 ```
-fmad(dst, pred, src1, src2); // dst = dst * src1 + src2
-fmls(dst, pred, src1, src2); // dst = dst - src1 * src2
+fmad(a, b, c) ; a = a * b + c
+fmsb(a, b, c) ; a =-a * b + c
+fmla(a, b, c) ; a = a + b * c
+fmls(a, b, c) ; a = a - b * c
+
+fnmad(a, b, c) = -fmad(a, b, c)
+fnmsb(a, b, c) = -fmsb(a, b, c)
+fnmla(a, b, c) = -fmla(a, b, c)
+fnmls(a, b, c) = -fmls(a, b, c)
 ```
 
 ```

@@ -1,6 +1,6 @@
 # 呼び出し規約
 
-[Procedure Call Standard for the ARM 64-bit Architecture (AArch64) with SVE support](https://developer.arm.com/documentation/100986/latest)
+[Procedure Call Standard for the Arm 64-bit Architecture (AArch64)](https://github.com/ARM-software/abi-aa/blob/main/aapcs64/aapcs64.rst)
 
 ## 汎用レジスタ
 

@@ -203,6 +203,8 @@ uint64_t nextCombination(uint64_t a)
 }
 ```
 
+速度優先なら分岐する方がよい場合がある
+
 ### ループの終了条件
 
 a=「0...01...1」のときcが0になるのでnextCombinationの結果が0になりループが終了する。
@@ -266,11 +268,4 @@ uint32_t ilog2(uint32_t x)
   assert(x != 0);
   return (f2u(x) >> 23) + 127;
 }
-```
-
-### doubleを使った方法
-
-[@mkashiさん](https://twitter.com/mkashi/status/1434847564256268291)
-
-```
 ```

@@ -131,8 +131,8 @@ do {
 
 一般形
 ```
-* 1 0「s個の0」
-* 0 1「s個の0」
+入力: 1 0「s個の0」
+出力: 0 1「s個の0」
 ```
 
 - `*100...0`の次に小さいのは`*010...0`
@@ -143,15 +143,15 @@ do {
 
 例
 ```
-0 1 1 1 0 0 1 1 1
-0 1 1 0 1 1 1 1 0
+入力: 0 1 1 1 0 0 1 1 1
+出力: 0 1 1 0 1 1 1 1 0
 ```
 
 一般形
 
 ```
-*「1 0」「s個0」「t個1」
-*「0 1」「t個1」「s個0」
+入力: 1 0」「s個0」「t個1」
+出力:「0 1」「t個1」「s個0」
 ```
 
 - まず「t個の1」を作る
@@ -209,15 +209,41 @@ uint64_t nextCombination(uint64_t a)
 
 a=「0...01...1」のときcが0になるのでnextCombinationの結果が0になりループが終了する。
 
-## MSBから見て最初に1が立った場所(bsr)
+### bsr(x)
 
-### x86の場合
+MSBから見て最初に1が立った場所を返すx86/x64の命令
 
-- x86ならbsr(x)命令を使う
-  - ただしx = 0のときbsrの結果は不定なので注意
-  - ZF=1なのでそれを使って対応可能
+- x = 0のときbsrの結果は不定なので注意
+- ZF=1なのでそれを使って対応可能
 
-### floatの指数部を取り出す
+組み込み関数
+
+- sizeof(x) = 4のとき
+  - Windowsなら`_BitScanReverse(x)`
+  - gcc系なら`__builtin_clz(x) ^ 0x1f`
+- sizeof(x) = 8のとき
+  - Windowsなら`_BitScanForward64(x)`
+  - gcc系なら`__builtin_clzll(x) ^ 0x3f`
+
+### nextCombinationの割り算を減らす
+
+`b = a^(a+1)`のとき`b+1`で割るということはbsr(b + 1)で右シフトすればよい
+
+```
+uint64_t nextCombination(uint64_t a)
+{
+  uint64_t b = a ^ (a + 1);
+  uint64_t c = a - b / 2;
+  return c - (c & -c) >> bsr(b + 1);
+}
+```
+
+## MSBから見て最初に1が立った場所
+
+- bsr(x)を使えばよい
+- それ以外の方法
+
+### floatの指数部を取り出す方法
 
 - x≠0のときy = bsr(x)とすると`1 << y`はxを超えない最大の2ベキ
 - float x = [s:e:m](s:1bit, e:8bit, m:23bit)とするとx = (-1)<sup>s</sup>2<sup>e-127</sup>(1+m/2<sup>23</sup>)
@@ -260,6 +286,8 @@ double u2d(uint64_t u)
 通常コンパイラの最適化によりmovなどのレジスタ移動命令に置き換わる
 
 ### ilog(x)
+
+`bsr(x) = int(log2(x))`
 
 ```
 // same as bsr(x)

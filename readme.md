@@ -24,6 +24,7 @@
 - [ノーマルじゃない数値との演算](aarch64/compare.md)
 
 ## [JITのデバッグ方法](jit-debug.md)
+## [ビット操作あれこれ](bit-operation.md)
 
 ## 著者
 

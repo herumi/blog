@@ -76,6 +76,10 @@ for (int x = 0; x < 20; x++) {
   - 下位ビットは`10...0`
   - よってLSBから見て最初に1が立った部分だけが残り、後は0
 
+### blsi(x)
+
+x86には`blsi(x) = x & -x`という命令がある(BMI1 : Haswell以降)
+
 ## ビット組み合わせのパターン
 
 [サンプルコード](https://github.com/herumi/misc/blob/master/combination2.cpp)
@@ -153,6 +157,7 @@ do {
 - まず「t個の1」を作る
 - 「t個の1」に1を足せば`*01...1`→`*10...0`なので排他的論理和を取れば`011...1`
   - `b = a ^ (a + 1);`
+    - Intelには`blsmsk(a) = a^(a-1)`という命令がある
   - この半分は「t個の1」
   - それをaから引くと「t個の1」がクリアされる ; `c = a - b / 2;`
 
@@ -201,3 +206,71 @@ uint64_t nextCombination(uint64_t a)
 ### ループの終了条件
 
 a=「0...01...1」のときcが0になるのでnextCombinationの結果が0になりループが終了する。
+
+## MSBから見て最初に1が立った場所(bsr)
+
+### x86の場合
+
+- x86ならbsr(x)命令を使う
+  - ただしx = 0のときbsrの結果は不定なので注意
+  - ZF=1なのでそれを使って対応可能
+
+### floatの指数部を取り出す
+
+- x≠0のときy = bsr(x)とすると`1 << y`はxを超えない最大の2ベキ
+- float x = [s:e:m](s:1bit, e:8bit, m:23bit)とするとx = (-1)<sup>s</sup>2<sup>e-127</sup>(1+m/2<sup>23</sup>)
+- つまりeを取り出せばよい
+
+### 浮動小数点数と整数のビット変換
+
+C/C++のstrict aliasingを避けるためにmemcpyを使う
+
+```
+uint32_t f2u(float f)
+{
+  uint32_t u;
+  memcpy(&u, &f, sizeof(u));
+  return u;
+}
+
+float u2f(uint32_t u)
+{
+  float f;
+  memcpy(&f, &u, sizeof(f));
+  return f;
+}
+
+uint64_t d2u(double d)
+{
+  uint64_t u;
+  memcpy(&u, &d, sizeof(u));
+  return u;
+}
+
+double u2d(uint64_t u)
+{
+  double d;
+  memcpy(&d, &u, sizeof(d));
+  return d;
+}
+```
+
+通常コンパイラの最適化によりmovなどのレジスタ移動命令に置き換わる
+
+### ilog(x)
+
+```
+// same as bsr(x)
+uint32_t ilog2(uint32_t x)
+{
+  assert(x != 0);
+  return (f2u(x) >> 23) + 127;
+}
+```
+
+### doubleを使った方法
+
+[@mkashiさん](https://twitter.com/mkashi/status/1434847564256268291)
+
+```
+```

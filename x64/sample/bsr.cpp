@@ -118,7 +118,7 @@ void check(uint64_t x)
 	uint64_t b = g3(x);
 	if (a != y || b != y) {
 		printf("err x=%llx y=%llx a=%llx b=%llx\n", x, y, a, b);
-		exit(1);
+//		exit(1);
 	}
 }
 
@@ -139,9 +139,16 @@ int main()
 	}
 #endif
 	for (int i = 0; i < 64; i++) {
-		check(1ull << i);
+		uint64_t x = 1ull << i;
+		printf("x=%llx cast=%llx\n", x, (uint64_t)(double)x);
+		putH("x", x);
+		check(x);
+		x--;
+		if (x == 0) continue;
+		printf("x=%llx cast=%llx\n", x, (uint64_t)(double)x);
+		putH("x", x);
+		check(x);
 	}
-#if 1
 	const uint64_t tbl[] = {
 		1,
 		2,
@@ -158,23 +165,9 @@ int main()
 	};
 	for (size_t i = 0; i < CYBOZU_NUM_OF_ARRAY(tbl); i++) {
 		uint64_t x = tbl[i];
-//		check(x);
+		putH("x", x);
+		check(x);
 	}
 	puts("tbl ok");
 	return 0;
-#else
-	// 2^(-1)*(1+(2^52-1)/2^52)
-	putH(a);
-	putH(b);
-	putH(u2d((uint64_t(1023+52) << 52) + 1));
-	put(1);
-	put(2);
-	put(3);
-	for (int i = 2; i < 32; i++) {
-		uint32_t x = 1 << i;
-		put(x-1);
-		put(x);
-		put(x+1);
-	}
-#endif
 }

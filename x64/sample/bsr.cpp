@@ -78,17 +78,19 @@ double g2(double x)
 
 uint64_t bsr_shift(uint64_t x)
 {
-//putH("x", x);
 	double a = f1(x);
 	double b = f2(a);
 	double s = g1(x);
 	double t = g2(s);
 	if (a != s || b != t) {
-		printf("err x=%llx\n", x);
+		printf("ERR emu\n");
+		putH("x", x);
 		putH("a", a);
 		putH("b", b);
-		putH("g1", s);
-		putH("g2", t);
+		putH("a-b", a-b);
+		putH("s", s);
+		putH("t", t);
+		putH("s-t", s-t);
 //		exit(1);
 	}
 	return (uint64_t)(a - b);
@@ -117,7 +119,7 @@ void check(uint64_t x)
 	uint64_t a = bsr_shift(x);
 	uint64_t b = g3(x);
 	if (a != y || b != y) {
-		printf("err x=%llx y=%llx a=%llx b=%llx\n", x, y, a, b);
+		printf("err org x=%llx ok=%llx org=%llx emu=%llx\n", x, y, a, b);
 //		exit(1);
 	}
 }
@@ -140,13 +142,13 @@ int main()
 #endif
 	for (int i = 0; i < 64; i++) {
 		uint64_t x = 1ull << i;
-		printf("x=%llx cast=%llx\n", x, (uint64_t)(double)x);
-		putH("x", x);
+		uint64_t y = uint64_t(double(x));
+		if (x != y) printf("cast err x=%llx cast=%llx\n", x, y);
 		check(x);
 		x--;
 		if (x == 0) continue;
-		printf("x=%llx cast=%llx\n", x, (uint64_t)(double)x);
-		putH("x", x);
+		y = uint64_t(double(x));
+		if (x != y) printf("cast err x=%llx cast=%llx\n", x, y);
 		check(x);
 	}
 	const uint64_t tbl[] = {

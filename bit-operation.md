@@ -319,7 +319,7 @@ uint32_t bsr_shift(uint32_t x)
 
 - x = 2^e(1 + m/M)とする
   - eは指数
-  - m ∈ [0, M-1] ; uint32_tならm∈[0, 0xffffffff]
+  - m ∈ [0, M-1]
 
 - a = M(1 + 1/M) 2^e(1 + m/M) = (2^e M)(1 + (m+1)/M + m/M^2)
   - m/M^2の丸め

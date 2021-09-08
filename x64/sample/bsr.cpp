@@ -124,7 +124,11 @@ void check(uint64_t x)
 
 int main()
 {
-#if 1
+	double a = 4503599627370497.; // (1 << 52) + 1
+	double b = 0.99999999999999989; // 0x3fefffffffffffff
+	putH("a", a);
+	putH("b", b);
+#if 0
 	{
 		uint32_t x = 0xffffffff;
 		while (x > 0) {
@@ -159,8 +163,6 @@ int main()
 	puts("tbl ok");
 	return 0;
 #else
-	double a = 4503599627370497.; // (1 << 52) + 1
-	double b = 0.99999999999999989; // 0x3fefffffffffffff
 	// 2^(-1)*(1+(2^52-1)/2^52)
 	putH(a);
 	putH(b);

@@ -303,7 +303,7 @@ uint32_t ilog2(uint32_t x)
 [@mkashiさん](https://twitter.com/mkashi/status/1434847564256268291)
 
 ```
-uint32_t bsr_double(uint32_t x)
+uint32_t bsr_shift(uint32_t x)
 {
   double a = 4503599627370497. * x;
   double b = 0.99999999999999989 * a;

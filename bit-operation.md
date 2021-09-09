@@ -366,19 +366,19 @@ bsr_shift(0098967f)=00800000
 0以上M未満な浮動小数点数xに対してM = 1<<52を足して引くと偶数丸め(.5は偶数方向に丸められる)ができる
 
 ```
-double myround(double x)
+double roundToEven(double x)
 {
   double M = 1ull << 52;
   return x + M - M;
 }
 
-myround(0.4) = 0
-myround(0.5) = 0
-myround(0.6) = 1
-myround(1.3) = 1
-myround(1.5) = 2
-myround(12345.6) = 12346
-myround(4294967292.9) = 4294967293
+roundToEven(0.4) = 0
+roundToEven(0.5) = 0
+roundToEven(0.6) = 1
+roundToEven(1.3) = 1
+roundToEven(1.5) = 2
+roundToEven(12345.6) = 12346
+roundToEven(4294967292.9) = 4294967293
 
 ```
 x86での丸め命令は[x86/x64における小数から整数への丸め処理命令の変遷](https://blog.cybozu.io/entry/2017/08/15/080000)参照
@@ -388,3 +388,38 @@ x86での丸め命令は[x86/x64における小数から整数への丸め処理
 - x + M = M(1 + x/M)でこれをdoubleで表現すると0 <= m < Mな整数を用いてM(1 + m/M)となる
 - つまりm = round(x)
 - よってMを引くとM(1 + m/M) - M = m = round(x)
+
+### 負の数への対応
+
+- xが負のときはこの方法ではx + MがMを超えないのでうまくいかない(結果が0.5刻みで丸められる)
+- Mの代わりにM + M/2を使えばよい
+
+```
+double roundToEven2(double x)
+{
+  double M = (3ull << 51);
+  return x + M - M;
+}
+```
+結果
+
+x|roundToEven|roundToEven2
+-|-|-
+-2.10|-2.00|-2.00
+-1.70|-1.50 ×|-2.00
+-1.30|-1.50 ×|-1.00
+-0.90|-1.00|-1.00
+-0.50|-0.50 ×|0.00
+-0.10|0.00|0.00
+0.30|0.00|0.00
+0.70|1.00|1.00
+1.10|1.00|1.00
+1.50|2.00|2.00
+1.90|2.00|2.00
+2.30|2.00|2.00
+```
+
+
+
+
+

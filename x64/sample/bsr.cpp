@@ -171,5 +171,13 @@ int main()
 		check(x);
 	}
 	puts("tbl ok");
+	int x;
+	x = 13; printf("bsr_shift(%08x)=%08x\n", x, (int)bsr_shift(x));
+	x = 14; printf("bsr_shift(%08x)=%08x\n", x, (int)bsr_shift(x));
+	x = 15; printf("bsr_shift(%08x)=%08x\n", x, (int)bsr_shift(x));
+	x = 16; printf("bsr_shift(%08x)=%08x\n", x, (int)bsr_shift(x));
+	x = 17; printf("bsr_shift(%08x)=%08x\n", x, (int)bsr_shift(x));
+	x = 12345; printf("bsr_shift(%08x)=%08x\n", x, (int)bsr_shift(x));
+	x = 9999999; printf("bsr_shift(%08x)=%08x\n", x, (int)bsr_shift(x));
 	return 0;
 }

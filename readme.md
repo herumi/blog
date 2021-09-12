@@ -11,6 +11,7 @@
   - [int8とbfloat16の積和演算](x64/int8-bfloat16.md)
   - [floatの指数関数のAVX-512による実装](x64/exp.md)
 - [メモリオーダー](https://github.com/herumi/misc/blob/master/cpp/fence.md)
+- [AVX512-FP16](x64/fp16.md)
 
 ## SVE
 

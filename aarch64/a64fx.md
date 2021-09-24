@@ -2,7 +2,8 @@
 
 ## マニュアル
 
-[A64FX Microarchitecture Manual](https://github.com/fujitsu/A64FX)
+- [A64FX Microarchitecture Manual](https://github.com/fujitsu/A64FX)
+- [A64 -- SVE Instructions](https://developer.arm.com/documentation/ddi0596/2020-12/SVE-Instructions)
 
 ## ステージ
 

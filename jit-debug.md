@@ -16,6 +16,13 @@ objdump -M x86-64 -D -bin binary -m i386 ファイル名
 objdump -m aarch64 -D -b binary ファイル名
 ```
 
+[Intel Software Development Emulator Download ](https://www.intel.com/content/www/us/en/developer/articles/license/pre-release-license-agreement-for-software-development-emulator.html)を使う場合は
+
+```
+xed -64 -ir ファイル名
+```
+とします。
+
 ## ブレークポイント
 
 JITコードにブレークポイントを置くのはやや面倒です。

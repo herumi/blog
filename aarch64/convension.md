@@ -65,3 +65,46 @@ p0からp15まで。各bitが1ならactive。0ならinactive。
 
 - p0からp3まで自由
 - p4からp15までcallee保存
+
+## 命令
+
+### load/store
+
+- str x0, [x1] ; *x1 = x0;
+- ldr x0, [x1] ; x0 = *x1;
+
+ペアのstore
+
+- stp, x29, x30, [sp] ; *sp = x29, *(sp + 8) = x30;
+
+### 関数呼び出しとジャンプ
+
+- blr x0 ; x0の値のアドレスの関数呼び出し
+- br x0 ; x0の値のアドレスにジャンプ
+
+### ret
+
+- x30の値にreturn
+
+### オフセット
+
+- ldr x0, [x1, 0x10]  ; x0 = *(x1 + 0x10);
+- ldr x0, [x1, 0x10]! ; x1 += 0x10; x0 = *x1;
+- ldr x0, [x1], 0x10  ; x0 = *x1 ; x1 += 0x10;
+
+Xbyak_aarch64ではそれぞれ
+
+```
+ldr(x0, ptr(x1, 0x10));
+ldr(x0, pre_ptr(x1, 0x10));
+ldr(x0, post_ptr(x1, 0x10));
+```
+です。
+
+```
+ldp x29, x30, [sp], saveSize
+```
+も
+```
+ldp(x29, x30, post_ptr(sp, saveSize));
+```

@@ -1,0 +1,24 @@
+{
+  "name": "blog",
+  "version": "1.0.0",
+  "description": "zenn.dev blog",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/herumi/blog.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/herumi/blog/issues"
+  },
+  "homepage": "https://github.com/herumi/blog#readme",
+  "dependencies": {
+    "zen-cli": "^0.0.2",
+    "zenn-cli": "^0.1.107"
+  }
+}

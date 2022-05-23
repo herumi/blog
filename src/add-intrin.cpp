@@ -1,3 +1,7 @@
+/*
+	clang -O2 unrolls loops, but gcc does not it.
+	gcc -O2 -funroll-loops does it, but the generated code is not good.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -13,7 +17,7 @@ typedef uint64_t Unit;
 
 #ifdef __GNUC__
 #pragma GCC push_options
-#pragma GCC optimize ("unroll-loops")
+#pragma GCC optimize ("unroll-loops") // or -funroll-loops
 #endif
 template<size_t N>
 Unit addT(Unit *z, const Unit *x, const Unit *y)

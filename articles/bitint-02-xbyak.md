@@ -3,7 +3,7 @@ title: "多倍長整数の実装2（Xbyak）"
 emoji: "🧮"
 type: "tech"
 topics: ["int","add", "C++", "xbyak"]
-published: false
+published: true
 ---
 ## 初めに
 
@@ -103,3 +103,61 @@ auto add4 = code.getCode<uint64_t (*)(uint64_t *, const uint64_t *, const uint64
 ```
 とすると4桁（256bit）の加算関数が生成されて、その関数ポインタがadd4となります。
 生成されたコードサイズは`code.getSize()`で取得できます。
+
+生成されたコードをcodeというファイルに保存して逆アセンブルしてみましょう。
+
+```cpp
+int main()
+{
+  Code code(4);
+  auto add4 = code.getCode<uint64_t (*)(uint64_t *, const uint64_t *, const uint64_t *)>();
+  std::ofstream ofs("code", std::ios::binary);
+  ofs.write((const char*)add4, code.getSize());
+}
+```
+
+Windows環境で[Intel Software Development Emulator](https://www.intel.com/content/www/us/en/developer/articles/tool/software-development-emulator.html)のxedを使ってみます。
+
+```
+xed -64 -ir code
+
+mov rax, qword ptr [rdx]
+add rax, qword ptr [r8]
+mov qword ptr [rcx], rax
+mov rax, qword ptr [rdx+0x8]
+adc rax, qword ptr [r8+0x8]
+mov qword ptr [rcx+0x8], rax
+mov rax, qword ptr [rdx+0x10]
+adc rax, qword ptr [r8+0x10]
+mov qword ptr [rcx+0x10], rax
+mov rax, qword ptr [rdx+0x18]
+adc rax, qword ptr [r8+0x18]
+mov qword ptr [rcx+0x18], rax
+setb al
+movzx eax, al
+```
+
+Linux環境ではobjdumpを使ってみますか。
+
+```
+objdump -D -b binary -m i386 -M x86-64,intel code
+mov    rax,QWORD PTR [rsi]
+add    rax,QWORD PTR [rdx]
+mov    QWORD PTR [rdi],rax
+mov    rax,QWORD PTR [rsi+0x8]
+adc    rax,QWORD PTR [rdx+0x8]
+mov    QWORD PTR [rdi+0x8],rax
+mov    rax,QWORD PTR [rsi+0x10]
+adc    rax,QWORD PTR [rdx+0x10]
+mov    QWORD PTR [rdi+0x10],rax
+mov    rax,QWORD PTR [rsi+0x18]
+adc    rax,QWORD PTR [rdx+0x18]
+mov    QWORD PTR [rdi+0x18],rax
+setb   al
+movzx  eax,al
+ret
+```
+
+`qword ptr`はXbyakの`ptr`に相当します（Xbyakでも`qword`と記述できます）。
+簡潔で最小限のコードになっていることが分かります。
+これと比べると前回のC++による実装結果はかなり無駄な操作があることが分かります。

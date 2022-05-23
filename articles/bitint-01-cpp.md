@@ -3,7 +3,7 @@ title: "多倍長整数の実装1（C/C++）"
 emoji: "🧮"
 type: "tech"
 topics: ["int","add", "C++"]
-published: false
+published: true
 ---
 ## 初めに
 

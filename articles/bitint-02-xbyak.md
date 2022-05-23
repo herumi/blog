@@ -18,12 +18,10 @@ published: true
 64bitの下位32bitはeax, ebx, ecx, edx, esi, edi, ebp, r8d, r9d, ..., r15dで操作できます。
 C/C++の関数内で利用する一次変数や関数の戻る場所などを記憶するためのスタック領域を指すレジスタがrspです。
 
-関数の引数は1番目から順にWindowsならrcx, rdx, r8, r9, Linuxならrdi, rsi, rdx, rcxです。
-詳細は[Windowsでの呼び出し既約](http://herumi.in.coocan.jp/prog/x64.html#WIN64)
-関数の戻り値はraxを利用します。
+関数の引数は1番目から順にWindowsならrcx, rdx, r8, r9, Linuxならrdi, rsi, rdx, rcxです。関数の戻り値はraxを利用します。
+詳細は[Windowsでの呼び出し既約](http://herumi.in.coocan.jp/prog/x64.html#WIN64)を参照ください。
 
-いくつかの命令を紹介します。
-下記のaやbはレジスタを表します。
+いくつかの命令を紹介します。下記のaやbはレジスタを表します。
 
 - `mov a, [b]` : bで指すアドレスの値をaに読み込む。
 - `mov [b], a` : aをbで指すアドレスに書き込む。

@@ -11,15 +11,24 @@ typedef uint64_t Unit;
 
 typedef uint64_t Unit;
 
+#ifdef __GNUC__
+#pragma GCC push_options
+#pragma GCC optimize ("unroll-loops")
+#endif
 template<size_t N>
 Unit addT(Unit *z, const Unit *x, const Unit *y)
 {
 	uint8_t c = 0;
+
+
 	for (size_t i = 0; i < N; i++) {
-		_addcarry_u64(c, x[i], y[i], &z[i]);
+		c = _addcarry_u64(c, x[i], y[i], (unsigned long long*)&z[i]);
 	}
 	return c;
 }
+#ifdef __GNUC__
+#pragma GCC pop_options
+#endif
 
 extern "C" Unit add4(Unit *z, const Unit *x, const Unit *y)
 {

@@ -1,5 +1,6 @@
 #include <xbyak/xbyak.h>
 #include <xbyak/xbyak_util.h>
+#include <fstream>
 
 struct Code : Xbyak::CodeGenerator {
 	Code(int N)
@@ -26,7 +27,6 @@ int main()
 {
 	Code code(4);
 	auto add4 = code.getCode<uint64_t (*)(uint64_t *, const uint64_t *, const uint64_t *)>();
-	FILE *fp = fopen("code", "wb");
-	fwrite(add4, code.getSize(), 1, fp);
-	fclose(fp);
+	std::ofstream ofs("code", std::ios::binary);
+	ofs.write((const char*)add4, code.getSize());
 }

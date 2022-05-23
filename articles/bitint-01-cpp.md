@@ -134,3 +134,4 @@ add4:
 ```
 
 今はまだ詳細には入りませんが、ごちゃごちゃと計算していることが分かります。
+[多倍長整数の実装2（Xbyak）](https://zenn.dev/herumi/articles/bitint-02-xbyak)に続く。

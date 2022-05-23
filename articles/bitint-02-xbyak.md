@@ -7,7 +7,7 @@ published: true
 ---
 ## 初めに
 
-前回は固定長256bit整数加算をC++で実装しました。
+前回、[多倍長整数の実装1（C/C++）](https://zenn.dev/herumi/articles/bitint-01-cpp)では固定長256bit整数加算をC++で実装しました。
 今回は[Xbyak](https://github.com/herumi/xbyak)を用いて実装します。
 
 ## x64レジスタ
@@ -82,6 +82,7 @@ struct Code : Xbyak::CodeGenerator {
 
 - `Xbyak::CodeGenerator`クラスを継承するとその中で、クラスメソッドとしてasmの命令を関数呼び出しとして記述できます。
   - asmで`add rax, rcx`は`add(rax, rcx)`, `mov rax, [rsp]`は`mov(rax, ptr[rsp])`となります。
+  - 詳細は[Xbyakのマニュアル](https://github.com/herumi/xbyak/blob/master/doc/usage.md)を参照ください。
 - `Xbyak::util::StackFrame`はWindowsとLinuxの関数の引数の違いを吸収する簡易クラスです。
   - 1番目にそのクラスのthis, 2番目に今から作る関数の引数の個数を指定します。
   - `sf.p[0]`, `sf.p[1]`が1番目, 2番目の汎用レジスタを表します。

@@ -39,8 +39,10 @@ extern "C" Unit add4(Unit *z, const Unit *x, const Unit *y)
 	return addT<4>(z, x, y);
 }
 
+#if  __cplusplus >= 201703L
 template<size_t N, size_t I = 0>
-Unit Unroll(uint8_t c, Unit *z, const Unit *x, const Unit *y) {
+Unit Unroll(uint8_t c, Unit *z, const Unit *x, const Unit *y)
+{
 	if constexpr(I < N) {
 		c = _addcarry_u64(c, x[I], y[I], (unsigned long long *)&z[I]);
 		return Unroll<N, I + 1>(c, z, x, y);
@@ -51,4 +53,30 @@ Unit Unroll(uint8_t c, Unit *z, const Unit *x, const Unit *y) {
 extern "C" Unit add4_2(Unit *z, const Unit *x, const Unit *y)
 {
 	return Unroll<4>(0, z, x, y);
+}
+#endif
+
+template<size_t N, size_t I = N - 1>
+struct UnrollT {
+	static inline Unit unroll(uint8_t c, Unit *z, const Unit *x, const Unit *y) {
+		c = _addcarry_u64(c, x[N - 1 - I], y[N - 1 - I], (unsigned long long *)&z[I]);
+		return Unroll<N, I - 1>(c, z, x, y);
+	}
+};
+
+template<>
+struct UnrollT<0> {
+	static inline Unit Unroll(uint8_t c, Unit *, const Unit *, const Unit *) {
+		return c;
+	}
+};
+
+extern "C" Unit add4_3(Unit *z, const Unit *x, const Unit *y)
+{
+	return UnrollT<4>::unroll(0, z, x, y);
+}
+
+int version()
+{
+	return __cplusplus;
 }

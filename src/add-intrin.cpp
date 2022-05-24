@@ -15,7 +15,7 @@ typedef uint64_t Unit;
 
 typedef uint64_t Unit;
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC push_options
 #pragma GCC optimize ("unroll-loops") // or -funroll-loops
 #endif
@@ -30,7 +30,7 @@ static inline Unit addT(Unit *z, const Unit *x, const Unit *y)
 	}
 	return c;
 }
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC pop_options
 #endif
 

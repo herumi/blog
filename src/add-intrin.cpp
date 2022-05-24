@@ -38,20 +38,21 @@ extern "C" Unit add4(Unit *z, const Unit *x, const Unit *y)
 	return addT<4>(z, x, y);
 }
 
-#if  __cplusplus >= 201703L
+#if (__cplusplus >= 201703L) || (_MSC_VER >= 1920) // VS2019
 template<size_t N, size_t I = 0>
-Unit Unroll(uint8_t c, Unit *z, const Unit *x, const Unit *y)
+Unit addT2(uint8_t c, Unit *z, const Unit *x, const Unit *y)
 {
 	if constexpr (I < N) {
 		c = _addcarry_u64(c, x[I], y[I], (unsigned long long *)&z[I]);
-		return Unroll<N, I + 1>(c, z, x, y);
+		return addT2<N, I + 1>(c, z, x, y);
+	} else {
+		return c;
 	}
-	return c;
 }
 
 extern "C" Unit add4_2(Unit *z, const Unit *x, const Unit *y)
 {
-	return Unroll<4>(0, z, x, y);
+	return addT2<4>(0, z, x, y);
 }
 #endif
 

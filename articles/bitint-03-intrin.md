@@ -295,6 +295,7 @@ extern "C" Unit add4_2(Unit *z, const Unit *x, const Unit *y)
 
 - `_addcarry_u64`を使うとclangではXbyakと同等のコードを生成できる。
 - VCでもtemplateテクニックを使ってループアンロールを強制させると同等のコードを生成できる。
+- C++17のconstexpr ifを使うとスマートにアンロールを記述できる。
 - gccは今のところCFについての最適化が不十分である。
 - 残念ながら`_addcarry_u64`はx64環境でしか使えない。
 

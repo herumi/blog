@@ -3,7 +3,7 @@ title: "多倍長整数の実装3（intrinsic）"
 emoji: "🧮"
 type: "tech"
 topics: ["int","add", "cpp", "intrinsic"]
-published: false
+published: true
 ---
 ## 初めに
 
@@ -13,6 +13,15 @@ published: false
 ## _addcarry_u64
 
 [_addcarry_u64](https://www.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top/compiler-reference/intrinsics/intrinsics-for-later-gen-core-proc-instruct-exts/intrinsics-for-multi-precision-arithmetic/addcarry-u32-addcarry-u64.html)はx64命令のadcに相当するコンパイラの組み込み関数です。
+利用するにはWindowsなら`intrin.h`, Linuxなら`x86intrin.h`をインクルードします。
+
+```cpp
+#ifdef _WIN32
+#include <intrin.h>
+#else
+#include <x86intrin.h>
+#endif
+```
 
 プロトタイプ宣言は
 
@@ -265,28 +274,28 @@ gccはunrollオプションや#pragmaを使わなくてもループアンロー�
 
 ```cpp
 template<size_t N, size_t I = 0>
-Unit Unroll(uint8_t c, Unit *z, const Unit *x, const Unit *y)
+Unit addT2(Unit *z, const Unit *x, const Unit *y, uint8_t c = 0)
 {
   if constexpr (I < N) {
     c = _addcarry_u64(c, x[I], y[I], (unsigned long long *)&z[I]);
-    return Unroll<N, I + 1>(c, z, x, y);
+    return addT2<N, I + 1>(z, x, y, c);
+  } else {
+    return c;
   }
-  return c;
 }
 
 extern "C" Unit add4_2(Unit *z, const Unit *x, const Unit *y)
 {
-  return Unroll<4>(0, z, x, y);
+  return addT2<4>(z, x, y);
 }
 ```
-
-再帰なのは同じですが、structにしなくてもよい、特殊化を作らなくてもよいのでスマートですね。出力結果は前述と同じでした。
+`if constexpr 条件`は条件が偽のときはその中の文がコンパイルされず再帰が止まります。そのため特殊化を作らなくてすむのです。出力結果は前述と同じでした。
 
 ### まとめ
 
-- `_addcarry_u64`を使うとclangではXbyakと同等のコードを生成できました。
-- VCでもtemplateテクニックを使ってループアンロールを強制させると同等のコードになりました。
-- gccは今のところ最適化が不十分なようです。
-- 残念ながら`_addcarry_u64`はx64環境でしか使えません。
+- `_addcarry_u64`を使うとclangではXbyakと同等のコードを生成できる。
+- VCでもtemplateテクニックを使ってループアンロールを強制させると同等のコードを生成できる。
+- gccは今のところCFについての最適化が不十分である。
+- 残念ながら`_addcarry_u64`はx64環境でしか使えない。
 
 次回はclang独自の構文を使ってみます。

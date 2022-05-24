@@ -2,7 +2,7 @@
 title: "多倍長整数の実装1（C/C++）"
 emoji: "🧮"
 type: "tech"
-topics: ["int","add", "C++"]
+topics: ["int","add", "cpp"]
 published: true
 ---
 ## 初めに
@@ -96,7 +96,7 @@ Unit addT(Unit *z, const Unit *x, const Unit *y)
 
 `N = 4`のときのclang-12での出力を見てみましょう。
 
-```asm
+```
 // clang-12 -O2 -DNDEBUG -S -masm=intel t.cpp
 
 add4:

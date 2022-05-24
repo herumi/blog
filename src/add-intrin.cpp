@@ -24,7 +24,6 @@ static inline Unit addT(Unit *z, const Unit *x, const Unit *y)
 {
 	uint8_t c = 0;
 
-
 	for (size_t i = 0; i < N; i++) {
 		c = _addcarry_u64(c, x[i], y[i], (unsigned long long*)&z[i]);
 	}

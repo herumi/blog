@@ -2,7 +2,7 @@
 title: "多倍長整数の実装2（Xbyak）"
 emoji: "🧮"
 type: "tech"
-topics: ["int","add", "C++", "xbyak"]
+topics: ["int","add", "cpp", "xbyak"]
 published: true
 ---
 ## 初めに
@@ -38,7 +38,7 @@ adcの演算結果に応じてCFも更新されます。
 
 これを使うとa, b, c, dが64bitレジスタで`[a:b]`と`[c:d]`という2個の128bit整数の加算`[a:b] += [c:d]`は
 
-```asm
+```
 add b, d : b += d
 adc a, c : a += c + CF
 ```

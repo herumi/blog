@@ -56,10 +56,10 @@ extern "C" Unit add4_2(Unit *z, const Unit *x, const Unit *y)
 }
 #endif
 
-template<size_t N, size_t I = N - 1>
+template<size_t N, size_t I = N>
 struct UnrollT {
 	static inline Unit call(uint8_t c, Unit *z, const Unit *x, const Unit *y) {
-		c = _addcarry_u64(c, x[N - 1 - I], y[N - 1 - I], (unsigned long long *)&z[I]);
+		c = _addcarry_u64(c, x[N - I], y[N - I], (unsigned long long *)&z[N - I]);
 		return UnrollT<N, I - 1>::call(c, z, x, y);
 	}
 };

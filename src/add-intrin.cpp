@@ -13,8 +13,6 @@
 
 typedef uint64_t Unit;
 
-typedef uint64_t Unit;
-
 #if defined(__GNUC__) && !defined(__clang__)
 #pragma GCC push_options
 #pragma GCC optimize ("unroll-loops") // or -funroll-loops

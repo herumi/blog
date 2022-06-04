@@ -12,6 +12,14 @@ published: true
 利用目的が楕円曲線やペアリングを使った暗号なので、bit長は256～512bitの固定長とします。
 それよりも長いbit長や可変長なものは扱いません。
 
+## 多倍長整数の実装一覧
+
+- [多倍長整数の実装1（C/C++）（この記事）](https://zenn.dev/herumi/articles/bitint-01-cpp)
+- [多倍長整数の実装2（Xbyak）](https://zenn.dev/herumi/articles/bitint-02-xbyak)
+- [多倍長整数の実装3（intrinsic）](https://zenn.dev/herumi/articles/bitint-03-intrin)
+- [多倍長整数の実装4（乗算の基礎）](https://zenn.dev/herumi/articles/bitint-04-mul)
+- [多倍長整数の実装5（乗算とmulx）](https://zenn.dev/herumi/articles/bitint-05-mulx)
+
 ## 多倍長整数の表現
 
 現在のC++(20)では`uint64_t`より大きい整数の型はありません。
@@ -26,14 +34,14 @@ published: true
 符号無し多倍長整数を`Unit`の配列で表現します。
 たとえば64bit CPUなら`Unit = uint64_t`なので256bit整数は256 / 64 = 4個の配列です。
 
-```
+```cpp
 Unit x[4];
 ```
 
 ここでは配列の小さい添え字が下位の値を表現すると決めます。
 たとえば`x[4] = { 1, 2, 3, 4 };`とすると、この`x`は
 
-```
+```cpp
 x = (4 << 192) | (3 << 128) | (2 << 64) | (1 << 0) = 0x4000000000000000300000000000000020000000000000001
 ```
 という値を意味します。
@@ -96,7 +104,7 @@ Unit addT(Unit *z, const Unit *x, const Unit *y)
 
 `N = 4`のときのclang-12での出力を見てみましょう。
 
-```
+```nasm
 // clang-12 -O2 -DNDEBUG -S -masm=intel t.cpp
 
 add4:

@@ -9,6 +9,7 @@ published: true
 
 前回、[多倍長整数の実装1（C/C++）](https://zenn.dev/herumi/articles/bitint-01-cpp)では固定長256bit整数加算をC++で実装しました。
 今回は[Xbyak](https://github.com/herumi/xbyak)を用いて実装します。
+記事全体の一覧は[多倍長整数の実装1（C/C++）](https://zenn.dev/herumi/articles/bitint-01-cpp)参照。
 
 ## x64レジスタ
 
@@ -117,7 +118,7 @@ int main()
 
 Windows環境で[Intel Software Development Emulator](https://www.intel.com/content/www/us/en/developer/articles/tool/software-development-emulator.html)のxedを使ってみます。
 
-```
+```nasm
 xed -64 -ir code
 
 mov rax, qword ptr [rdx]

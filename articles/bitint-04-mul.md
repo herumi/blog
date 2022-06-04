@@ -8,6 +8,7 @@ published: true
 ## 初めに
 
 今回はN桁x1桁の固定多倍長整数の乗算を実装します。ここで1桁はUnit（32bit or 64bit）です。
+記事全体の一覧は[多倍長整数の実装1（C/C++）](https://zenn.dev/herumi/articles/bitint-01-cpp)参照。
 
 ## 筆算
 
@@ -128,7 +129,7 @@ Unit mulUnitT(Unit *z, const Unit *x, Unit y)
 (A)よりも(B)の方が最適化がかかりやすい可能性があります。
 試したところclang-12では元々高度な最適化をするので変わりませんでしたが、gcc-9.4では(B)が若干よいコードを生成しました。
 
-```
+```nasm
 // gccで(A)をコンパイルしたもの
 .L50:
     movq    %r9, %rax
@@ -145,7 +146,7 @@ Unit mulUnitT(Unit *z, const Unit *x, Unit y)
     jne .L50
 ```
 
-```
+```nasm
 // gccで(B)をコンパイルしたもの
 .L46:
     movq    %r11, %rax
@@ -161,8 +162,9 @@ Unit mulUnitT(Unit *z, const Unit *x, Unit y)
 ```
 加算のときと同様-O2だけではループアンロールされませんでした。
 それに対してclangは次のコードを生成しました。なかなか頑張ってますね。
+mulが4回、addが3回、adcが3回、setbが1回です。
 
-```
+```nasm
     movq    %rdx, %r10
     movq    %rdx, %rax
     mulq    (%rsi)

@@ -9,6 +9,7 @@ published: true
 
 前々回[多倍長整数の実装1（C/C++）](https://zenn.dev/herumi/articles/bitint-01-cpp)、前回[多倍長整数の実装2（Xbyak）](https://zenn.dev/herumi/articles/bitint-02-xbyak)でC++やXbyakによる実装をしました。
 今回からXbyakに頼らずに、いくつかの方法を試します。まずはコンパイラのintrinsic関数を使ってみましょう。
+記事全体の一覧は[多倍長整数の実装1（C/C++）](https://zenn.dev/herumi/articles/bitint-01-cpp)参照。
 
 ## _addcarry_u64
 
@@ -64,7 +65,7 @@ extern "C" Unit add4(Unit *z, const Unit *x, const Unit *y)
 # clang++-12 -S -O2 -DNDEBUG -masm=intel add-intrin.cpp
 ```
 
-```
+```nasm
 add4:
     mov rax, qword ptr [rsi]
     add rax, qword ptr [rdx]
@@ -92,7 +93,7 @@ add4:
 
 g++-10の結果を見てみます。
 
-```
+```nasm
 add4:
     mov r8, rdi
     xor eax, eax
@@ -114,7 +115,7 @@ add4:
 
 ループが展開されていないのでがっかりです。次にVCも見てみましょう。
 
-```
+```nasm
   xor  r9b, r9b
   sub  rcx, r8
   sub  rdx, r8
@@ -182,7 +183,7 @@ gccにはいくつかループを強制アンロールさせる方法があり�
 
 結果は次のようになりました。
 
-```
+```nasm
     mov rax, QWORD PTR [rdx]
     add rax, QWORD PTR [rsi]
     setc    cl
@@ -249,7 +250,7 @@ extern "C" Unit add4_3(Unit *z, const Unit *x, const Unit *y)
 
 結果を見ましょう。
 
-```
+```nasm
   mov   rax, QWORD PTR [rdx]
   add   rax, QWORD PTR [r8]
   mov   QWORD PTR [rcx], rax

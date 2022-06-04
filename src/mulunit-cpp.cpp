@@ -57,3 +57,23 @@ extern "C" Unit mulUnit4(Unit *z, const Unit *x, Unit y)
 	return mulUnitT<4>(z, x, y);
 }
 
+template<size_t N>
+uint64_t mulUnitT2(uint64_t *z, const uint64_t *x, uint64_t y)
+{
+  unsigned long long L, H;
+  uint8_t c = 0;
+  z[0] = _mulx_u64(x[0], y, &L);
+  for (size_t i = 1; i < N; i++) {
+    uint64_t t = _mulx_u64(x[i], y, &H);
+    c = _addcarry_u64(c, t, L, (unsigned long long *)&z[i]);
+    L = H;
+  }
+  _addcarry_u64(c, 0, L, &H);
+  return H;
+}
+
+extern "C" Unit mulUnit2_4(Unit *z, const Unit *x, Unit y)
+{
+	return mulUnitT2<4>(z, x, y);
+}
+

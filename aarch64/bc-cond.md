@@ -1,4 +1,4 @@
-# bc.cond
+# bc.cond(ヒント付き条件分岐 hinted conditional branch)
 
 ## 説明
 - [BC.cond](https://developer.arm.com/documentation/ddi0596/2021-09/Base-Instructions/BC-cond--Branch-Consistent-conditionally-)
@@ -9,6 +9,7 @@
 - HaveFeatHBC()でないと未定義
   - ARMv8.8以降でなければ実装されていない
   - apt getで入るaarch64-linux-gnu-as (version 2.34)ではエラー
+    - -march=armv8.8-a+hbcで有効になる?(未確認)
 
 従来の条件分岐
 - [B.cond](https://developer.arm.com/documentation/ddi0596/2021-09/Base-Instructions/B-cond--Branch-conditionally-)

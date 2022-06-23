@@ -74,6 +74,8 @@ EC（Elliptic Curve）とは楕円曲線という数学用語、DHはDiffieとHe
 数学的な話は上記書籍や、[『Software Design2022年3月号』](https://gihyo.jp/magazine/SD/archive/2022/202203)の
 「第4章：電子署名のプロセスを体験 Pythonによる楕円曲線暗号の実装」をごらんください。
 
+（注）[楕円曲線暗号のPythonによる実装その1（有限体とECDH鍵共有）](https://zenn.dev/herumi/articles/sd202203-ecc-1)で記事を公開しています。
+
 ECDH鍵共有では次のことをします。
 まずアリスは10進数で77桁ぐらいの大きな数aをランダムに選び秘密にしておきます。
 そしてそれを楕円曲線の点と呼ばれるものに変換します。

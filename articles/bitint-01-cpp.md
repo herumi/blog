@@ -19,6 +19,7 @@ published: true
 - [多倍長整数の実装3（intrinsic）](https://zenn.dev/herumi/articles/bitint-03-intrin)
 - [多倍長整数の実装4（乗算の基礎）](https://zenn.dev/herumi/articles/bitint-04-mul)
 - [多倍長整数の実装5（乗算とmulx）](https://zenn.dev/herumi/articles/bitint-05-mulx)
+- [多倍長整数の実装6（乗算後加算とintrinsicの限界）](https://zenn.dev/herumi/articles/bitint-06-muladd)
 
 ## 多倍長整数の表現
 

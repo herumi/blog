@@ -8,7 +8,7 @@ published: true
 ## 初めに
 
 前回[多倍長整数の実装6（乗算後加算とintrinsicの限界）](https://zenn.dev/herumi/articles/bitint-06-muladd)では、コンパイラのintrinsic関数の限界を紹介しました。
-仕方がないのでアセンブリ言語（以下asmtと表記）で実装しなければなりません。
+仕方がないのでアセンブリ言語（以下asmと表記）で実装しなければなりません。
 今回はその作業を手助けするPythonでアセンブリコードを生成する簡単なDSLを作ったのでそれを紹介します。
 記事全体の一覧は[多倍長整数の実装1（C/C++）](https://zenn.dev/herumi/articles/bitint-01-cpp)参照。
 

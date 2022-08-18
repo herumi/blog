@@ -132,7 +132,7 @@ clangには整数型の拡張として[`_ExtInt`](https://blog.llvm.org/2020/04/
 ```cpp
 #include <stdint.h>
 typedef unsigned _ExtInt(256) uint256_t; // 256bit符号無し整数
-typedef unsigned _ExtInt(256+64) uint320_t; // 32bit符号無し整数
+typedef unsigned _ExtInt(256+64) uint320_t; // 320bit符号無し整数
 
 uint64_t mulUnit256(uint256_t *pz, const uint256_t *px, uint64_t y)
 {

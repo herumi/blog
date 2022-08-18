@@ -86,7 +86,7 @@ add:
 `--target`オプションでLLVMがサポートする他のアーキテクチャのasmコードも生成できます。
 たとえばM1などのAArch64なら
 
-```console
+```shell-session
 $ clang++-12 -O2 -S -o - --target=aarch64 add32.ll
         .text
         .globl  add
@@ -97,7 +97,7 @@ add:
 
 clangが対応しているアーキテクチャは`-print-target`で確認できます。
 
-```sehll-sessoin
+```shell-session
 $ clang++-12 -print-targets
   Registered Targets:
     aarch64    - AArch64 (little endian)
@@ -113,7 +113,7 @@ $ clang++-12 -print-targets
 ```
 RISC-Vにも対応してます。便利ですね。
 
-```shell-sessoin
+```shell-session
 $ clang++-12 -S -o - -O2 --target=riscv64 a.ll
         .text
         .globl  add

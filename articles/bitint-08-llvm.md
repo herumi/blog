@@ -10,7 +10,7 @@ published: true
 前回まではx64用asmコードを用いた実装を紹介しました。高速な実装のためには[CPUの特性と命令を駆使しなければなりません](https://zenn.dev/herumi/articles/bitint-07-gen-asm#mulunitadd%E3%81%AE%E5%A0%B4%E5%90%88)。今回はLLVMを用いてより汎用的で（そこそこ）高速なコードを効率よく生成することを目指します。
 記事全体の一覧は[多倍長整数の実装1（C/C++）](https://zenn.dev/herumi/articles/bitint-01-cpp)参照。
 
-## 動機
+## 方針
 
 LLVMは仮想機械用の中間コード（LLVM IR）をもち、そのアセンブリ言語（以下ll）の文法は[LLVM Language Reference Manual](https://llvm.org/docs/LangRef.html)に記されています。
 llファイルを作ってclangに渡すとターゲットCPUに応じた最適化されたコードが生成されます。従って、llファイルを一つ作るとLLVMが対応する様々なアーキテクチャに対応できます（実際にはそううまくはいかないことが多いですが）。そこで、今回は今まで作ってきたadd, mulUnitなどの低レベル関数をllで記述してみましょう。

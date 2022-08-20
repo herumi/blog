@@ -22,6 +22,7 @@ published: true
 - [多倍長整数の実装6（乗算後加算とintrinsicの限界）](https://zenn.dev/herumi/articles/bitint-06-muladd)
 - [多倍長整数の実装7（XbyakライクなPython DSLによるasmコード生成）](https://zenn.dev/herumi/articles/bitint-07-gen-asm)
 - [多倍長整数の実装8（LLVMを用いたasmコード生成）](https://zenn.dev/herumi/articles/bitint-08-llvm)
+- [多倍長整数の実装9（手書きasmとLLVMのベンチマーク）](https://zenn.dev/herumi/articles/bitint-09-bench)
 
 ## 多倍長整数の表現
 

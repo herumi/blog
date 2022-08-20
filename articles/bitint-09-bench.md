@@ -55,7 +55,7 @@ mov rax, qword ptr [rsp - 16]       # 8-byte Reload
 
 ## x64向け高速化
 
-[mclでの利用方法](https://zenn.dev/herumi/articles/bitint-07-gen-asm#mcl%E3%81%A7%E3%81%AE%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95)ではN桁固定長整数x, yの乗算を`mulUnit`と`mulUnitAdd`を用いて実装しました。これでもGMPより速いのですが、今回手書きasmでより速いコードを目指します。
+[mclでの利用方法](https://zenn.dev/herumi/articles/bitint-07-gen-asm#mcl%E3%81%A7%E3%81%AE%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95)ではN桁固定長整数x, yの乗算を`mulUnit`と`mulUnitAdd`を用いて実装しました。これでもGMPより速いのですが、今回手書きasmでLLVMより速いコードを目指します。
 
 対象のコード
 ```cpp

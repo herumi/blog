@@ -1,8 +1,8 @@
 ---
-title: "有限体の実装1（減算）"
+title: "有限体の実装1（加算）"
 emoji: "🧮"
 type: "tech"
-topics: ["有限体", "sub", "x64"]
+topics: ["有限体", "add", "x64"]
 published: false
 ---
 ## 初めに
@@ -11,7 +11,7 @@ published: false
 
 ## 有限体の実装一覧
 
-- [有限体の実装1（減算）（この記事）](https://zenn.dev/herumi/articles/finite-field-01-sub)
+- [有限体の実装1（加算）（この記事）](https://zenn.dev/herumi/articles/finite-field-01-add)
 
 ## 有限体の復習
 

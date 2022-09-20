@@ -40,23 +40,40 @@ def sub_rm(t, px):
     else:
       sbb(t[i], ptr(px + 8 * i))
 
+# [px] = t[]
+def store(px, t):
+  for i in range(len(t)):
+    mov(ptr(px + 8 * i), t[i])
+
+def cmovc_rr(t1, t2):
+  for i in range(len(t1)):
+    cmovc(t1[i], t2[i])
+
 def gen_fp_add(N):
   align(16)
   with FuncProc(f'mclb_fp_add{N}'):
-    with StackFrame(4, N * 2) as sf:
+    with StackFrame(4, N*2-2) as sf:
       z = sf.p[0]
       x = sf.p[1]
       y = sf.p[2]
       p = sf.p[3]
-      t = sf.t[0:N+1]
-      t2 = sf.t[N+1:N * 2]
-      xor_(t[N], t[N])
-      add_rmm(t[0:N], x, y)
-      setc(t[N]) # t[N+1] = x[N] + y[N]
-      t2.append(y) # y is free
+      t = sf.t[0:N]
+      t2 = sf.t[N:]
+      xor_(eax, eax)
+      # t = x + y
+      add_rmm(t, x, y)
+      # use rax for CF
+      setc(al)
+      # x, y are free
+      t2.append(x)
+      t2.append(y)
       copy_rr(t2, t)
-      sub_rm(t[0:N], p) # t = x + y - p
-      sbb(t[N], 0)
+      # t[N] = x + y - p
+      sub_rm(t, p)
+      sbb(eax, 0)
+      # t = t2 if t < 0
+      cmovc_rr(t, t2)
+      store(z, t)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-win', '--win', help='output win64 abi', action='store_true')

@@ -19,30 +19,31 @@ published: false
 ごく簡単に復習すると$p$を素数としたとき、$0$以上$p$未満の整数の集合を$F_p$と書き、有限体と呼びます。
 
 $$
-F_p = \{0, 1, 2, ..., p-1\}.
+F_p := \{0, 1, 2, ..., p-1\}.
 $$
 
 有限体は通常の四則演算と似た性質を持つ四則演算を定義できます。「似た性質」とは$(a+b)+c=a+(b+c)$, $a(bc) = (ab)c$とか$a(b + c) = ab + ac$といった結合法則や分配法則を指します。
 四則演算のうち、加算、減算、乗算については$x, y \in F_p$について、$x$, $y$を整数と思って加減乗算したあと$p$で割ったものです。
 
 $$
-（有限体での）x + y = （整数での）x + y \mod p.\\
-（有限体での）x - y = （整数での）x - y \mod p.\\
-（有限体での）x \times y = （整数での）x \times y \mod p.
+（有限体での）x + y := （整数での）(x + y) \mod p.\\
+（有限体での）x - y := （整数での）(x - y) \mod p.\\
+（有限体での）x \times y := （整数での）(x \times y) \mod p.
 $$
 
-ここで$\mod p$は$p$で割った余り（$0$以上$p$未満の整数）を表します。
+ここで$x \mod p$は$x$を$p$で割った余り（$0$以上$p$未満の整数）を表します。
 
 ## 有限体の加減算の実装概略
 
-まず、比較的容易な加減算の実装について詳細に入ります。
-「$p$で割った余り」を求める操作は通常重たいです。有限体の演算は極限まで高速化したいのでそのような操作は極力避けたいです。
+まず、比較的容易な加減算の実装に入ります。
+「$p$で割った余り」を求める操作は通常重たいです。有限体の演算は極限まで高速化したいのでそのような操作は避けたいです。
 
-元の$x$, $y$は$0 \le x, y \le p-1$なのですから、$x+y$の範囲は$0 \le x+y \le 2p-2$です。
-もし$z=x+y$が$p$以上なら$z$から$p$を引くと$0 \le z-p \le p-2$となります。これは$x+y$を$p$で割った余りに一致します。すなわち
+元の$x$, $y$は$0 \le x, y \le p-1$なのですから、$z:=x+y$の範囲は$0 \le x+y \le 2p-2$です。
+もし$z$が$p$以上なら$z$から$p$を引くと$0 \le z-p \le p-2$となります。これは$z$を$p$で割った余りに一致します。すなわち
 
 ```python
-def add(x, y):
+# assume 0 <= x, y < p
+def fp_add(x, y):
   z = x + y
   if z >= p:
     z -= p
@@ -53,16 +54,17 @@ def add(x, y):
 引き算の場合は$0 \le x, y \le p-1$より$-(p-1) \le x - y \le p-1$です。したがって$x - y < 0$のとき$p$を足せば$0 < x - y \le p-1$となります。
 
 ```python
-def sub(x, y):
+def fp_sub(x, y):
   z = x - y
   if z < 0:
     z += p
   return z
 ```
+この変形で$p$で割る操作をなくせました。
 
-## 加減算の実装詳細
+## C++での実装
 
-前節で紹介したPythonによる実装をC/C++で置き換えるためにaddT, subTを使ってより詳しく考えましょう。
+前節で紹介したPythonによる実装をC++で置き換えるためにaddT, subTを使ってより詳しく考えましょう。
 
 ```cpp
 // x[] < y[]なら-1. x[] == y[]なら0. x[] > y[]なら1
@@ -93,7 +95,7 @@ Pythonでの`z = x + y`をN個のUnitに対する操作であるaddTを使った
 ```cpp
 // z[] = (x[] + y[]) % p[]
 template<size_t N>
-void Fp_add(Unit *z, const Unit *x, const Unit *y, const Unit *p)
+void fp_add(Unit *z, const Unit *x, const Unit *y, const Unit *p)
 {
   Unit CF = addT<N>(z, x, y);
   if (CF || cmpT<N>(z, p) >= 0) { // z[] = x[] + y[] >= p[]ならp[]を引く
@@ -102,13 +104,12 @@ void Fp_add(Unit *z, const Unit *x, const Unit *y, const Unit *p)
 }
 ```
 
-となります。
-引き算の場合は、もう少し簡単で引いて繰り下がりがあるときだけpを足せばよいです。
+となります。引き算の場合は、もう少し簡単で引いて繰り下がりがあるときだけpを足せばよいです。
 
 ```cpp
 // z[] = (x[] - y[]) % p[]
 template<size_t N>
-void Fp_sub(Unit *z, const Unit *x, const Unit *y, const Unit *p)
+void fp_sub(Unit *z, const Unit *x, const Unit *y, const Unit *p)
 {
   if (subT<N>(z, x, y)) { // z[] = x[] - y[] < 0ならp[]を足す
     addT<N>(z, z, p);
@@ -116,9 +117,9 @@ void Fp_sub(Unit *z, const Unit *x, const Unit *y, const Unit *p)
 }
 ```
 
-## x64向け最適化
+## 最適化への準備
 
-前節のコードFp_addをx64向けに最適化しましょう。例によってN = 4 or 6とします。Fp_addには二つの高速化の余地があります。一つは不要なメモリ読み書きの削除です。
+前節のコードfp_addをx64向けに最適化しましょう。fp_addには二つの高速化の余地があります。一つは不要なメモリ読み書きの削除です。
 
 ```cpp
 Unit CF = addT<N>(z, x, y);
@@ -131,21 +132,54 @@ if (CF || cmpT<N>(z, p) >= 0) {
 で`z[]`と`p[]`の値を比較しています。途中結果をメモリに保存せずにレジスタ上で処理すれば高速化が望めます。
 
 もう一つは条件分岐です。xとyを足した結果がpを越える確率はxとyがランダムな場合約1/2です。暗号で利用する場合、その傾向は予測できないと考えてよいのでCPUの分岐予測は1/2の確率で外れます。またcmpT関数は条件分岐命令が続くのでパイプラインを乱しがちです。
-そこでパイプラインを乱さないように条件移動命令cmovを使います。cmovはフラグに応じてレジスタの移動をするかしないかを選択できる命令です。
+そこでパイプラインを乱さないように分岐を削除する必要があり、そのために条件移動命令cmovを使います。
 
 ```nasm
 cmp rax, rcx
 cmovc rbx, rdx ; if (rax < rcx) rbx = rdx
 ```
 
-この命令を使って次のような擬似コードにします。コード中に現れる変数X, YなどはN個のレジスタの組とします。
+cmovはフラグに応じてレジスタの移動をするかしないかを選択できますが、それしかできません。前述のPythonのコードのようなifが成り立つときだけ計算するコードを陽にifを含まないように変形します。
+cmpTによる比較は実際に引き算して負になるかで判断しましょう。CPU上でのsubは2引数しか取れないことを考慮し、簡略化のためにPythonでfp_addを変形すると次のようになります。select関数はcmovに相当します。
 
-```cpp
-// px : xのアドレスを保持するレジスタ
-// py : yのアドレスを保持するレジスタ
-// pp : pのアドレスを保持するレジスタ
-xor_(CF, CF); // CF = 0
-load_rm(X, px); // X = x[]
-sub_rm(X, py); // X[] -= y[]
-setc(CF.cvt8()); // CFの下位8bitをセット
+```python
+def select(cond, x, y):
+  return x if cond else y
+
+def fp_add(x, y):
+  x += y
+  t = x
+  t -= p # t = x + y - p
+  return select(t < 0, x, t)
+```
+
+同様にfp_subをselectを使って書き直すと
+
+```python
+def fp_sub(x, y):
+  x -= y
+  t = x
+  t += p # t = x - y + p
+  return select(t < 0, x, t)
+```
+
+## x64asmコード
+
+このコードを念頭にasm（を生成するPython DSL）を書くと次のようになります。コード中に現れる変数X, TはN個のレジスタの組とします。
+
+```python
+# px : xのアドレスを保持するレジスタ
+# py : yのアドレスを保持するレジスタ
+# pp : pのアドレスを保持するレジスタ
+xor_(eax, eax)     # eax = 0
+add_rmm(X, px, py) # X = px[] + py[]
+setc(al)           # eax = CF（Xが繰り上がれば1）
+copy_rr(T, X)      # T = X
+sub_rm(T, pp)      # T -= pp[]
+sbb(eax, 0)        # CFのチェック
+cmovc_rr(T, X)     # T < 0ならT = X
+store(pz, T)
+setc(al); // eax = CF (Xが繰り上がれば1)
+mov_rr(T, X); // T = X
+
 ```

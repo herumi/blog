@@ -172,15 +172,14 @@ def fp_sub(x, y):
 # py : yのアドレスを保持するレジスタ
 # pp : pのアドレスを保持するレジスタ
 xor_(eax, eax)     # eax = 0
-add_rmm(X, px, py) # X = px[] + py[]
+load_rm(X, px)     # X = px[]
+add_rm(X, py)      # X = px[] + py[]
 setc(al)           # eax = CF（Xが繰り上がれば1）
-copy_rr(T, X)      # T = X
+mov_rr(T, X)       # T = X
 sub_rm(T, pp)      # T -= pp[]
-sbb(eax, 0)        # CFのチェック
-cmovc_rr(T, X)     # T < 0ならT = X
+sbb(eax, 0)        # check CF
+cmovc_rr(T, X)     # T = X if T < 0
 store(pz, T)
-setc(al); // eax = CF (Xが繰り上がれば1)
-mov_rr(T, X); // T = X
 ```
 
 ## LLVMによる実装

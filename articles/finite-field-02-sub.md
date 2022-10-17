@@ -15,7 +15,7 @@ published: true
 // pz[] = (px[] - py[]) % pp[]
 void fp_subN(Unit *pz, const Unit *px, const Unit *py, const Unit *py, const Unit *pp);
 ```
-です。
+です。記事全体の一覧は[有限体の実装一覧](https://zenn.dev/herumi/articles/finite-field-01-add#%E6%9C%89%E9%99%90%E4%BD%93%E3%81%AE%E5%AE%9F%E8%A3%85%E4%B8%80%E8%A6%A7)参照。
 
 ## LLVM DSLによる実装
 

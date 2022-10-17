@@ -12,6 +12,7 @@ published: true
 ## 有限体の実装一覧
 
 - [有限体の実装1（加算）（この記事）](https://zenn.dev/herumi/articles/finite-field-01-add)
+- [有限体の実装2（減算）（この記事）](https://zenn.dev/herumi/articles/finite-field-02-sub)
 
 ## 有限体の復習
 

@@ -7,7 +7,7 @@ published: false
 ---
 ## 初めに
 
-「署名とはメッセージのハッシュ値を秘密鍵で暗号化（or 復号）したものであり、検証は署名を公開鍵で復号（or 暗号化）してハッシュ値と等しいかを確認すること」という説明(×)をよく見かけます。
+「署名とはメッセージのハッシュ値を秘密鍵で暗号化したものであり、検証は署名を公開鍵で復号してハッシュ値と等しいかを確認すること」という説明(×)をよく見かけます。
 正しい署名の定義と実際のRSA署名がどのようなものであり、上記説明(×)がなぜよくないのかを理解しましょう。
 
 ## 署名の定義
@@ -26,7 +26,7 @@ verifyはボブが検証鍵Sを使って(m,σ)の正しさを確認し、受理�
 [RFC 8017](https://www.rfc-editor.org/rfc/rfc8017)ではRSAを署名に使うときは暗号化・復号という言葉を使わずRSASP(Signature Primitive)とRSAVP(Verification Primitive)を使っています。
 普及が進んでいる[ECDSA](https://zenn.dev/herumi/articles/sd202203-ecc-2#ecdsa%E3%81%AE%E9%8D%B5%E7%94%9F%E6%88%90)やEdDSA、Ethereumなどで使われるBLS署名も説明(×)とは異なる方法です。
 
-たとえ話をすると（だから突っ込み所はあるでしょうが）、説明(×)は自動車の定義を聞かれて「自動車とは牛に引かれて動く車」と牛車の説明をしているようなものです。なぜ一般論の中で限定した古い話をしているの?というわけです。自動車の動力はガソリン、電気、ハイブリッド、水素など多様なものがあるのですから「自動車とは人力以外の力で動く車」とすべきでしょう。
+たとえ話をすると（だから突っ込み所はあるでしょうが）、説明(×)は自動車の定義を聞かれて「自動車とは牛に引かれて動く車」と大昔の牛車の説明をしているようなものです。自動車の動力はガソリン、電気、ハイブリッド、水素など多様なものがあるのですから「自動車とは人力以外の力で動く車」とすべきでしょう。
 
 ## RSAの基礎
 
@@ -44,9 +44,9 @@ Enc(m) = f(e, m)として暗号化に落とし戸つき一方向性関数を利�
 *RSAの落とし戸つき一方向性関数（『暗認本』p.122）*
 
 話はそれますが大抵の入門書に載っているこの「RSA暗号」は安全ではないので絶対に使ってはいけません。たとえば0や1の暗号文は0や1のままです。より詳しい理由は[『暗認本』](https://herumi.github.io/anninbon/)などをごらんください。実際にはもっと複雑な方式が使われます。
-なお、掛け算とmodは交換できるのでEnc(mm') = Enc(m)Enc(m')という性質があります。
+なお、掛け算とmodは交換できるのでEnc(mm') = Enc(m)Enc(m')やDec(cc')=Dec(c)Dec(c')という性質があります。
 
-## Full domain hash(FDH)のRSA署名
+## Full Domain Hash(FDH)のRSA署名
 
 RSAの落とし戸つき一方向性関数を署名に使った方式の一つがfull domain hashのRSA署名です。
 
@@ -65,9 +65,9 @@ RSAの落とし戸つき一方向性関数を署名に使った方式の一つ�
 
 ## アドホックな改良とRSASSA-PKCS1-v1_5
 
-FDHのRSA署名には安全性証明がありますが、大きなハッシュ関数を使うので効率がよくありません。そこでFDHではない普通のハッシュ関数にデータをエンコードしてつかう方法がいくつか提案されています。エンコードとはハッシュ値の前後に適当なデータを追加して調整する方法です。
-アドホックに対応するので安全性が心配なところがあります。実際ISO/IEC 9796(-2)などは標準化された後で攻撃が見つかりました。その中で[RSASSA-PKCS1-v1_5](https://datatracker.ietf.org/doc/html/rfc8017#section-8-2)は今のところ有力な攻撃方法が見つかっていないため広く使われています。ただし安全性証明はありません。
-この方式はハッシュ値hを求めたら、hの前に`0x00||0x01||0xf...f||0x00||ID`（IDはある固定バイト列）をつけてEMとし、σ=f(d, EM)とします。
+FDHのRSA署名には安全性証明がありますが、大きなハッシュ関数を使うので効率がよくありません。そこで普通のハッシュ関数を使って作ったハッシュ値を適当に加工して使う方法（エンコード）がいろいろ提案されています。
+エンコード方式はアドホックなものが多く、安全性が心配なところがあります。実際ISO/IEC 9796(-2)などは標準化された後で攻撃が見つかりました。その中で[RSASSA-PKCS1-v1_5](https://www.rfc-editor.org/rfc/rfc8017#section-8.2)は今のところ有力な攻撃方法が見つかっていないため広く使われています（SSAはSignature Scheme with Appendixの略）。ただし安全性証明はありません。
+この方式はハッシュ値hを求めたら、hの前に`0x00||0x01||0xf...f||0x00||DI`（DIはある固定バイト列）をつけてEMとし、σ=f(d, EM)とします。
 
 ```mermaid
 graph LR;
@@ -92,71 +92,24 @@ verify' -- output --> 受理/拒否;
 *RSASSA-PKCS1-v1_5の署名(sign)と検証(verify)*
 
 ## RSASSA-PSS
+アドホックな改善ではなく、きちんと安全性証明がつけられた方式の一つが[RSASSA-PSS](https://www.rfc-editor.org/rfc/rfc8017#section-8.1)です。PSS方式はメッセージm以外にランダムなsaltを入力します。PSSはProbabilistic Signature Scheme（確率的署名方式）の略です。
+PKCS1-v1_5方式はハッシュ値と固定値を連結していましたが、PSSではmとsaltごとに変わる値にします。そのためにMGF(Mask Generation Function)を使います。MGFは、固定長のハッシュ関数を使って入力値から長いハッシュ値を出力する関数です。
 
-メモ
-RSA-PSS RFC-8017 https://www.rfc-editor.org/rfc/rfc8017
-RSASSA-PKCS1-v1_5
+### RSASSA-PSSの署名
+まずメッセージmのハッシュ値hを求め、saltと連結して再度ハッシュ値h'をとります。それからMGFを使ってmaskを作り、maskとsaltをxorしてmaskedDBを作ります。maskedDBとh'を連結してEMという値を作り、署名$σ=EM^d$ mod nを生成します（dは署名鍵）。
 
-RSA-OAEP
+![RSASSA-PSSの署名](/images/rsa-pss-sign.png =500x)
+*RSASSA-PSSの署名*
 
-ECDSA, EdDSA, 格子を使った署名
+### RSASSA-PSSの検証
+メッセージmと署名σのペアを受け取ったら、mのハッシュ値hとEM = $σ^e$ mod nを計算します（eは検証鍵）。EMが正しい形であることをチェックしたら分解してmaskedDBとh'を取り出します。
+h'からMGFを使ってmaskを作り、makedDBとxorすることでDBを復元します。DBの形をチェックしてh''とsaltを取り出します。最後にhとsaltから再度hashを取ってh'を作り、h' == h''だったら署名を受理します。
+署名するときに入力したsaltをうまく復元して利用していますね。またPKCS1-v1_5と違って署名σだけからはh = Hash(m)を復元できないという特徴もあります。
 
+![RSASSA-PSSの検証](/images/rsa-pss-verify.png =500x)
+*RSASSA-PSSの検証*
 
-RSA-PSS
-input : key, msg
-
-p, q : 素数
-n = pq
-d : RSA秘密鍵
-e : RSA公開鍵(ed ≡ 1 mod (p-1)(q-1)となる整数)
-
-rsaEncryption識別子というのは
-
-以下p, q(とn)を固定します。
-
-f(x, m) = m^x mod n
-
-RSAEP : RSA Encryption primitiveの略
-RSADP : RSA Decryption primitiveの略
-
-RSAEP(e, m) = f(e, m)
-RSADP(d, m) = f(d, m)
-RSAEPとRSADPの違いはfの第一引数にeを入れるかdを入れるかの違い
-
-RSASP1(d, m) = f(d, m)
-RSAVP1(e, m) = f(e, m)
-
-RSASP1 = RSADP
-RSAVP1 = RSAEP
-ではありますが、暗号化と署名は用とが異なるので区別するために名前がつけられています。
-
-RSA-PSS
-
-sign(d, m)
-
-EMCA-PSS-ENCODE(M)
-mHash = Hash(M)
-
-M' = 0...0 || mHash || salt
-H = Hash(M')
-DB = 0..0 || 1 || salt
-dbMask = MGF(H)
-
-maskedDB = DB xor dbMask
-EM = 0...0 || maskedDB || H || 0xbc
-output EM
-
-EMSA-PSS-VERIFY(M, EM)
-mHash = Hash(M)
-dbMask = MGF(H)
-DB = maskedDB xor dbMask
-salt = truncate(DB)
-M' = 0...0 || mHash || salt
-H' = Hash(M')
-return H == H'
-
-MGF(seed)
-T = ""
-counter = 0
-T = T || Hash(seed || counter)
-truncate(T)
+## まとめ
+- （一般の）署名の概念は暗号化・復号を使って定義されるものではない。
+- 安全なRSA署名はメッセージのハッシュ値を比較するような単純なものではない。
+- より安全性の高いRSASSA-PSS署名が推奨されている。

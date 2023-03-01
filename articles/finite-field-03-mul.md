@@ -3,7 +3,7 @@ title: "有限体の実装3（Montgomery乗算の紹介）"
 emoji: "🧮"
 type: "tech"
 topics: ["有限体", "mul", "Montgomery乗算", "llvm", "x64"]
-published: false
+published: true
 ---
 ## 初めに
 

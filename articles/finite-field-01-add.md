@@ -12,7 +12,9 @@ published: true
 ## 有限体の実装一覧
 
 - [有限体の実装1（加算）（この記事）](https://zenn.dev/herumi/articles/finite-field-01-add)
-- [有限体の実装2（減算）（この記事）](https://zenn.dev/herumi/articles/finite-field-02-sub)
+- [有限体の実装2（減算）](https://zenn.dev/herumi/articles/finite-field-02-sub)
+- [有限体の実装3（Montgomery乗算の紹介）](https://zenn.dev/herumi/articles/finite-field-03-mul)
+- [有限体の実装4（Montgomery乗算の利用）](https://zenn.dev/herumi/articles/finite-field-04-mul)
 
 ## 有限体の復習
 

@@ -68,4 +68,52 @@ flowchart LR
 したがって、一度Montgomeryの世界に移行し、加減乗算をしばらく実行してから最後に戻ってくることにすれば効率のよい計算ができます。
 
 ## C++によるmontの実装
-前回はPythonによる実装を紹介したので
+前回はPythonによる実装を紹介したので今回はC++による実装を紹介します。
+
+```python
+def mont(x, y):
+  MASK = 2**L - 1
+  t = 0
+  for i in range(N):
+    t += x * ((y >> (L * i)) & MASK) # (A)
+    q = ((t & MASK) * self.ip) & MASK # (B)
+    t += q * self.p # (C)
+    t >>= L # (D)
+  if t >= self.p: # (E)
+    t -= self.p
+  return t
+```
+
+Pythonコードの(A)や(C)はどちらもN桁×1桁をN桁に足し混む操作なので、[mulUnitAdd](articles/bitint-07-gen-asm#mulunitadd%E3%81%AE%E5%A0%B4%E5%90%88)を利用できます。
+ここでtの値は最大2p-1になりえることに注意します（前回の(E)の正当性を確認するところ）。
+pがN * 64ビットの素数の場合2p-1はN * 64 + 1ビットになる場合があるので、その場合はmulUnitAddが使えません。
+ただしBLS12-381などのペアリングで使われる素数は381ビットで2p-1はN * 64ビットに収まります｡
+そこで[pがフルビットでない場合の最適化](https://zenn.dev/herumi/articles/finite-field-02-sub#p%E3%81%8C%E3%83%95%E3%83%AB%E3%83%93%E3%83%83%E3%83%88%E3%81%A7%E3%81%AA%E3%81%84%E5%A0%B4%E5%90%88%E3%81%AE%E6%9C%80%E9%81%A9%E5%8C%96)で紹介したように、pがフルビットかそうでないかによってmontの処理を変えます。
+煩雑なので、ここではフルビットでない場合のコードを紹介します。
+
+```cpp
+template<size_t N>
+static void mulMontNFT(Unit *z, const Unit *x, const Unit *y, const Unit *p)
+{
+    const Unit rp = p[-1]; // p'に相当
+    Unit buf[N * 2]; // tに相当
+    buf[N] = bint::mulUnitT<N>(buf, x, y[0]); // ループ初回の(A)
+    Unit q = buf[0] * rp; // ループ初回の(B)
+    buf[N] += bint::mulUnitAddT<N>(buf, p, q); // ループ初回の(C)
+    for (size_t i = 1; i < N; i++) {
+        buf[N + i] = bint::mulUnitAddT<N>(buf + i, x, y[i]); // (A)
+        q = buf[i] * rp; // (B)
+        buf[N + i] += bint::mulUnitAddT<N>(buf + i, p, q); // (C)
+    }
+    if (bint::subT<N>(z, buf + N, p)) { // (E)
+        bint::copyT<N>(z, buf + N);
+    }
+}
+```
+ループ初回はt = 0に加算するのでadd処理をスキップして直接mulUnitを呼び出します。
+tに相当する変数はbuf[N * 2]と2倍のサイズを確保しておきます。(C)で加算したあと、buf[]をシフトする代わりにアクセスする添え字をずらせば(buf + i)、(D)のLだけ右シフトしたのと同じです。
+pがフルビットの場合は繰り上がり処理がやや複雑になりますが同様にできます(see mulMontT)。
+
+## まとめ
+Montgomery乗算を使って通常の世界とMontgomery乗算がやりやすい世界との移行の話をしました。それからPythonコードに相当するC++コードも紹介しました。
+次回はLLVMを使ったM1 Mac用の実装を紹介します。

@@ -2,14 +2,13 @@
 title: "有限体の実装4（Montgomery乗算の利用）"
 emoji: "🧮"
 type: "tech"
-topics: ["有限体", "mul", "Montgomery乗算", "llvm", "x64"]
+topics: ["有限体", "mul", "Montgomery乗算", "cpp"]
 published: false
 ---
 ## 初めに
 
 [前回](https://zenn.dev/herumi/articles/finite-field-03-mul)はMontgomery乗算を紹介しました。
 今回はこれをどう利用するかとC++での実装の話をします。
-Montgomery乗算は普通の乗算の代わりとなる重要な演算です。
 記事全体の一覧は[有限体の実装一覧](https://zenn.dev/herumi/articles/finite-field-01-add#%E6%9C%89%E9%99%90%E4%BD%93%E3%81%AE%E5%AE%9F%E8%A3%85%E4%B8%80%E8%A6%A7)参照。
 
 ## 記号の復習
@@ -41,7 +40,7 @@ def fromMont(self, x):
 
 ```mermaid
 flowchart LR
-  x --> mul{mul}
+  x --> mul{mul+mod}
   y --> mul
   mul --> xy
   subgraph 入力
@@ -65,12 +64,13 @@ flowchart LR
 - toMont(x) + toMont(y) = toMont(x + y)
 - toMont(x) - toMont(y) = toMont(x - y)
 なども成立します。
-したがって、一度Montgomeryの世界に移行し、加減乗算をしばらく実行してから最後に戻ってくることにすれば効率のよい計算ができます。
+したがって、入力段階で一度Montgomeryの世界に移行し、必要な加減乗算をしばらく実行してから最後に戻ってくれば効率のよい計算ができます。
 
 ## C++によるmontの実装
 前回はPythonによる実装を紹介したので今回はC++による実装を紹介します。
 
 ```python
+# Pythonによる実装（再掲）
 def mont(x, y):
   MASK = 2**L - 1
   t = 0
@@ -92,6 +92,7 @@ pがN * 64ビットの素数の場合2p-1はN * 64 + 1ビットになる場合�
 煩雑なので、ここではフルビットでない場合のコードを紹介します。
 
 ```cpp
+# C++による実装
 template<size_t N>
 static void mulMontNFT(Unit *z, const Unit *x, const Unit *y, const Unit *p)
 {

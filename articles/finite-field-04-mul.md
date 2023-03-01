@@ -66,3 +66,6 @@ flowchart LR
 - toMont(x) - toMont(y) = toMont(x - y)
 なども成立します。
 したがって、一度Montgomeryの世界に移行し、加減乗算をしばらく実行してから最後に戻ってくることにすれば効率のよい計算ができます。
+
+## C++によるmontの実装
+前回はPythonによる実装を紹介したので

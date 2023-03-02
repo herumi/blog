@@ -3,7 +3,7 @@ title: "有限体の実装4（Montgomery乗算の利用）"
 emoji: "🧮"
 type: "tech"
 topics: ["有限体", "mul", "Montgomery乗算", "cpp"]
-published: false
+published: true
 ---
 ## 初めに
 

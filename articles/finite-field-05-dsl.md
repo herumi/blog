@@ -11,7 +11,7 @@ published: true
 記事全体の一覧は[有限体の実装一覧](https://zenn.dev/herumi/articles/finite-field-01-add#%E6%9C%89%E9%99%90%E4%BD%93%E3%81%AE%E5%AE%9F%E8%A3%85%E4%B8%80%E8%A6%A7)参照。
 
 ## LLVM DSL
-[多倍長整数の実装8（LLVMを用いたasmコード生成）](http://localhost:8000/articles/bitint-08-llvm)ではC++によるLLVMコード生成の方法を紹介しました。
+[多倍長整数の実装8（LLVMを用いたasmコード生成）](https://zenn.dev/herumi/articles/bitint-08-llvm)ではC++によるLLVMコード生成の方法を紹介しました。
 あれから同じ機能を持ったPythonによるLLVMコード生成DSLを作ったのでそれを紹介します。
 [s_xbyak_llvm.py](https://github.com/herumi/mcl-ff/blob/main/s_xbyak_llvm.py)はDSLからLLVM IRコード（以下ll）を生成するためのPythonツールです。
 もともとは、C++でJITを実現するための[Xbyak](https://github.com/herumi/xbyak)を開発していたのですが、JITじゃなくてもDSLでアセンブラを掛けるのが便利であることが分かってx64用の[s_xbyak.py](https://github.com/herumi/mcl-ff/blob/main/s_xbyak.py)を開発し（sは静的の意味）、それを今度はLLVMに適用したのです。

@@ -84,7 +84,7 @@ def mont(x, y):
   return t
 ```
 
-Pythonコードの(A)や(C)はどちらもN桁×1桁をN桁に足し混む操作なので、[mulUnitAdd](articles/bitint-07-gen-asm#mulunitadd%E3%81%AE%E5%A0%B4%E5%90%88)を利用できます。
+Pythonコードの(A)や(C)はどちらもN桁×1桁をN桁に足し混む操作なので、[mulUnitAdd](https://zenn.dev/herumi/articles/bitint-07-gen-asm#mulunitadd%E3%81%AE%E5%A0%B4%E5%90%88)を利用できます。
 ここでtの値は最大2p-1になりえることに注意します（前回の(E)の正当性を確認するところ）。
 pがN * 64ビットの素数の場合2p-1はN * 64 + 1ビットになる場合があるので、その場合はmulUnitAddが使えません。
 ただしBLS12-381などのペアリングで使われる素数は381ビットで2p-1はN * 64ビットに収まります｡

@@ -15,6 +15,7 @@ published: true
 - [有限体の実装2（減算）](https://zenn.dev/herumi/articles/finite-field-02-sub)
 - [有限体の実装3（Montgomery乗算の紹介）](https://zenn.dev/herumi/articles/finite-field-03-mul)
 - [有限体の実装4（Montgomery乗算の利用）](https://zenn.dev/herumi/articles/finite-field-04-mul)
+- [有限体の実装5（PythonによるLLVM DSLの紹介）](https://zenn.dev/herumi/articles/finite-field-05-dsl)
 
 ## 有限体の復習
 

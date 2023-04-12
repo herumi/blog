@@ -81,6 +81,8 @@ x64|DSL|DSL + mulx|mcl
 -|-|-|-
 mont|42.86|35.52|28.93
 
+DSLによるMontgomeryの実装は[mcl-ff](https://github.com/herumi/mcl-ff)にあります。
+
 ### 考察
 
 blstのM1(AArch64)用のコードは手で書かれたアセンブラが使われています。DSL+LLVMで生成したコードはその速度にほぼ匹敵します。

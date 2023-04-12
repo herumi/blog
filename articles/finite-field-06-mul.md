@@ -66,7 +66,7 @@ Pythonによる実際に動くコードとほぼ一対一で記述できてい�
 
 ## ベンチマーク評価
 前述のmontがどの程度の性能なのか評価しましょう。
-M1 Mac上では[blst]((https://github.com/supranational/blst)、x64上では[mcl](https://github.com/herumi/mcl)と比較します。
+M1 Mac上では[blst](https://github.com/supranational/blst)、x64上では[mcl](https://github.com/herumi/mcl)と比較します。
 pはBLS署名などで広く使われているBLS12-381に現れる381ビット素数とします。
 
 ### MacBook Pro, M1, 2020, 単位nsec

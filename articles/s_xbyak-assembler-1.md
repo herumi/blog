@@ -116,6 +116,9 @@ add2 endp
 _text ends
 end
 ```
+
+Win64 ABIに合わせて`lea(rax, ptr(x + y))`が`lea rax, [rcx+rdx]`に展開されています。
+
 ### NASM向け出力
 AMD64 (Linux)用なら
 ```

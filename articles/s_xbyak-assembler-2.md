@@ -3,7 +3,7 @@ title: "x64用主要アセンブラの構文差異クイズ"
 emoji: "❓"
 type: "tech"
 topics: ["x64", "ASM", "Python", "Xbyak"]
-published: false
+published: true
 ---
 ## 初めに
 これはx64用JITアセンブラ[Xbyak](https://github.com/herumi/xbyak)や静的アセンブラ[s_xbyak](https://github.com/herumi/s_xbyak)を開発するときに、各種アセンブラの差異についてはまったり調べたりしたことをまとめるにあたり、せっかくなのでクイズ形式にしたものです。
@@ -25,38 +25,38 @@ s_xbyakでは、アドレス参照についてXbyakの`ptr[...]`が`ptr(...)`に
 ## 初級編
 
 ### Q1
-movでraxにrbxの値をコピーする。[答えA1](#A1)
+movでraxにrbxの値をコピーする。[答えA1](#a1)
 
 ### Q2
-raxの値に0x123をaddする。[答えA2](#A2)
+raxの値に0x123をaddする。[答えA2](#a2)
 
 ### Q3
-raxで指定されたアドレスの64bit整数をincする。[答えA3](#A3)
+raxで指定されたアドレスの64bit整数をincする。[答えA3](#a3)
 
 ### Q4
-ラベル`buf`という名前がつけられた8byteの整数データが定義されているとき、それをRIP相対でraxに読み込む。[答えA4](#A4)
+ラベル`buf`という名前がつけられた8byteの整数データが定義されているとき、それをRIP相対でraxに読み込む。[答えA4](#a4)
 
 ## 中級編
 
 ### Q5
-アドレスraxにあるfloat値をブロードキャストしてzmm1にvaddpsしてzmm0に代入する。[答えA5](#A5)
+アドレスraxにあるfloat値をブロードキャストしてzmm1にvaddpsしてzmm0に代入する。[答えA5](#a5)
 
 ### Q6
-zmm1のfloat値16個を負の無限大方向(rd-sae)に丸めてzmm0にvcvtps2dqする。[答えA6](#A6)
+zmm1のfloat値16個を負の無限大方向(rd-sae)に丸めてzmm0にvcvtps2dqする。[答えA6](#a6)
 
 ### Q7
-zmm1のfloat値16個を例外抑制しつつ整数値に銀行丸め(.5は偶数に丸める)でzmm0にvrndscalepsする。[答えA7](#A7)
+zmm1のfloat値16個を例外抑制しつつ整数値に銀行丸め(.5は偶数に丸める)でzmm0にvrndscalepsする。[答えA7](#a7)
 
 ## 上級編
 
 ### Q8
-アドレスraxにあるdouble値2個をxmm0にcvtpd2dqする。[答えA8](#A8)
+アドレスraxにあるdouble値2個をxmm0にcvtpd2dqする。[答えA8](#a8)
 
 ### Q9
-アドレスraxにあるdouble値をm256としてブロードキャストしてxmm0にcvtpd2dqする。[答えA9](#A9)
+アドレスraxにあるdouble値をm256としてブロードキャストしてxmm0にcvtpd2dqする。[答えA9](#a9)
 
 ### Q10
-第2世代Xeon SPで使えるようになったAVX-512 VNNI命令vpdpbusdをAVX-512をサポートしていないAlder Lakeで使えるようにAVX-VNNIとしてエンコードする。[答えA10](#A10)
+第2世代Xeon SPで使えるようになったAVX-512 VNNI命令vpdpbusdをAVX-512をサポートしていないAlder Lakeで使えるようにAVX-VNNIとしてエンコードする。[答えA10](#a10)
 
 ## 回答
 
@@ -66,7 +66,7 @@ zmm1のfloat値16個を例外抑制しつつ整数値に銀行丸め(.5は偶数
 - NASM : `mov rax, rbx`
 - GAS : `mov %rbx, %rax`
 
-GASは引数の順序がIntelのマニュアルと逆順になり、レジスタには`%`をつける必要があります。[問題1](#Q1)
+GASは引数の順序がIntelのマニュアルと逆順になり、レジスタには`%`をつける必要があります。[問題1](#q1)
 
 ### A2
 - Xbyak : `add(rax, 0x123)`
@@ -75,7 +75,7 @@ GASは引数の順序がIntelのマニュアルと逆順になり、レジスタ
 - GAS : `add $0x123, %rax`
 
 MASMは`0x...`という16進数表記はエラーで、`...h`という表記でなければなりません。
-GASは数値の先頭に`$`をつける必要があります。[問題2](#Q2)
+GASは数値の先頭に`$`をつける必要があります。[問題2](#q2)
 
 ### A3
 - Xbyak : `inc(qword[rax])`
@@ -83,7 +83,7 @@ GASは数値の先頭に`$`をつける必要があります。[問題2](#Q2)
 - NASM : `inc qword[rax]`
 - GAS : `incq (%rax)`
 
-サイズを明示するときはGAS以外はメモリ側につけるのですがGASはニーモニックの後ろに添え字をつけます。[問題3](#Q3)
+サイズを明示するときはGAS以外はメモリ側につけるのですがGASはニーモニックの後ろに添え字をつけます。[問題3](#q3)
 
 ### A4
 - s_xbyak : `mov(rax, ptr(rip+'buf'))`
@@ -102,7 +102,7 @@ bufの64bit絶対アドレスをraxに入れる| `mov rax, buf` | `mov rax, buf`
 bufの下位32bitアドレスにある値をraxに入れる| `mov rax, [buf]` | 無い?
 bufへのRIP相対アドレスにある値をraxに入れる| `mov rax, [rel buf]` | `mov rax, qword ptr [buf]` or `mov rax, qword ptr buf`
 
-[問題4](#Q4)
+[問題4](#q4)
 
 ### A5
 - Xbyak : `vaddps(zmm0, zmm1, ptr_b[rax])`
@@ -114,7 +114,7 @@ bufへのRIP相対アドレスにある値をraxに入れる| `mov rax, [rel buf
 今回はfloat(32bit)をzmmレジスタ(512bit)にブロードキャストするので`X = 512/32=16`となります。GASとNASMは`{1to16}`という属性が付与されています。
 しかし、本来ニーモニックとレジスタから`X`の値は一意に決まります。そこでXbyakでは`ptr_b`を採用し、自動的に設定されるようにしました（`b`はbroadcastから）。
 MASMも恐らく同様の考えにより`bcst`を使います。ただしMASMは元のデータサイズ（今回は`dword`）を指定する必要があります。
-s_xbyakでは`ptr_b`から`{1toX}`を求めるために、Intel SDMからニーモニックのパターンを全て抜き出してテーブルを作って対応しました。なかなか面倒でした。[問題5](#Q5)
+s_xbyakでは`ptr_b`から`{1toX}`を求めるために、Intel SDMからニーモニックのパターンを全て抜き出してテーブルを作って対応しました。なかなか面倒でした。[問題5](#q5)
 
 ### A6
 - Xbyak : `vcvtps2dq(zmm0 | T_rd_sae, zmm1)` または `vcvtps2dq(zmm0, zmm1 | T_rd_sae)`
@@ -125,7 +125,7 @@ s_xbyakでは`ptr_b`から`{1toX}`を求めるために、Intel SDMからニー�
 Intel XEDによる逆アセンブラは`vcvtps2dq zmm0{rd-sae}, zmm1`を出力しました。アセンブラによって`{rd-sae}`の指定位置が異なります。
 Xbyakでは場所に悩まないように、どちらのレジスタにつけてもOKにしています。
 MASMはIntelの表記に似てレジスタと`{rd-sae}`の間にコンマはないのですが、NASMは何故かコンマが必要です。`{1toX}`はコンマが要らないので不思議ですね。
-GASは`{rd-sae}`はレジスタじゃないのにそれを含めて逆順にしているので違和感があります。[問題6](#Q6)
+GASは`{rd-sae}`はレジスタじゃないのにそれを含めて逆順にしているので違和感があります。[問題6](#q6)
 
 ### A7
 - Xbyak: `vrndscaleps(zmm0|T_sae, zmm1, 0)` または `vrndscaleps(zmm0, zmm1|T_sae, 0)`
@@ -133,7 +133,7 @@ GASは`{rd-sae}`はレジスタじゃないのにそれを含めて逆順にし�
 - NASM : `vrndscaleps zmm0, zmm1, {sae}, 0`
 - GAS : `vrndscaleps $0, {sae}, %zmm1, %zmm0`
 
-前問の類題で即値を取る場合です。Intel XEDによる逆アセンブラは`vrndscaleps zmm0{sae}, zmm1, 0`を出力しました。やはりアセンブラごとに`{sae}`の場所が違います。NASMやGASは`{sae}`が端にあるというわけではないのですね。[問題7](#Q7)
+前問の類題で即値を取る場合です。Intel XEDによる逆アセンブラは`vrndscaleps zmm0{sae}, zmm1, 0`を出力しました。やはりアセンブラごとに`{sae}`の場所が違います。NASMやGASは`{sae}`が端にあるというわけではないのですね。[問題7](#q7)
 
 ### A8
 - Xbyak : `vcvtpd2dq(xmm0, ptr[rax])` または `vcvtpd2dq(xmm0, xword[rax])`
@@ -154,7 +154,7 @@ MASM|byte ptr|word ptr|dword ptr|qword ptr|xmmword ptr|ymmword ptr|zmmword ptr
 NASM|byte|word|dword|qword|oword|yword|zword
 GAS|b|w|l|q|x|y|z
 
-GASの32bitが`d`ではなく`l`なのに注意。`l`だとlongで64bitかと勘違いしそうです。[問題8](#Q8)
+GASの32bitが`d`ではなく`l`なのに注意。`l`だとlongで64bitかと勘違いしそうです。[問題8](#q8)
 
 ### A9
 - Xbyak : `vcvtpd2dq(xmm0, yword_b[rax])`
@@ -164,7 +164,7 @@ GASの32bitが`d`ではなく`l`なのに注意。`l`だとlongで64bitかと勘
 
 Xbyakではywordとしてブロードキャストするために`yword_b`を使います（ここでは`ptr_b`を使うと`xword_b`となります）。
 GASやNASMでは`{1to4}`があるのでm256とわかるためにサイズを指定する必要はありません。
-MASMは`vcvtpd2dq xmm0, qword bcst ymmword ptr [rax]`と書いてもm128のブロードキャスとして扱われたので[バグ報告](https://developercommunity.visualstudio.com/t/ml64exe-cant-deal-with-vcvtpd2dq-xmm0/10352105)しました。そのうち改善されると思います。[問題9](#Q9)
+MASMは`vcvtpd2dq xmm0, qword bcst ymmword ptr [rax]`と書いてもm128のブロードキャスとして扱われたので[バグ報告](https://developercommunity.visualstudio.com/t/ml64exe-cant-deal-with-vcvtpd2dq-xmm0/10352105)しました。そのうち改善されると思います。[問題9](#q9)
 
 ### A10
 - Xbyak : `vpdpbusd(xmm0, xmm1, xmm2, VexEncoding)`
@@ -173,7 +173,7 @@ MASMは`vcvtpd2dq xmm0, qword bcst ymmword ptr [rax]`と書いてもm128のブ�
 - GAS : `{vex} vpdpbusd %xmm2, %xmm1, %xmm0`
 
 デフォルトでは`{evex}`や`EvexEncoding`を指定したのと同じです。
-NASMでは`{evex}`は指定できてAVX-512としてエンコードされましたが、`{vex}`はエラーになりました。現時点で未対応なのかもしれません（マニュアルには`{vex2}`や`{vec3}`という表記があったのですがどれもエラー）。[問題10](#Q10)
+NASMでは`{evex}`は指定できてAVX-512としてエンコードされましたが、`{vex}`はエラーになりました。現時点で未対応なのかもしれません（マニュアルには`{vex2}`や`{vec3}`という表記があったのですがどれもエラー）。[問題10](#q10)
 
 ## まとめ
 s_xbyakのAVX-512関係の実装のために他のアセンブラでの記法を調べたのですが、改めて構文に細かな違いがあるのに気付きました。

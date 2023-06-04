@@ -80,7 +80,7 @@ $$ {\tt vscalefps}(n, x) = 2^n \times x.$$
 
 ### 四捨五入
 続いてステップの最初の四捨五入に戻ります。
-SSE時代からある`cvtps2dq`（float→int変換）はAVX-512で拡張されて丸めモードを指定できます。しかし、結果はint型なので、小数部を求めたりや前述の`vscalefps`に渡すためにはfloat型に戻さなければなりません。
+SSE時代からある`cvtps2dq`（float→int変換）はAVX-512で拡張されて丸めモードを指定できます。しかし、結果はint型なので、小数部を求めたり前述の`vscalefps`に渡すためにはfloat型に戻さなければなりません。
 SSE4(AVX)で登場した`vroundps`は結果をfloatの型として受け取れますが、AVX-512には拡張されていません。
 そこでAVX-512では`vrndscaleps`を使います。これは $x$ の他に4ビットの $M$ と丸めモードctlを引数にとり、
 

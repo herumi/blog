@@ -58,7 +58,7 @@ for i in range(LN):
   self.logTbl1.append(v)
   self.logTbl2.append(math.log(v))
 ```
-$u$ の計算を `i << (23 - self.L)`ではなく`(i*2+1) << (23 - self.L - 1)`としているのは、上図「テーブル参照」のように、$m$ の下位 $23-L$ ビットを0にすると、いつも切り捨てになってしまうので、`+(1 << (23 - L - 1)`することで四捨五入の効果を狙うためです。
+$u$ の計算を `i << (23 - self.L)`ではなく`(i*2+1) << (23 - self.L - 1)`としているのは、上図「テーブル参照」のように、$m$ の下位 $23-L$ ビットを0にすると、いつも切り捨てになってしまうので、`+(1 << (23 - L - 1))`して四捨五入の効果を狙うためです。
 `v = uint2float(float2uint(v))`はPythonのfloat（つまりCのdouble）を正しくCのfloat値として扱うための処理です。
 [Pythonでfloatの値をfloat32の値に変換する](https://zenn.dev/herumi/articles/float32-in-python#%E5%8E%9F%E5%9B%A0%E3%81%A8%E3%81%AA%E3%81%A3%E3%81%9F%E3%82%B3%E3%83%BC%E3%83%89)というちょっと変わった記事を書いたのは、このテーブルを正しく作成するためでした。
 

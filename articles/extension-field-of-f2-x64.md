@@ -16,7 +16,7 @@ published: false
 Packed Carry-Less MULtiplication Quadwordという命令です。"packed"は整数系SIMD, "carry-less multiplication"はcarryの無い乗算という意味です。SSE版だけでなくAVXやAVX-512版のvpclmulqdqもあります。
 普通の整数乗算は計算途中で繰り上がりが発生します（cf. [多倍長整数の実装4（乗算の基礎）](https://zenn.dev/herumi/articles/bitint-04-mul)）。
 しかし、標数2の体では加法は排他的論理和、乗法は論理積なので繰り上がりがありません。そのため"carry-less"とついています。具体的には[多項式の乗算](https://zenn.dev/herumi/articles/extension-field-of-f2-impl#%E5%A4%9A%E9%A0%85%E5%BC%8F%E3%81%AE%E4%B9%97%E7%AE%97)に現れた式を計算します。
-すなわち、$a=\sum_{i=0}^{n-1} a_i X^i$, $b=\sum_{i=0}^{n-1} b_i X^i$ に対して $c=ab$ としたとき
+すなわち、 $a=\sum_{i=0}^{n-1} a_i X^i$, $b=\sum_{i=0}^{n-1} b_i X^i$ に対して $c=ab$ としたとき
 
 $$
 c_i = \begin{cases}

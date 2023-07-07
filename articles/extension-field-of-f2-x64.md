@@ -46,6 +46,7 @@ xL yL, xL yH, xH yL, xH yHの乗算を計算し、それぞれ重なっている
 xy = ([xH yH] << 128) ^ ([xH yL] << 64) ^ ([xL yH] << 64) ^ [xL yL]
 ```
 ![pclmulqdq](/images/mulqdq.drawio.png)
+64ビット乗算を使った128ビット乗算
 
 この後の $K=𝔽_{2^{128}}$​ におけるmod演算は簡単なビットシフトと排他的論理和をとります。詳細は前述のIntelのPDFをご覧ください。
 

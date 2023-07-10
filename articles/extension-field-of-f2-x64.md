@@ -97,7 +97,37 @@ xの逆数inv(x)に行列yを掛けてimm8を足します。「行列を掛け�
 ```python
 gf2p8affineqb(z, x, y, imm8) # z ← x * y + imm8
 ```
-こちらの面白い使い方についてはまたいずれの機会に。
+## gf2p8affineqbを用いたビット反転(bit reverse)
+ 高速Fourier変換FFTなどではある整数値のbit reverseが必要になることがあります。
+bit reverseとはたとえば8ビット整数a=[a7:a6:a5:a4:a3:a2:a1:a0]ならbitRev(a)=[a0:a1:a2:a3:a4:a5:a6:a7]とすることです。
+bitRevはシフトやorなどのビット演算の組み合わせ、あるいは8ビットテーブル引きをして16ビット整数や32ビット整数のbitRevを実現します。
+ここではgf2p8affineqbを使ったやり方を紹介します。と言っても単純で、前節のAffine変換では単位行列を使った部分を
+```
+00000001 // 0x01
+00000010 // 0x02
+00000100 // 0x04
+00001000 // 0x08
+00010000 // 0x10
+00100000 // 0x20
+01000000 // 0x40
+10000000 // 0x80
+```
+にするだけです。8ビット内でbitRevができれば後はbswapか、複数個同時にするならvpshufbやvpermbを使ってバイト単位の反転をすればよいです。
+
+```python
+def gen_bitRev():
+  with FuncProc('bitRev_gfni'):
+    with StackFrame(1, vNum=2, vType=T_XMM) as sf:
+      x = sf.p[0]
+      bswap(x)
+      vmovq(xmm0, x)
+      mov(rax, 0x8040201008040201)
+      vmovq(xmm1, rax)
+      vgf2p8affineqb(xmm0, xmm0, xmm1, 0)
+      vmovq(rax, xmm0)
+```
+他には8ビット単位でのAx+bの結果が(1<<L)以上かどうかの判定によってL個の(=0判定による)式のandといくつかの式のorのチェックもできますね(たとえば$x_0+x_2+x_3=0 \cap x_1 + x_2 + x_7=0 \cup x_3+x_4+1=0$みたいな)。
+具体的な応用例は今思いつきませんが、はまれば使える部分がありそうです。
 
 ## まとめ
 標数2の拡大体の演算を高速化するためのPCLMULQDQとGFNI命令を紹介しました。暗号用途に追加された命令群ではありますが、それ以外の使い道が無いか考えてみると面白いかもしれません。

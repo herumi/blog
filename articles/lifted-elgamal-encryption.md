@@ -3,7 +3,7 @@ title: "楕円lifted ElGamal暗号の加法準同型性とWasmによる実装例
 emoji: "🧮"
 type: "tech"
 topics: ["liftedElGamal暗号", "楕円曲線", "加法準同型暗号", "wasm"]
-published: false
+published: true
 ---
 ## 初めに
 前回、楕円曲線を使った公開鍵暗号[楕円ElGamal暗号](https://zenn.dev/herumi/articles/elgamal-encryption)を紹介しました。

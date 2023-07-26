@@ -33,10 +33,10 @@ extern "C" int add(int x, int y)
 clangで`-S -O2 -emit-llvm`オプションでコンパイルするとllファイルが生成されます。
 生成されたファイルにはいろいろな付加情報がついていますが、最小限を抜き出すと次のようになります。
 
-```cpp
-define i32 @add(i32 %0, i32 %1) { // 32bitレジスタ%0と%1を引数にもちi32を返す関数
-  %3 = add i32 %1, %0             // 32bit加算をして%3にセット
-  ret i32 %3                      // %3をreturnする
+```llvm
+define i32 @add(i32 %0, i32 %1) { ; 32bitレジスタ%0と%1を引数にもちi32を返す関数
+  %3 = add i32 %1, %0             ; 32bit加算をして%3にセット
+  ret i32 %3                      ; %3をreturnする
 }
 ```
 
@@ -57,9 +57,9 @@ int main()
 }
 ```
 
-```
-clang++-12 -O2 main1.cpp add32.ll
-% ./a.out
+```shell-session
+$ clang++-12 -O2 main1.cpp add32.ll
+$ ./a.out
 0 + 3 = 3
 1 + 4 = 5
 2 + 5 = 7
@@ -74,8 +74,8 @@ clang++-12 -O2 main1.cpp add32.ll
 
 `add`関数に対応するコードは`-S -o - -O2`で確認できます（余計な部分を除去しています）。
 
-```
-clang++-12 -S -O2 -o - add32.ll
+```shell-session
+$ clang++-12 -S -O2 -o - add32.ll
         .text
         .globl  add
 add:
@@ -86,8 +86,8 @@ add:
 `--target`オプションでLLVMがサポートする他のアーキテクチャのasmコードも生成できます。
 たとえばM1などのAArch64なら
 
-```
-% clang++-12 -O2 -S -o - --target=aarch64 add32.ll
+```shell-session
+$ clang++-12 -O2 -S -o - --target=aarch64 add32.ll
         .text
         .globl  add
 add:
@@ -97,8 +97,8 @@ add:
 
 clangが対応しているアーキテクチャは`-print-target`で確認できます。
 
-```
-% clang++-12 -print-targets
+```shell-session
+$ clang++-12 -print-targets
   Registered Targets:
     aarch64    - AArch64 (little endian)
     aarch64_32 - AArch64 (little endian ILP32)
@@ -113,8 +113,8 @@ clangが対応しているアーキテクチャは`-print-target`で確認でき
 ```
 RISC-Vにも対応してます。便利ですね。
 
-```
-clang++-12 -S -o - -O2 --target=riscv64 a.ll
+```shell-session
+$ clang++-12 -S -o - -O2 --target=riscv64 a.ll
         .text
         .globl  add
 add:
@@ -147,17 +147,17 @@ uint64_t mulUnit256(uint256_t *pz, const uint256_t *px, uint64_t y)
 
 このコードのllファイルは
 
-```cpp
+```llvm
 define i64 @mulUnit256(i256* %0, i256* readonly %1, i64 %2) {
-  %4 = load i256, i256* %1    # %1(=px)から256bit読み込んで%4(=x)に代入
-  %5 = zext i256 %4 to i320   # %4を320bitにゼロ拡張
-  %6 = zext i64 %2 to i320    # %2(=y)を320bitにゼロ拡張
-  %7 = mul i320 %5, %6        # 掛けて320bitの値を得る
-  %8 = trunc i320 %7 to i256  # それを256bitに切り捨てて
-  store i256 %8, i256* %0     # %0(=pz)に書き込み
-  %9 = lshr i320 %7, 256      # 残りを256bitシフトして
-  %10 = trunc i320 %9 to i64  # 64bitに切り捨てて
-  ret i64 %10                 # returnする
+  %4 = load i256, i256* %1    ; %1(=px)から256bit読み込んで%4(=x)に代入
+  %5 = zext i256 %4 to i320   ; %4を320bitにゼロ拡張
+  %6 = zext i64 %2 to i320    ; %2(=y)を320bitにゼロ拡張
+  %7 = mul i320 %5, %6        ; 掛けて320bitの値を得る
+  %8 = trunc i320 %7 to i256  ; それを256bitに切り捨てて
+  store i256 %8, i256* %0     ; %0(=pz)に書き込み
+  %9 = lshr i320 %7, 256      ; 残りを256bitシフトして
+  %10 = trunc i320 %9 to i64  ; 64bitに切り捨てて
+  ret i64 %10                 ; returnする
 }
 ```
 
@@ -245,7 +245,7 @@ LLVM IRの主に整数演算命令に対応する関数が用意されていて�
 
 loadNやstoreNはN個分シフトしながら読み書きするサブ関数です。このコードをコンパイルして実行すると
 
-```cpp
+```llvm
 define i64 @mclb_add4(i64* noalias  %r2, i64* noalias  %r3, i64* noalias  %r4)
 {
 %r6 = bitcast i64* %r3 to i256*
@@ -279,8 +279,8 @@ ret i64 %r31
 
 このようなllファイルが作成されます（cf. [mcl/src/bint64.ll](https://github.com/herumi/mcl/blob/master/src/bint64.ll#L238-L266)）。このllファイルをx64用のasmに変換すると
 
-```
-% clang++-12 -S -o - -O2 -masm=intel a.ll
+```shell-session
+$ clang++-12 -S -o - -O2 -masm=intel a.ll
         .text
         .globl  mclb_add4
 mclb_add4:
@@ -303,8 +303,8 @@ mclb_add4:
 
 最適化により冗長なtruncやzest, lshrなどは全て消えて望みのコードが生成されました。もちろんAArch64用のコードも生成できます。
 
-```
-% clang++-12 -S -o - -O2 --target=aarch64 a.ll
+```shell-session
+$ clang++-12 -S -o - -O2 --target=aarch64 a.ll
         .globl  mclb_add4
 mclb_add4:
     ldp     x9, x8, [x1]

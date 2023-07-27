@@ -44,12 +44,12 @@ AVX10の収束バージョン(converged version)は
   - 埋め込みブロードキャスト
   - Pコアのみ
 - AVX10.2
- - 128/256ビット FP/INT(512ビットはオプション)
- - 32個のSIMDレジスタ
- - 8個のマスクレジスタ
- - 256/512(?)ビット埋め込み丸め
- - 埋め込みブロードキャスト
- - Pコア・Eコアサポート
+  - 128/256ビット FP/INT(512ビットはオプション)
+  - 32個のSIMDレジスタ
+  - 8個のマスクレジスタ
+  - 256/512(?)ビット埋め込み丸め
+  - 埋め込みブロードキャスト
+  - Pコア・Eコアサポート
 
 # AVX10アーキテクチャ仕様
 - [The Converged Vector ISA:Intel Advanced Vector Extensions 10](https://cdrdv2.intel.com/v1/dl/getContent/784343)

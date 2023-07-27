@@ -3,7 +3,7 @@ title: "楕円曲線暗号の安全性 DLPとCDHとDDH"
 emoji: "🧮"
 type: "tech"
 topics: ["楕円曲線暗号", "DLP", "CDH", "DDH"]
-published: false
+published: true
 ---
 ## 初めに
 TLSで利用される鍵共有ECDHや、楕円曲線を使ったlifted ElGamal暗号の安全性の根拠について解説します。

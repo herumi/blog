@@ -3,7 +3,7 @@ title: "完全準同型暗号CKKSその1 多項式環"
 emoji: "🧮"
 type: "tech"
 topics: ["完全準同型暗号", "CKKS", "多項式環", "環準同型"]
-published: false
+published: true
 ---
 ## 初めに
 これからしばらく完全準同型暗号の一方式[CKKS (Cheon-Kim-Kim-Song)](https://eprint.iacr.org/2016/421)を紹介します。Microsoftが開発している[SEAL](https://github.com/microsoft/SEAL)などで実装されています。

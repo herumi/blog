@@ -3,7 +3,7 @@ title: "準同型暗号CKKSその3 暗号化・復号と演算"
 emoji: "🧮"
 type: "tech"
 topics: ["準同型暗号", "CKKS", "暗号化", "演算"]
-published: false
+published: true
 ---
 ## 初めに
 今回は準同型暗号CKKSの暗号化・復号と、加算・乗算方法を説明します。

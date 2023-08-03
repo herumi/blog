@@ -1,8 +1,8 @@
 ---
-title: "完全準同型暗号CKKSその2 エンコードとデコード"
+title: "準同型暗号CKKSその2 エンコードとデコード"
 emoji: "🧮"
 type: "tech"
-topics: ["完全準同型暗号", "CKKS", "エンコード", "デコード"]
+topics: ["準同型暗号", "CKKS", "エンコード", "デコード"]
 published: true
 ---
 ## 初めに

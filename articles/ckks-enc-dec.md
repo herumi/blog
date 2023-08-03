@@ -1,13 +1,13 @@
 ---
-title: "完全準同型暗号CKKSその3 暗号化・復号と加算・乗算"
+title: "準同型暗号CKKSその3 暗号化・復号と加算・乗算"
 emoji: "🧮"
 type: "tech"
-topics: ["完全準同型暗号", "CKKS", "暗号化", "加算", "乗算"]
+topics: ["準同型暗号", "CKKS", "暗号化", "加算", "乗算"]
 published: false
 ---
 ## 初めに
-今回は完全準同型暗号CKKSの暗号化・復号処理を解説します。
-記事一覧は[完全準同型暗号CKKSその1 多項式環](https://zenn.dev/herumi/articles/ckks-ring-iso)
+今回は準同型暗号CKKSの暗号化・復号処理を解説します。
+記事一覧は[準同型暗号CKKSその1 多項式環](https://zenn.dev/herumi/articles/ckks-ring-iso)
 
 ## 主な記号の復習
 - $M$ : 4以上の2のべきの形の整数, $N:=M/2$

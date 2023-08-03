@@ -1,20 +1,20 @@
 ---
-title: "完全準同型暗号CKKSその1 多項式環"
+title: "準同型暗号CKKSその1 多項式環"
 emoji: "🧮"
 type: "tech"
-topics: ["完全準同型暗号", "CKKS", "多項式環", "環準同型"]
+topics: ["準同型暗号", "CKKS", "多項式環", "環準同型"]
 published: true
 ---
 ## 初めに
-これからしばらく完全準同型暗号の一方式[CKKS (Cheon-Kim-Kim-Song)](https://eprint.iacr.org/2016/421)を紹介します。Microsoftが開発している[SEAL](https://github.com/microsoft/SEAL)などで実装されています。
+これからしばらく準同型暗号の一方式[CKKS (Cheon-Kim-Kim-Song)](https://eprint.iacr.org/2016/421)を紹介します。Microsoftが開発している[SEAL](https://github.com/microsoft/SEAL)などで実装されています。
 
 ## CKKSの記事一覧
-- [完全準同型暗号CKKSその1 多項式環（この記事）](https://zenn.dev/herumi/articles/ckks-ring-iso)
-- [完全準同型暗号CKKSその2 エンコードとデコード](https://zenn.dev/herumi/articles/ckks-encoding)
-- [完全準同型暗号CKKSその3 暗号化と復号](https://zenn.dev/herumi/articles/ckks-enc-dec)
+- [準同型暗号CKKSその1 多項式環（この記事）](https://zenn.dev/herumi/articles/ckks-ring-iso)
+- [準同型暗号CKKSその2 エンコードとデコード](https://zenn.dev/herumi/articles/ckks-encoding)
+- [準同型暗号CKKSその3 暗号化と復号](https://zenn.dev/herumi/articles/ckks-enc-dec)
 
 ## 完全準同型暗号の概要
-完全準同型暗号FHE(fully homomorphic encryption)とは暗号文を復号することなく、暗号文を操作できる暗号です。数学的には暗号文の加算と乗算を任意回計算できます（演算回数が制限される場合もあります）。
+完全準同型暗号FHE(fully homomorphic encryption)とは暗号文を復号することなく、暗号文を操作できる暗号です。数学的には暗号文の加算と乗算を任意回計算できます（実際には演算回数が制限される場合も多いです）。
 
 ```mermaid
 sequenceDiagram
@@ -34,7 +34,7 @@ sequenceDiagram
 4. それをクライアントに戻します。
 5. 最後にクライアントは$c'$を復号して処理結果$Dec(c')=f(m)$を得られます。
 
-AIサーバに秘密情報を渡さなくてよいので大変ありがたいです。このようなことが出来るように日々研究が進められています。CKKSはFHEの一つで、今まで紹介してきた楕円曲線暗号ではなく格子暗号と呼ばれるジャンルです。実数や複素数係数の多項式を使うため、しばらく多項式に関する数学的な準備をしましょう。ハードな内容ですが、丁寧に説明したつもりなので頑張ってください。
+AIサーバに秘密情報を渡さなくてよいので大変ありがたいです。このようなことが出来るように日々研究が進められています。CKKSは準同型暗号の一つで、今まで紹介してきた楕円曲線暗号ではなく格子暗号と呼ばれるジャンルです。実数や複素数係数の多項式を使うため、しばらく多項式に関する数学的な準備をしましょう。ハードな内容ですが、丁寧に説明したつもりなので頑張ってください。
 
 ## 1のべき乗根
 

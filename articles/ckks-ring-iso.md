@@ -12,6 +12,7 @@ published: true
 - [準同型暗号CKKSその1 多項式環（この記事）](https://zenn.dev/herumi/articles/ckks-ring-iso)
 - [準同型暗号CKKSその2 エンコードとデコード](https://zenn.dev/herumi/articles/ckks-encoding)
 - [準同型暗号CKKSその3 暗号化・復号と演算](https://zenn.dev/herumi/articles/ckks-enc-dec)
+- [準同型暗号CKKSその4 Pythonによる動作確認](https://zenn.dev/herumi/articles/ckks-python-sample)
 
 ## 完全準同型暗号の概要
 完全準同型暗号FHE(fully homomorphic encryption)とは暗号文を復号することなく、暗号文を操作できる暗号です。数学的には暗号文の加算と乗算を任意回計算できます。実際には演算回数が制限される場合も多く、その場合は厳密にはレベルド(leveled)準同型暗号といいます。

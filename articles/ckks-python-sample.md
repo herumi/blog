@@ -3,7 +3,7 @@ title: "準同型暗号CKKSその4 Pythonによる動作確認"
 emoji: "🧮"
 type: "tech"
 topics: ["準同型暗号", "CKKS", "Python"]
-published: false
+published: true
 ---
 ## 初めに
 今回は準同型暗号CKKSの理解を深めるためにPythonによる簡単なサンプルを動かしてみます([ckks.py](https://github.com/herumi/misc/blob/main/crypto/src/ckks.py))。実用的なものでは全く無い（特にレベルの扱いはいいかげん）ので注意してください。

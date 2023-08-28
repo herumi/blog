@@ -159,6 +159,7 @@ catch 5 -> 10
 catch -5 -> -1
 ```
 と、一つ目のC++で投げられた例外はJavaScript側でcatchされ、二つ目は正しくC++内でcatchされていることが分かります。
+サンプルコードは[wasm/exception](https://github.com/herumi/misc/tree/main/wasm/exception)をごらんください。
 
 ### まとめ
 最近私がはまった仕様変更に関わるオプションを紹介しました（例外は違いますが）。たまにしかemccを更新しないと後方互換性が壊されていろいろ痛い目にあいます。こまめに[ChangeLog](https://github.com/emscripten-core/emscripten/blob/main/ChangeLog.md)を確認するとよさそうです。

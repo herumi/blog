@@ -74,3 +74,50 @@ YMM|yes|yes|yes|yes|yes
 ZMM|yes|no|no|yes|yes
 YMM埋め込み丸め|no|no|yes|no|yes
 ZMM埋め込み丸め|yes|no|no|yes|yes
+
+# [APX(Advanced Performance Extension)](https://www.intel.com/content/www/us/en/developer/articles/technical/advanced-performance-extensions-apx.html)
+- 新しいREX2プレフィクス
+- 汎用レジスタ(GPR)が16個→32個
+  - loadが10%, storeが20%減少
+- 3オペランド
+  - 命令数10%減少
+- xsave/xrestorに対応
+  - MPXが廃止された領域を使うのでxsaveのレイアウトと大きさは変更されない
+- push2/pop2命令
+  - 2個のレジスタを転送
+- フラグ変更抑制オプション
+- 既存コードの再コンパイルで対応可能
+
+## 少し詳しく
+- modRM : 16bit自体からレジスタ3bitx2で8個x8個の2オペランド
+  - `[mod:reg:r/m]=[2:3:3]`
+- SIB : メモリ参照の場合のエンコード(即値含む `[eax+ecx*2+4]`など)
+  - `[scale:index:base] = [2:3:3]`
+- REXプレフィクス(AMDによる64bit拡張)
+  - 1bygeのinc/decが無くなった
+  - 1bit使って4bitx2で16個x16個の2オペランド
+- VEXプレフィクス(Vector Extension)
+  - 既存のプレフィクスをまとめて短くする
+  - 66h : オペランドのサイズを変更
+  - f2h, f3h, 0fh 38h, 0f 3ahなど
+  - 3op対応(SIMD/AVXのみ)
+  - les/ldsはreg, regがないのでそれを利用
+- EVEXプレフィクス(Enhanced VEX)
+  - bound(62h)命令の再利用
+  - レジスタ32個の3オペランド
+  - マスクレジスタ、丸めモード、ブロードキャストなどのフラグ
+  - [AVX-512フォーマット詳解](https://www.slideshare.net/herumi/avx512)
+- REX2プレフィクス ← New!
+  - AAD(d5h)命令の再利用
+  - [d5:M0:R4:X4:B4:W:R3:X3:B3]
+  - レジスタが5bit : 32個
+  - EVEXプレフィクスを整数命令にもつけられるようになった
+    - 3オペランド対応
+    - EVEXを更に拡張(Extended EVEX of EVEX instructions!)
+- ccmp/ctest命令
+  - 条件命令を実行するか否かのフラグSCC(souce condition code)をつけられる
+  - 複数のcmpの結果のandならjmp
+- setccの改善
+  - setcc命令は下位8bitを0か1にする(上位bitは変更されない)
+  - 最初にゼロクリアが必要/レジスタの部分書き換え
+  - 上位を0クリアするフラグの追加

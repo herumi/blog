@@ -1,6 +1,6 @@
 ---
 title: "WASM用C++コンパイラemccのコンパイラオプション"
-emoji: "🔤"
+emoji: "📖"
 type: "tech"
 topics: ["WASM", "cpp", "例外", "スタック"]
 published: true

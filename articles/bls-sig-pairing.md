@@ -107,7 +107,7 @@ $$
 
 https://github.com/herumi/bls/blob/c6fb5264e9970a7508da2ef0cd48b8945380d277/src/bls_c_impl.hpp#L209-L223
 
-今回BLS署名のうち、署名が $G_2$ の元となるEthereumタイプの最適化を紹介しましたが、$G_1$ の元となるDFINITYタイプの場合、ペアリングの引数の一つが生成元 $Q$ と固定であることを利用して一部の処理を事前計算しておく最適化もしています。
+今回BLS署名のうち、署名が $G_2$ の元となるEthereumタイプの最適化を紹介しましたが、$G_1$ の元となるDFINITYタイプの場合、ペアリングの引数の一つが生成元 $P_2 \in G_2$ と固定であることを利用して一部の処理を事前計算しておく最適化もしています。
 
 https://github.com/herumi/bls/blob/c6fb5264e9970a7508da2ef0cd48b8945380d277/src/bls_c_impl.hpp#L225-L238
 

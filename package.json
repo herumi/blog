@@ -19,6 +19,6 @@
   "homepage": "https://github.com/herumi/blog#readme",
   "dependencies": {
     "zen-cli": "^0.0.2",
-    "zenn-cli": "^0.1.145"
+    "zenn-cli": "^0.1.146"
   }
 }

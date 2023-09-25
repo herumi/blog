@@ -53,7 +53,7 @@ assertの中は常に`true`です。
 abstract class SIGN {
   abstract keyGenerator(): [PrivateKey, PublicKey];
   abstract sign(s: PrivateKey, m : Uint8Array): Signature;
-  abstract verify(p : PublicKey : m : Uint8Array, σ : Signature): boolean;
+  abstract verify(p : PublicKey, m : Uint8Array, σ : Signature): boolean;
 }
 ```
 

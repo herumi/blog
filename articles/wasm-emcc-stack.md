@@ -1,12 +1,12 @@
 ---
-title: "JavaScriptからWASMのスタックポインタを操作する"
+title: "JavaScriptからWasmのスタックポインタを操作する"
 emoji: "📖"
 type: "tech"
-topics: ["WASM", "JavaScript", "emcc", "cpp", "スタックポインタ"]
+topics: ["Wasm", "JavaScript", "emcc", "cpp", "スタックポインタ"]
 published: true
 ---
 ## 初めに
-JavaScirptからWASMのスタックポインタをemscriptenの関数を用いて操作する方法を紹介します。
+JavaScirptからWasmのスタックポインタをemscriptenの関数を用いて操作する方法を紹介します。
 
 ## スタックポインタ
 ここで、スタックとは関数内で主に一時的に利用される変数のメモリ上における格納領域のことで、スタックポインタ（SP : stack pointer）はそのアドレスを指す識別子です。
@@ -36,7 +36,7 @@ return --> next[次のコード]
 end
 ```
 
-## mcl-wasmにおけるWASMとCとのやりとり
+## mcl-wasmにおけるWasmとCとのやりとり
 暗号ライブラリ[mcl-wasm](https://github.com/herumi/mcl-wasm)は有限体Fpや楕円曲線G1などのクラスのインスタンスは単なるバイト列で、メモリ管理はライブラリを呼び出す側で管理する方針で設計しています。
 
 ```typescript
@@ -48,7 +48,7 @@ abstract class Common {
     this.a_ = new Uint32Array(size / 4)
   }
 ```
-共通の基底クラス`Common`はUint32Arrayの配列`a_`を持ち、四則演算などの様々なメソッドは、`a_`を一端WASM側の関数`malloc`で確保したメモリにコピーしてから利用しています。
+共通の基底クラス`Common`はUint32Arrayの配列`a_`を持ち、四則演算などの様々なメソッドは、`a_`を一端Wasm側の関数`malloc`で確保したメモリにコピーしてから利用しています。
 
 `Common`クラスのメモリ周りの操作メソッド
 ```typescript
@@ -96,9 +96,9 @@ add(x : Fp, y : Fp) => Fp {
 
 毎回メモリ確保+コピー+開放の組み合わせはオーバーヘッドが大きいのですが、mallocしたポインタを使い回すのはデストラクタの無いJavaScriptと相性が悪いので利便性のためにこうしています。高速な処理をしたいときはJavaScript側でメモリ管理を自分で行い、ポインタを保持してダイレクトに操作することはできます。
 
-## emccによるWASMのスタック操作
+## emccによるWasmのスタック操作
 
-malloc/freeは汎用的なメモリ管理なので処理が重たいです。関数`add`の中で必要なx, y, zの領域は一時的に必要ですぐ開放するので本来なら（WASM側の）スタックで管理したいものです。
+malloc/freeは汎用的なメモリ管理なので処理が重たいです。関数`add`の中で必要なx, y, zの領域は一時的に必要ですぐ開放するので本来なら（Wasm側の）スタックで管理したいものです。
 JavaScriptからemccで管理しているスタックを操作する関数が、StackSave, StackAlloc, StackRestoreです。それぞれ次の操作をします。
 
 - StackSave : 現在のスタックポインタの値を返す。
@@ -106,7 +106,7 @@ JavaScriptからemccで管理しているスタックを操作する関数が、
 - StackRestore(sp) : スタックポインタをspの位置に戻す。
 
 これらの関数の実体は[stack_ops.S](https://github.com/emscripten-core/emscripten/blob/main/system/lib/compiler-rt/stack_ops.S)にあります。
-WASMで書かれていますがざっくりとCで表すとこんな実装です。
+Wasmで書かれていますがざっくりとCで表すとこんな実装です。
 
 ```C
 uint8_t*__stack_pointer;
@@ -178,4 +178,4 @@ inv|9.287|9.209
 変動はありますが、大体0.06~0.07usec処理が軽くなっているようです。addやsubは単体の処理が軽いので13%ぐらいの高速化です。意外と効果がありますね。
 
 ### まとめ
-JavaScriptからWASMのスタックを操作する方法を紹介しました。あまり使う機会は無いかもしれませんが、一時用途にmalloc/freeを使っている場合は代替案として有効かもしれません。
+JavaScriptからWasmのスタックを操作する方法を紹介しました。あまり使う機会は無いかもしれませんが、一時用途にmalloc/freeを使っている場合は代替案として有効かもしれません。

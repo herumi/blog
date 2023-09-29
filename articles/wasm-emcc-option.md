@@ -1,15 +1,15 @@
 ---
-title: "WASM用C++コンパイラemccのコンパイラオプション"
+title: "Wasm用C++コンパイラemccのコンパイラオプション"
 emoji: "📖"
 type: "tech"
-topics: ["WASM", "cpp", "例外", "スタック"]
+topics: ["Wasm", "cpp", "例外", "スタック"]
 published: true
 ---
 ## 初めに
-WASM用C++コンパイラツールチェーン[emscripten](https://emscripten.org/)のemccで、自分がはまったオプションをいくつか紹介します。
+Wasm用C++コンパイラツールチェーン[emscripten](https://emscripten.org/)のemccで、自分がはまったオプションをいくつか紹介します。
 
 ## モジュール化
-まず`-s WASM=1`と`-s MODULARIZE=1`が必要です。
+まず`-s Wasm=1`と`-s MODULARIZE=1`が必要です。
 それから、デフォルトではjsファイルとwasmファイルの両方が作られますが、`-s SINGLE_FILE=1`をつけるとjsファイルだけが生成されます。
 wasmファイルはjsの中の`var wasmBinaryFile;`という変数にbase64エンコードされた形で取り込まれています。
 
@@ -147,7 +147,7 @@ EMCC_OPT+=-sNO_DISABLE_EXCEPTION_CATCHING
 EMCC_OPT+=-fexceptions
 ```
 
-いくつかのコードをコンパイルして比べた限りでは両者は同一のWASMファイルを生成しました。有効にして実行すると、
+いくつかのコードをコンパイルして比べた限りでは両者は同一のWasmファイルを生成しました。有効にして実行すると、
 
 ```shell
 node test.js

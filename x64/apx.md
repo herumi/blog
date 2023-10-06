@@ -126,3 +126,13 @@ W|V3|V2|V1|V0|X4|p|p
   - EVEX.NF=1で更新抑制
 
 ### VEX命令のEVEX拡張
+
+R3|X3|B3|R4|B4|M2|M1|M0
+-|-|-|-|-|-|-|-
+W|V3|V2|V1|V0|X4|p|p
+z|L|L|b|V4|a|a|a
+
+- kmov*, bmiなどの命令が昇格する
+- NF=1でフラグ抑制
+  - andn, bextr, blsi, blsmsk, blsr, bzhi
+- Vレジスタ識別子はNDSとしてエンコードされる

@@ -136,3 +136,33 @@ z|L|L|b|V4|a|a|a
 - NF=1でフラグ抑制
   - andn, bextr, blsi, blsmsk, blsr, bzhi
 - Vレジスタ識別子はNDSとしてエンコードされる
+
+APXは次の命令を昇格しない
+- GPRをベースやインデックスレジスタとして利用するメモリオペランドを持っていても、EVEXに対応するベクタレジスタを持たないVEX命令
+
+例
+- aesdec, aesdeclast, aesenc, aesenclastはVEX/EVEX両方
+  - EVEX形式で32個のGPRとSIMDレジスタを利用できる
+- aesimc, aeskeygenassisitはVEXのみ
+  - 16個のGPRとSIMDレジスタしか利用できない
+
+- EVEX.{R4,X4,B4}のどれがのビットが昇格されたVEX命令で利用されなかったらそれは無視される
+- コード生成器はそれらの値を論理0にすべきである
+
+### EVEX命令のEVEX拡張
+- すべてのEVEX命令は拡張EVEXプレフィクスを使うと32個のGPRを利用できる
+- B4とX4を除きEVEXと同じ
+
+## デスティネーションレジスタのマージとゼロ拡張
+このセクションの規則はデスティネーションレジスタがGPRのときにのみ適用される
+
+- APX以前は64ビットモードでは結果は`[OSIZE-1:0]`に入り`[63:OSIZE]`はゼロになった
+- APXではNDDが存在しないときは従来と同じ規則
+- NDDが存在するときは`[63:OSIZE]`がゼロクリアされる
+
+## push2/pop2
+- push2 v64, b64 ; push v64/push b64
+- pop2 v64, b64 ; pop v64/pop b64
+
+## 条件命令の拡張
+後で

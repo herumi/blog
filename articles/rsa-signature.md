@@ -110,7 +110,7 @@ PKCS1-v1_5方式はハッシュ値と固定値を連結していましたが、P
 
 ### RSASSA-PSSの検証
 メッセージmと署名σのペアを受け取ったら、mのハッシュ値hとEM = $σ^e$ mod nを計算します（eは検証鍵）。EMが正しい形であることをチェックしたら分解してmaskedDBとh'を取り出します。
-h'からMGFを使ってmaskを作り、makedDBとxorすることでDBを復元します。DBの形をチェックしてh''とsaltを取り出します。最後にhとsaltから再度hashを取ってh'を作り、h' == h''だったら署名を受理します。
+h'からMGFを使ってmaskを作り、maskedDBとxorすることでDBを復元します。DBの形をチェックしてsaltを取り出します。最後にhとsaltから再度hashを取り、h' == hash(0...0||h||salt)だったら署名を受理します。
 署名するときに入力したsaltをうまく復元して利用していますね。またPKCS1-v1_5と違って署名σだけからはh = Hash(m)を復元できないという特徴もあります。
 
 ![RSASSA-PSSの検証](/images/rsa-pss-verify.png =500x)

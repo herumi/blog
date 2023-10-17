@@ -72,6 +72,9 @@ REX2|7|6|5|4|3|2|1|0
   - CRC32, SHA, RAOなどのレガシーマップ2, 3のAPX拡張はEVEXプレフィクスとして提供される
 - REX2プレフィクスはプレフィクスの最後に置く
   - スタックプレフィクス, OSIZE, ASIZE, LOCK, REPNE, REPEだけが有効
+対応
+- op r1, r2 : B = r1, R = r2
+- op r, [baes+idx*scale+disp] : B = base, R = r, X = scale
 
 ### 新しいデータ転送先NDD(New Data Destination)
 - inc ndd, r/m : ndd = r/m + 1

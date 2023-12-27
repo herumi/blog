@@ -1,20 +1,64 @@
 ---
-title: "Intel APXの解説"
+title: "Intel APXの解説（機能編）"
 emoji: "📖"
 type: "tech"
-topics: ["APX", "x64", "EVEX拡張"]
-published: false
+topics: ["APX", "x64", "ccmpSCC", "ctestSCC"]
+published: true
 ---
 ## 初めに
 Intel APXは既存命令の拡張と新しい命令群のセットです。
-今月始め(2023/12/1)、拙作の[Xbyak](https://github.com/herumi/xbyak)をAPX対応させて、とっても詳しくなった（自称）ので、改めて解説します。
+今月始め (2023/12/1)、拙作の[Xbyak](https://github.com/herumi/xbyak)をAPX対応させて、とっても詳しくなった（自称）ので、改めて解説します。
 APXは主に次の特徴を持ちます。
-- 16個の汎用レジスタGPR r16, ..., r31が追加された。
-- 多くの命令に新しいデータ宛て先NDDが追加されて3オペランド対応した。
+- 16個の汎用レジスタGPR (General-Purpose Register) r16, ..., r31が追加された。
+- 多くの命令に新しいデータ宛て先NDD (New Data Destination) が追加されて3オペランド対応した。
 - 新しい条件命令が追加された。
 - 雑多な機能拡張
   - フラグ更新抑制フラグ
   - setCC/imulのゼロ拡張
+
+## Intelエミュレータsde
+解説の前に準備をしましょう。APXはまだ登場していないCPUの機能なので手元のCPUでは実験できません。Intelが開発エミュレータ[sde (Software Development Emulator)](https://www.intel.co.jp/content/www/jp/ja/download/684897/788820/intel-software-development-emulator.html)を提供しているのでそれを使います。
+リンク先では9.21.1が「最新」と表示されてますが2023/12/27時点で9.27が最新バージョンなので注意しましょう。
+適当にパスを通して`sde -help`で使い方が表示されます。たとえば`sde -gnr -- ./a.out`でGranite Rapidsの機能をエミュレートして`./a.out`を実行します。
+APXを使うには`-future`を指定します。
+
+```bash
+sde -future -- ./a.out
+```
+
+xedを使うと逆アセンブルできます。たとえば
+
+```cpp
+#include <stdio.h>
+#include <xbyak/xbyak.h>
+#include <fstream>
+
+struct Code : Xbyak::CodeGenerator {
+    Code()
+    {
+        add(r20, r21, ptr[r22+r30*4]);
+        sub(r20|T_nf, r21, ptr[r22+r30*4]);
+    }
+};
+
+int main() {
+    Code c;
+    std::ofstream ofs("out.bin", std::ios::binary);
+    ofs.write((const char*)c.getCode(), c.getSize());
+}
+```
+
+というようにコード生成したバイナリデータを`out.bin`というファイルに保存して、
+
+```bash
+% xed -64 -ir out.bin
+XDIS 0: BINARY    APXEVEX    62ACD810032CB6           add r20, r21, qword ptr [r22+r30*4]
+XDIS 7: BINARY    APXEVEX    62ACD8142B2CB6           sub r20, r21, qword ptr [r22+r30*4]
+# end of text section.
+(snip)
+```
+で逆アセンブル結果を見られます。Xbyakを開発するときに無くてはならない機能です。
+それでは準備が整ったので、APXの解説を始めましょう。
 
 ## 新しい汎用レジスタ
 従来x64ではrax, rbx, rcx, rdx, rsi, rdi, rbp, rsp(スタックポインタ)とr8, ..., r15の16個の汎用レジスタがありました。
@@ -25,13 +69,13 @@ APXではそれに加えてr16, ..., r31の64ビットレジスタが追加さ�
 - r16w, ..., r31w
 - r16b, ..., r31b
 
-でアクセスできます。`add(r30, r31)`や`lea(r20, ptr[r16+r8])`のように使えます。
+でアクセスできます。`add(r30d, r31d)`や`lea(r20, ptr[r16+r8])`のように使えます。
 レジスタが増えて複雑な計算中のメモリ退避回数を減らせるため、楕円曲線暗号の実装などで高速化が見込まれます。
 
 ## 3オペランド対応
 `add`や`xor`などの基本的な算術・論理演算命令やシフト命令が3オペランド対応しました。
-`add(dst, src1, rsc2)`で`dst = src1 + src2`を意味します。
-もちろん追加された汎用レジスタも使えるので`add(r20, r21, r22)`と書けます。これだけ見るとRISC系CPUと区別がつかないですね。
+`add(dst, src1, rsc2)`は`dst = src1 + src2`を意味します。
+もちろん追加された汎用レジスタも使えるので`add(r20, r21, r22)`と書けます。これだけ見るともはやRISC系CPUと区別がつかないですね。
 
 ## 新しい条件命令ccmpSCCとctestSCC
 従来の比較命令cmpやテスト命令testの条件つき命令が追加されました。条件にしたがって`eflags`（のOF, SF, ZF, CF）を更新します。
@@ -119,14 +163,52 @@ cmovCC(dst, r, ptr[rax]); // tmp = [rax]; if (CC) { dst = tmp; } else { dst = r;
 ## フラグ更新抑制
 x86は基本的にほぼ全ての演算命令で、演算後の値に応じてeflagsが更新されていました。
 特に多倍長演算の実装では、その仕様が足かせになることがあり、`mulx`や`shlx`などのフラグを更新しない命令が追加されてきました。
-APXではadd, sub, mul, xorなどの命令が3オペランド対応になると同時にフラグ更新を抑制するフラグNF(no flags = status flags update suppression)を指定できるようになりました。
+APXではadd, sub, mul, xorなどの命令が3オペランド対応になると同時にフラグ更新を抑制するフラグNF (no flags = status flags update suppression)を指定できるようになりました。
 アセンブリ言語レベルで、どういう文法になるかは現状では決まっていない（2023/12/1?時点）のでXbyakではAVX-512ライクに`T_nf`をつける文法としました。
 `add(r10, r11, r12);`と異なり`add(r10|T_nf, r11, r12);`はeflagsを更新しません。
 
+[sample/no_flags.cpp](https://github.com/herumi/xbyak/blob/master/sample/no_flags.cpp)
+```cpp
+#include <stdio.h>
+#include <xbyak/xbyak.h>
+
+struct Code : Xbyak::CodeGenerator {
+  Code(bool nf) {
+    xor_(eax, eax); // CF = 0
+    mov(eax, -1);
+    if (nf) {
+      puts("no flags (with T_nf)");
+      add(eax|T_nf, eax, 1); // does not change CF
+    } else {
+      puts("change flags (without T_nf)");
+      add(eax, eax, 1); // CF = 1
+    }
+    adc(eax, 0); // eax = CF ? 1 : 0
+    ret();
+  }
+};
+
+int main() {
+  for (int i = 0; i < 2; i++) {
+    Code c(i);
+    printf("i=%d ret=%d\n", i, c.getCode<int(*)()>()());
+  }
+}
+```
+
+```bash
+% sde -future -- ./a.out
+change flags (without T_nf)
+i=0 ret=1
+no flags (with T_nf)
+i=1 ret=0
+```
+`T_nf`をつけると`CF`が変更されないのを確認できます。
+
 ## setCCのゼロ拡張
 条件CCに従ってレジスタを1か0に設定するsetCC命令は上位ビットを変更しないため事前にゼロクリアする必要があり、非常に使い勝手が悪いものでした。
-それが上位ビットをゼロクリアするフラグZU(zero upper)を指定できるようになりました。こちらも指定文法が不明瞭なため、Xbyakでは`T_zu`をつけることにしました。
-`setz(al|T_zu)`は`rax = (ZF == 1)`という意味になります。`setCC`の他に何故か`imul`だけが`T_zf`を指定できるようになっています。
+それが上位ビットをゼロクリアするフラグZU (zero upper)を指定できるようになりました。こちらも指定文法が不明瞭なため、Xbyakでは`T_zu`をつけることにしました。
+`setz(al|T_zu)`は`rax = (ZF == 1)`という意味になります。`setCC`の他に何故か`imul`だけが`T_zu`を指定できるようになっています。
 
 ccmpSCCの説明で紹介した
 
@@ -151,4 +233,4 @@ sete(al|T_zu);
 
 ## まとめ
 Intel APXの拡張された機能を紹介しました。汎用レジスタ倍増、3オペランド対応の他にフラグ回りの大きい拡張、細かい改良があります。
-CPUとコンパイラが対応したら再コンパイルするだけで性能向上が見込まれるというのも納得できそうです。
+CPUとコンパイラが対応したら再コンパイルするだけで性能向上が見込まれるというのも納得できますね。

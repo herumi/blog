@@ -6,7 +6,7 @@ topics: ["APX", "x64", "rex2", "evex"]
 published: true
 ---
 ## 初めに
-前回、[Intel APXの解説（エンコーディング編）](https://zenn.dev/herumi/articles/intel-apx-architecture)でAPXの機能を紹介しました。
+前回、[Intel APXの解説（機能編）](https://zenn.dev/herumi/articles/intel-apx-architecture)でAPXの機能を紹介しました。
 今回はそれらの命令がどのようにエンコードされているかを紹介します。
 8086からの屋上屋を重ねるかのような、（しかし後方互換性のために必要だった）拡張の歴史を80386から眺めてみましょう。
 
@@ -17,7 +17,7 @@ published: true
 *命令フォーマット*
 プレフィクス|オペコード|ModR/M|SIB|オフセット (displacement)|即値
 -|-|-|-|-|-
-1~4バイト|1~3バイト|1バイト|1バイト|1~4バイト|1~8バイト
+1~4バイト|1~3バイト|1バイト|1バイト|1 or 4バイト|1~8バイト
 
 オペコードが必須、それ以外はオペランドなどに依存して追加されます。
 

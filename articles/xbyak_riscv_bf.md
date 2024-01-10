@@ -3,11 +3,11 @@ title: "RISC-Vの呼び出し規約とXbyak_riscvによるBrainFuckのJITイン�
 emoji: "📖"
 type: "tech"
 topics: ["RISCV", "JIT", "xbyak", "brainfuck"]
-published: false
+published: true
 ---
 ## 初めに
 2022年末から[Xbyak](https://github.com/herumi/xbyak)のRISC-V版[Xbyak_riscv](https://github.com/herumi/xbyak_riscv)を作ってました。
-現在RV32I, RV64I, RV32M, RV64M, RV32A, RV64AとRV32C, RV64Cの一部、Vector Extensionに対応してます。
+現在RV32, RV64のI, fence, M, AとCの一部, Vector Extensionに対応してます。
 しばらく放置してたので全部忘れてしまい、勉強し直すためにBrainFuckのJITインタプリタを作りました。
 
 ## RISC-Vのレジスタと呼び出し規約
@@ -66,6 +66,26 @@ funcX() {
 }
 ```
 jalrとretだけを使っているとraは明示的には見えないので注意してください（はまった人）。
+
+## Xbyak_riscvの文法
+概ねasm構文をC++のメソッド呼び出しにする形で置き換えます。Xbyakと異なり、凝った演算子オーバーライドはしていません。
+
+asm|Xbyak
+-|-
+`add x3, x4, x5`|`add(x3, x4, x5);`
+`ld x3, 16(x4)`|`ld(x3, x4, 16);`
+`sw t0,8(s1)`|`sw(t0, s1, 8);`
+`amoswap.w a0,a1,(a2)`|`amoswap_w(a0, a1, a2);`
+
+- `ld`や`sw`などのメモリ関係の命令はアドレス指定を意味する`()`は取り除いてください。
+- `amoswap.w`などの途中にピリオド`.`がある命令はアンダースコア`_`に置き換えてください。
+
+```cpp
+Label F;
+  beq(a0, x0, F);
+```
+分岐命令もXbyakと同じ使い方です。現状は飛び先が遠いと例外を投げます。
+32ビットオフセット内ならOKにする拡張はそのうち対応します。
 
 ## Brainfuck
 Brainfuckは小さな言語です。

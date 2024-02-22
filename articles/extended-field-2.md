@@ -7,7 +7,7 @@ published: true
 ---
 ## 初めに
 前回、[2次拡大体の基本](https://zenn.dev/herumi/articles/extended-field-1)ではKaratsuba法を用いた乗算の高速化手法を紹介しました。
-今回はその昔(2010年)、[High-Speed Software Implementation of the Optimal Ate Pairing over Barreto–Naehrig Curves](https://link.springer.com/chapter/10.1007/978-3-642-17455-1_2)で提案した（lazy reductionと呼ばれる）手法を紹介します。
+今回はその昔(2010年)、[High-Speed Software Implementation of the Optimal Ate Pairing over Barreto–Naehrig Curves](https://link.springer.com/chapter/10.1007/978-3-642-17455-1_2)でペアリングの拡大体計算に適用した（lazy reductionと呼ばれる）手法を紹介します。
 
 ## Montgomery乗算
 一般に、大きな素数標数 $p$ の有限体の乗算は[Montgomery乗算](https://zenn.dev/herumi/articles/finite-field-03-mul)を使います。

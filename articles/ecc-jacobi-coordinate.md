@@ -3,7 +3,7 @@ title: "楕円曲線暗号のための数学3（ヤコビ座標）"
 emoji: "🧮"
 type: "tech"
 topics: ["楕円曲線暗号", "ヤコビ座標"]
-published: false
+published: true
 ---
 ## 初めに
 [楕円曲線暗号のための数学1（射影座標）](https://zenn.dev/herumi/articles/projective-coordinate)では通常の2次元座標 $(x,y)$ の代わりの射影座標を紹介しました。今回はその亜種のヤコビ（Jacobi）座標を紹介します。
@@ -34,7 +34,23 @@ L=\frac{y_2-y_1}{x_2-x_1}=\frac{Y_2/Z_2^3-Y_1/Z_1^3}{X_2/Z_2^2-X_1/Z_1^2}=\frac{
 $$
 
 分子を $S$, 分母を $T$ として $L=S/T$ として、$x=S^2/T^2-(X_1/Z_1^2+X_2/Z_2)=...$ と計算します。
-詳細は [Jacobian coordinates for short Weierstrass curves](https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian.html)を見てください。
+[楕円暗号の数理（小山謙二, 宮地 充子, 内山成憲, 電子情報通信学会論文誌 A, J82-A(8): 1212-1222）](https://dspace.jaist.ac.jp/dspace/bitstream/10119/4422/1/C-456.pdf)から（微調整して）引用すると、
+
+$P \neq Q$ のときの加算公式
+1. $U_1=X_1 Z_2^2$, $U_2=X_2 Z_1^2$
+1. $S_1=Y_1 Z_2^3$, $S_2=Y_2 Z_1^3$
+1. $H=U_2-U_1$, $r=S_2-S_1$
+7. $X_3=-H^3-2U_1 H^2 + r^2$
+8. $Y_3=-S_1 H^3+ r(U_1 H^2-X_3)$
+9. $Z_3=Z_1 Z_2 H$
+
+2倍算公式
+1. $s=4 X_1 Y_1^2$, $m=3 X_1^2+a Z_1^4$
+1. $X_3=-2s+m^2$
+1. $Y_3=-8 Y_1^4+m(s-X_3)$
+1. $Z_3=2Y_1 Z_1$
+
+です。そのほかの様々な公式の詳細は [Jacobian coordinates for short Weierstrass curves](https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian.html)を見てください。
 
 ## 演算コストの比較
 射影座標とヤコビ座標を使ったときの計算コストを見てみましょう。
@@ -55,4 +71,22 @@ dbl |12M +11A|7M+14A
 $M$ は $A$ よりずっと処理が重たいのでdblが速いヤコビ座標を使ったスカラー倍算が高速です。
 これがヤコビ座標を導入する理由です。
 
-## 混合演算
+## ヤコビ座標とアフィン座標の併用
+バイナリ法によるスカラー倍算（再掲）をよく見ると、加算する値 $P$ は一定です。
+```python
+def mul(P : Ec, n : int):
+  bs = bin(n)[2:]
+  Q = Ec() # zero
+  for b in bs: # 上位ビットから順次計算
+    Q = dbl(Q)
+    if b == '1':
+      Q = add(Q, P)
+  return Q
+```
+もし、$P=[X_1:Y_1:Z_1]$ がアフィン座標（$Z_1=1$）ならば、前節の公式は $Z_1=1$ を仮定して乗算回数を減らせます。
+
+$$
+\text{ヤコビ座標} ← \text{add}(\text{ヤコビ座標}, \text{アフィン座標})
+$$
+
+スカラー倍算全体で減らせる乗算コストが、一度だけヤコビ座標をアフィン座標に変換するコスト（除算）よりも小さければ、$P$ をアフィン座標にしてから計算する方が速くなります。

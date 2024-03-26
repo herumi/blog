@@ -17,7 +17,7 @@ $Z = M^N \bmod{p}$, $Z' = M'^N \bmod{p}$ とする。$Z Z' \equiv = 1 \pmod{p}$ 
 
 ## 通常の乗算からMontgomery乗算への移行
 素数 $p$ の有限体の元 $x$, $y$ についてのMontgomery乗算とは
-.
+
 $$
 mont(x, y) = x y Z' \bmod{p}
 $$

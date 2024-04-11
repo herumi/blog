@@ -52,6 +52,51 @@ $P \neq Q$ のときの加算公式
 
 です。そのほかの様々な公式の詳細は [Jacobian coordinates for short Weierstrass curves](https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian.html)を見てください。
 
+## 加算公式の導出（補足）
+$P \neq Q$ のとき、上記変数の定義を使うと
+
+$$
+L=\frac{S_2-S_1}{Z_1 Z_2(U_2-U_1)}=\frac{r}{Z_1 Z_2 H}=\frac{r}{Z_3},
+$$
+$$
+x_1+x_2=\frac{U_1+U_2}{Z_1^2 Z_2^2}=\frac{2 U_1+H}{Z_1^2 Z_2^2}=\frac{(2U_1+H)H^2}{Z_3^2}.
+$$
+$x_3=L^2-(x_1+x_2)$ より
+
+$$
+x_3 Z_3^2=(L^2-(x_1+x_2))Z_3^2=r^2-(2U_1+H)H^2=X_3.
+$$
+同様に  $y_3=L(x_1-x_3)-y_1$ より
+
+$$
+\begin{align*}
+\begin{split}
+y_3 Z_3^3&= L Z_3 (x_1 Z_3^2 - X_3) - y_1 Z_3^3=r((X_1/Z_1^2)(Z_1 Z_2 H)^2 - X_3) - (Y_1/Z_1^3)(Z_1 Z_2 H)^3\\
+&=r(X_1 Z_2^2 H^2 - X_3) - Y_1 Z_1^3 H^3=r(U_1 H^2-X_3)-S_1 H^3.
+\end{split}
+\end{align*}
+$$
+
+$P = Q$ のとき、
+
+$$
+L=\frac{3 x_1^2+a}{2 y_1}=\frac{3 X_1^2+a Z_1^4}{2 Y_1 Z_1}=\frac{m}{Z_3}.
+$$
+$x_3 = L^2-2x_1$ より
+
+$$
+x_3 Z_3^2=m^2 - 2(X_1/Z_1^2) (2 Y_1 Z_1)^2=m^2- 2(4 X_1 Y_1^2) = X_3.
+$$
+
+$$
+\begin{align*}
+\begin{split}
+y_3 Z_3^3&=L Z_3(x_1 Z_3^2-X_3)-y_1 Z_3^3=m((X_1/Z_1^2) 4 Y_1^2 Z_1^2 - X_3) - (Y_1/Z_1^3) (8 Y_1^3 Z_1^3)\\
+&=m(s-X_3)-8Y_1^4 = Y_3.
+\end{split}
+\end{align*}
+$$
+
 ## 演算コストの比較
 射影座標とヤコビ座標を使ったときの計算コストを見てみましょう。
 ここでは簡単にするために、有限体上の乗算と2乗算を同じコスト M, 加算を A で表し、楕円曲線の方程式は $a=0$ とします。ビットコイン、zkSNARKやBLS署名などで使われる楕円曲線はこの仮定を満たします。

@@ -36,7 +36,7 @@ $$
 分子を $S$, 分母を $T$ として $L=S/T$ として、$x=S^2/T^2-(X_1/Z_1^2+X_2/Z_2)=...$ と計算します。
 [楕円暗号の数理（小山謙二, 宮地 充子, 内山成憲, 電子情報通信学会論文誌 A, J82-A(8): 1212-1222）](https://dspace.jaist.ac.jp/dspace/bitstream/10119/4422/1/C-456.pdf)から（微調整して）引用すると、$R=P+Q=[X_3:Y_3:Z_3]$ として
 
-$P \neq Q$ のときの加算公式
+$x_1 \neq x_2$ のときの加算公式
 1. $U_1=X_1 Z_2^2$, $U_2=X_2 Z_1^2$
 1. $S_1=Y_1 Z_2^3$, $S_2=Y_2 Z_1^3$
 1. $H=U_2-U_1$, $r=S_2-S_1$
@@ -53,7 +53,7 @@ $P \neq Q$ のときの加算公式
 です。そのほかの様々な公式の詳細は [Jacobian coordinates for short Weierstrass curves](https://hyperelliptic.org/EFD/g1p/auto-shortw-jacobian.html)を見てください。
 
 ## 加算公式の導出（補足）
-$P \neq Q$ のとき、上記変数の定義を使うと
+$x_1 \neq x_2$ のとき、上記変数の定義を使うと
 
 $$
 L=\frac{S_2-S_1}{Z_1 Z_2(U_2-U_1)}=\frac{r}{Z_1 Z_2 H}=\frac{r}{Z_3},

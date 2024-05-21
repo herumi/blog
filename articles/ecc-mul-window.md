@@ -17,7 +17,7 @@ $n>0$ を整数として、Ec を楕円曲線の点を表すクラスとして P
 
 ```python
 def mul(P : Ec, n : int):
-  bs = bin(n)[2:]
+  bs = bin(n)[2:] # nを2進数展開
   Q = Ec() # zero
   for b in bs: # 上位ビットから順次計算
     Q = dbl(Q)
@@ -35,3 +35,35 @@ $0, P, 2 P, \dots, 7 P$ を事前に計算しておき、$Q$ を2倍しながら
 *ウィンドウ法*
 ![ウィンドウ法](/images/window-method.png)
 
+```python
+def mulWin(P : Ec, n : int, w : int):
+  l = n.bit_length()
+  mask = (1<<w) - 1
+  Q = Ec() # zero
+  T = [Q]
+  for i in range(1, 2**w):
+    T.append(add(T[i-1], P))
+  for i in reversed(range(0, l, w)):
+    for i in range(w):
+      Q = dbl(Q)
+    idx = (l >> w) & mask
+    if idx > 0:
+      Q = add(Q, T[idx])
+  return Q
+```
+
+
+$n$ が $l$ ビット整数のとき、バイナリ法のコストは $l(D+A/2)$ でした（$D$ が dbl の回数で $A$ が add の回数）。
+ウィンドウ法は $w$ ビットのテーブルを作るのに $2^w-1$ 回の add, ループ内は dbl の回数は変わらず、add の回数は $1/w$ になります。
+したがって、全体では$(2^w-1)A+l(D+A/w)=l D + (2^w+l/w-1)A$.
+
+$l=128, 256, 384$ のとき add の回数が最小になる $w$ を調べると、表のようになりました。
+
+*コストが最小となる $w$ とそのときの $A$ のコスト*
+l|128|256|384
+-|-|-|-
+w|4|4|5
+ウィンドウ法|47|79|108
+バイナリ法|64|128|192
+
+ウィンドウの方がバイナリ法よりも効率がよいことが分かります。

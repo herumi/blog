@@ -15,6 +15,7 @@ published: true
 - [楕円曲線暗号のための数学2（バイナリ法によるスカラー倍算）](https://zenn.dev/herumi/articles/ecc-binary-method)
 - [楕円曲線暗号のための数学3（ヤコビ座標）](https://zenn.dev/herumi/articles/ecc-jacobi-coordinate)
 - [楕円曲線暗号のための数学4（ウィンドウ法）](https://zenn.dev/herumi/articles/ecc-mul-window)
+- [楕円曲線暗号のための数学5（NAF）](https://zenn.dev/herumi/articles/ecc-mul-win-naf)
 
 ## 楕円曲線の定義
 Pythonを使った楕円曲線を実装する話は[楕円曲線暗号のPythonによる実装その2（楕円曲線とECDSA）](https://zenn.dev/herumi/articles/sd202203-ecc-2)でも解説してるので参考にしてください。

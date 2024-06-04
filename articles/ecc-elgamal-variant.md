@@ -1,6 +1,6 @@
 ---
 title: "楕円ElGamal暗号の変種とその安全性"
-emoji: "🧮"
+emoji: "📖"
 type: "tech"
 topics: ["楕円ElGamal暗号", "安全性", "楕円曲線"]
 published: true

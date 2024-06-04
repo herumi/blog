@@ -1,6 +1,6 @@
 ---
 title: "『SSL/TLS実践入門』の気になったところ"
-emoji: "🧮"
+emoji: "📖"
 type: "tech"
 topics: ["TLS", "楕円曲線暗号"]
 published: true

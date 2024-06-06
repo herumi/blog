@@ -148,19 +148,19 @@ $L^3-1=(L-1)(L^2+L+1)=0 \in 𝔽_p$ を解いて $L(\neq 1)$ を求めます（�
 const mcl = require('mcl-wasm');
 
 (async () => {
-  await mcl.init(mcl.BLS12_381) # BLS12-381曲線で初期化
-  const P = mcl.hashAndMapToG1("abc") # 適当な楕円曲線の点を作る
-  P.normalize() # アフィン座標に変換
-  console.log(`P.x=${P.getX().getStr(16)}`) # Pの(x, y)座標を表示
+  await mcl.init(mcl.BLS12_381) // BLS12-381曲線で初期化
+  const P = mcl.hashAndMapToG1("abc") // 適当な楕円曲線の点を作る
+  P.normalize() // アフィン座標に変換
+  console.log(`P.x=${P.getX().getStr(16)}`) // Pの(x, y)座標を表示
   console.log(`P.y=${P.getY().getStr(16)}`)
   const L = new mcl.Fr()
-  L.setStr('0xac45a4010001a40200000000ffffffff') # L を設定
+  L.setStr('0xac45a4010001a40200000000ffffffff') // L を設定
   console.log(`L=${L.getStr(16)}`)
-  const Q = mcl.mul(P, L) # Q = P * L
+  const Q = mcl.mul(P, L) // Q = P * L
   Q.normalize()
-  console.log(`Q.x=${Q.getX().getStr(16)}`) # Qの(x, y)座標を表示
+  console.log(`Q.x=${Q.getX().getStr(16)}`) // Qの(x, y)座標を表示
   console.log(`Q.y=${Q.getY().getStr(16)}`)
-  const w = mcl.div(Q.getX(), P.getX()) # w = Q.x / P.x
+  const w = mcl.div(Q.getX(), P.getX()) // w = Q.x / P.x
   console.log(`w=${w.getStr(16)}`)
 })()
 ```

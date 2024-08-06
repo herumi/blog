@@ -18,6 +18,7 @@ published: true
 - [楕円曲線暗号のための数学5（NAF）](https://zenn.dev/herumi/articles/ecc-mul-win-naf)
 - [楕円曲線暗号のための数学6（GLV法と自己準同型写像）](https://zenn.dev/herumi/articles/ecc-mul-glv-endo)
 - [楕円曲線暗号のための数学7（マルチスカラー倍算概要）](https://zenn.dev/herumi/articles/ecc-multi-scalar-multiplication)
+- [楕円曲線暗号のための数学8（マルチスカラー倍算のパラメータ最適化）](https://zenn.dev/herumi/articles/ecc-multi-scalar-multiplication2)
 
 ## 楕円曲線の定義
 Pythonを使った楕円曲線を実装する話は[楕円曲線暗号のPythonによる実装その2（楕円曲線とECDSA）](https://zenn.dev/herumi/articles/sd202203-ecc-2)でも解説してるので参考にしてください。

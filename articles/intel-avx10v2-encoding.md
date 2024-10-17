@@ -13,7 +13,7 @@ AVX10は256ビットSIMDしか搭載しない非AVX-512 CPUでもAVX-512の機�
 
 ## AVX-512 VNNIとAVX-VNNI
 
-2019年に登場したIce Lake でサポートされた AVX-512 VNNI には `vpdpbusd` という `uint8_t` と `int8_t` の積和命令があります。名前はの途中の `us` は `Unsigned` × `Signed` の意味。
+2019年に登場したIce Lake でサポートされた AVX-512 VNNI には `vpdpbusd` という `uint8_t` と `int8_t` の積和命令があります（名前の途中の `us` は `Unsigned` × `Signed` の意味）。
 その後、AVX-512がサーバ用途向けに舵を切り、コンシューマ向けCPUには256ビットSIMD（YMMレジスタ）までしか載せなくなってから、YMM向けのAVX-VNNIが登場しました。
 例えば `vpdpbusd(ymm1, ymm2, ymm3)` はAVX-512 VNNIでは `62F26D2850CB` に、AVX-VNNIでは `C4E26D50CB` にエンコードにしなくてはなりません。
 Xbyakではそれらを指定するために、Encodingパラメータを指定できるようにしています。
@@ -118,8 +118,8 @@ AVX10.2の新規命令は100種類近くあります。ちまちまと対応し�
 
 命令|昔|現状|今回登場
 -|-|-|-
-vmovd|AVX|AVX512F/AVX10.1|AVX10.2
-vmovw|-|AVX512-FP16/AVX10.1|AVX10.2
+vmovd|AVX (VEX)|AVX512F/AVX10.1 (EVEX)|AVX10.2 (EVEX)
+vmovw|-|AVX512-FP16/AVX10.1 (EVEX)|AVX10.2 (EVEX)
 
 しかし、今回AVX10.2で新たな EVEX エンコーディングが追加されているのです。つまり、`VexEncoding` と `EvexEncoding` では区別がつかないのです。
 こいつのためには AVX10.2 かそれより以前かで区別するしかありません。

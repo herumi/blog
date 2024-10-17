@@ -2,7 +2,7 @@
 title: "Intel AVX10.2の複雑怪奇な命令体系とエンコーディング事情"
 emoji: "📖"
 type: "tech"
-topics: ["EVEX", "AVX512", "AVX10v2", "xbyak"]
+topics: ["EVEX", "AVX512", "AVX10v2", "Xbyak"]
 published: true
 ---
 ## 初めに

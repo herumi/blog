@@ -111,7 +111,7 @@ void uvmul(Vec *z, const Vec *x, const Vec *y)
     t[N] = vadd(t[N], mulUnitAdd(t, vpN, q));
     for (size_t i = 1; i < N; i++) {
         t[N+i] = mulUnitAdd(t+i, x, y[i]); // t += x * y[i]
-        t[i] = vadd(t[i], vpsrlq(t[i-1], W)); // tの最下位だけ正規化
+        t[i] = vadd(t[i], vpsrlq(t[i-1], W));
         q = vmulL(t[i], vrp); // q = mask(t * vrp)
         t[N+i] = vadd(t[N+i], mulUnitAdd(t+i, vpN, q)); // t += p * q
     }

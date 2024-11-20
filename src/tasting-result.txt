@@ -1,0 +1,30 @@
+        cat nasm.lst
+     1 00000000 C5F9C5C003              vpextrw rax, xmm0, 3
+     2 00000005 01C8                    add eax, ecx
+     3 00000007 29D3                    sub ebx, edx
+     4 00000009 DEE9                    fsubp
+     5 0000000B DEE1                    fsubrp
+
+        cat yasm.lst
+     2 00000000 C4E1F9C5C003           vpextrw rax, xmm0, 3
+     3 00000006 01C8                   add eax, ecx
+     4 00000008 29D3                   sub ebx, edx
+     5 0000000A DEE9                   fsubp
+     6 0000000C DEE1                   fsubrp
+
+        cat masm.lst
+ 00000000  C5 F9/ C5 C0 03      vpextrw rax, xmm0, 3
+ 00000005  03 C1                add eax, ecx
+ 00000007  2B DA                sub ebx, edx
+ 00000009  DE E9                fsubp
+ 0000000B  DE E1                fsubrp
+
+gcc -c gas-tasting.s
+objdump -d -M intel gas-tasting.o
+
+   0:   c5 f9 c5 c0 03          vpextrw eax,xmm0,0x3
+   5:   01 c8                   add    eax,ecx
+   7:   de e1                   fsubrp st(1),st
+   9:   de e9                   fsubp  st(1),st
+
+.intel_syntax noprefix

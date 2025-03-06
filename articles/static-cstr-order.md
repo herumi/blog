@@ -6,7 +6,7 @@ topics: ["cpp", "static", "初期化順序", "attribute", "declspec"]
 published: true
 ---
 ## 初めに
-C++のグローバルな静的変数が`main`関数の前に宣言されていると`main`の前に初期化されます。
+C++ではグローバルな静的変数が宣言されていると`main`の前に初期化されます。
 GCCには`__attribute__((constructor))`という[拡張](https://gcc.gnu.org/onlinedocs/gcc/Common-Function-Attributes.html)があり、この属性を関数の前に付けるとその関数が`main`の前に呼ばれます。
 それでは両方使うとどういう順序でなるのか? **C++的には未定義**ですが実験してみました。
 

@@ -1,5 +1,5 @@
 ---
-title: "C++のグローバル静的変数とattribute/declspecによる関数の呼び出し順序制御"
+title: "C++のグローバル静的変数の初期化とattribute/declspecによる関数の呼び出し順序の制御"
 emoji: "📖"
 type: "tech"
 topics: ["cpp", "static", "初期化順序", "attribute", "declspec"]

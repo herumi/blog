@@ -3,7 +3,7 @@ title: "C++のグローバル静的変数とattribute/declspecによる関数の
 emoji: "📖"
 type: "tech"
 topics: ["cpp", "static", "初期化順序", "attribute", "declspec"]
-published: false
+published: true
 ---
 ## 初めに
 C++のグローバルな静的変数が`main`関数の前に宣言されていると`main`の前に初期化されます。
@@ -179,11 +179,28 @@ X3 cstr
 main
 ```
 
-ただ、この方法は将来に渡って動くかの保証はないそうです。
-将来`XCT`サブセクションが登場してぶつかったときのために
+最後に追加したい場合は`XCU`の次の`XCV`（アルファベットUの次はV）を使います。
+将来万一、マイクロソフトが`XCT`サブセクションを追加して、ぶつかったときのために
 
 ```cpp
 #pragma warning(default:5247) // セクション 'section-name' は C++ 動的初期化用に予約されています。
 #pragma warning(default:5248)
 ```
 を付けて警告を有効にしておくとよいかもしれません（まあ当分は無いでしょうが）。
+
+## 複数ファイルの場合
+複数のオブジェクトファイルでそれぞれ初期化コードを実行する場合、上記ルールに「リンク時のオブジェクトファイル順に処理される」というルールに従います。
+GCCの場合にファイルごとに異なるpriorityを指定するとそれが優先されます。
+
+Visual Studioでは同名のサブセクションごとにまとめられてから実行されます。
+したがって、
+- 全てのファイルで`.CRT$XCU`を用いた場合は、「C++の動的初期化→__declspecで登録した関数」をobjごとの順に
+- 全てのファイルで`.CRT$XCT`を用いた場合は、「__declspecで登録した関数をobjごとの順」→「C++の動的初期化をobjごとの順」
+となります。
+
+```
+gcc -c main1.exe main.o sub1.o sub2.o # initMain, X cstr, initSub1, sub1 X cstr, initSub2, sub2 X cstrの順
+gcc -c main2.exe sub2.o main.o sub1.o # initSub2, sub2 X cstr, initMain, X cstr, initSub1, sub1 X cstrの順
+```
+などとなります。
+詳細は[static-cstr](https://github.com/herumi/misc/tree/main/static-cstr)にサンプルコードを置いたので試してみてください。

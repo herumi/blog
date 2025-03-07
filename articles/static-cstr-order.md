@@ -131,8 +131,6 @@ X1 cstr # 1030
 main
 ```
 
-使い道はあまりなさそうですがおもしろいですね。
-
 ## Windows (Visual Studio) の場合
 Visual Studioには残念ながら`__attribute__((constructor))`相当の拡張がありません。
 代わりに次の方法が使われることがあります。
@@ -204,3 +202,8 @@ gcc -c main2.exe sub2.o main.o sub1.o # initSub2, sub2 X cstr, initMain, X cstr,
 ```
 などとなります。
 詳細は[static-cstr](https://github.com/herumi/misc/tree/main/static-cstr)にサンプルコードを置いたので試してみてください。
+
+## まとめ
+ライブラリの実装で初期化関数をC++の規格に従わずに`__attribute__((constructor))`などを使ってどうしても呼び出したい場面というのはありえるでしょう。
+その場合はC++の動的初期化の枠組みよりも先に呼びたいでしょうから`__attribute__((constructor(101)))`などとpriorityを上げた状態でライブラリの初期化関数を呼び出し、その中でファイルごとの初期化関数を明示的に呼ぶとオブジェクトファイルの順序に寄らずに制御できます（完全ではありませんが）。
+そしてWindowsでは`.CRT$XCT`を使うとLinuxとほぼ同じ制御ができるので都合がよいです。

@@ -52,8 +52,8 @@ $$ 2^a = 1 + c[1] a + c[2] a^2 + c[3] a^3 + c[4] a^4 + c[5] a^5. $$
 最終的に次のステップでexp(x)を計算します。
 
 1. $y \leftarrow x \times \log_2(e).$
-1. $n \leftarrow {\tt round}(x).$  ここで ${\tt round}$ は四捨五入関数。
-1. $a \leftarrow x - n.$
+1. $n \leftarrow {\tt round}(y).$  ここで ${\tt round}$ は四捨五入関数。
+1. $a \leftarrow y - n.$
 1. $w=2^a \leftarrow 1 + a(c[1] + a(c[2] + a(c[3] + a(c[4] + a c[5])))).$
 1. $z \leftarrow 2^n.$
 1. return $zw$.
@@ -92,15 +92,15 @@ $$ {\tt ROUND}(x) = 2^{-M} {\tt round}(x \times 2^M, {\tt ctl})$$
 
 $$ x - {\tt ROUND}(x)$$
 
-を直接求める命令です。つまり、上記ステップ3の小数部 $a = x - n$ を先に求めるのです。$n$ は $n=x-a$ として後で求めます。
+を直接求める命令です。つまり、上記ステップ3の小数部 $a = y - n$ を先に求めるのです。$n$ は $n=y-a$ として後で求めます。
 
-- $n \leftarrow {\tt vrndscaleps}(x).$
-- $a \leftarrow x - n.$
+- $n \leftarrow {\tt vrndscaleps}(y).$
+- $a \leftarrow y - n.$
 
 を
 
-- $a \leftarrow {\tt vreduceps}(x).$
-- $n \leftarrow x - a.$
+- $a \leftarrow {\tt vreduceps}(y).$
+- $n \leftarrow y - a.$
 
 とする。$a$ は続く重たい処理であるローラン展開の計算に必要なので先に求められるならその方が都合がよいです。
 加えて、レイテンシは`vrndscaleps`が8clkなのに対して`vreduceps`だと4clkです。より早くローラン展開を開始できます（マニュアルを何度も眺めていて気がついた）。

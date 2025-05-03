@@ -114,6 +114,9 @@ $x$ から1を引き(vsubps)、`0x7fffffff`とアンドをとる(vandps)こと�
 ## 補足（2023/6/15追記）
 AVX-512にはvpermpsの他に5ビットテーブル引きができるvpermi2psという命令もあります。こちらのほうがより精度が高くなるのでよいのですが、使うと若干遅くなってしまいました。それで今回はvpermpsを使っています。
 
+## 補足2
+lpha_zさんが[AVX-512の機能を使ったlogf(x)の実装（その1）](https://lpha-z.hatenablog.com/entry/2023/08/27/231500), [AVX-512の機能を使ったlogf(x)の実装（その2）](https://lpha-z.hatenablog.com/entry/2023/09/03/231500)で改善方法を提示してくださっています。[fmath](https://github.com/herumi/fmath)のAVX-512用`fmath_logf_v`の実装はその手法を採用しました。ありがとうございます。
+
 ## まとめ
 AVX-512を使ったstd::logfの近似計算例を紹介しました。AVX-512にはvgetexppsやvgetmantpsなどの浮動小数点数の指数部や仮数部を得る便利な命令があります。
 vpermpsは小さいテーブル参照として使えると便利です。

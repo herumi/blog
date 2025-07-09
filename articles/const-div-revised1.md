@@ -99,7 +99,7 @@ div7:
 x64のdiv7の`613566757`もAArch64のdiv7の`18725+(9362<<16)`に等しく、同じ定数除算最適化手法を用いていることが伺われます。
 
 ## 定数の求め方
-今回は["Integer division by constatns: optimal bounds" (Lemire, Barlett, Kaser, 2020)](https://arxiv.org/abs/2012.12369)の記法に概ね従いつつ、定式化を紹介しましょう。
+今回は["Integer division by constatns: optimal bounds" (Lemire, Barlett, Kaser, 2020)](https://arxiv.org/abs/2012.12369)を参考にしつつ、定式化しましょう。
 
 まず記号を準備します。$M$ を1以上の整数、割る数 $d \in [1, M]$ を定数とします。
 非負の整数 $a$, $b$ に対して $a$ を $b$ で割った余りを $a \texttt{\%} b$ と書きます。
@@ -112,13 +112,13 @@ $$
 なぜ、こんな数字を定義するかはこの後説明します。
 
 **定理**
-整数 $A \ge d$ をとり、$c :=  \mathrm{ceil}(A/d)=(A+d-1) \texttt{//} d$, $e := d c - A$ とします。
-もし $e M_d < A$ ならば全ての整数 $x \in [0, M]$ について $x \texttt{//} d = (x c)\texttt{//}A$ が成り立つ。
+整数 $m \ge d$ をとり、$c :=  \mathrm{ceil}(m/d)=(m+d-1) \texttt{//} d$, $e := d c - m$ とします。
+もし $e M_d < m$ ならば全ての整数 $x \in [0, M]$ について $x \texttt{//} d = (x c)\texttt{//}m$ が成り立つ。
 
 **解説**
-まず $e$ の構成法から $0 \le e \le d-1 < A$ です。
-$1/d = c/(A+e)$ なので $1/d$ を $c/A$ で近似したときの誤差的なものが $e$ です。
-その $e$ に対して $e M_d < A$ という条件が成り立つ2べきの $A$ が見つかれば、定数除算を乗算+シフト演算に置き換えられるということです。
+まず $e$ の構成法から $0 \le e \le d-1 < m$ です。
+$1/d = c/(m+e)$ なので $1/d$ を $c/m$ で近似したときの誤差的なものが $e$ です。
+その $e$ に対して $e M_d < m$ という条件が成り立つ2べきの $m$ が見つかれば、定数除算を乗算+シフト演算に置き換えられるということです。
 まず定理の証明をしましょう。
 
 **証明**
@@ -126,13 +126,13 @@ $x \in [0, M]$ に対して $(q, r) := \mathrm{divmod}(x, d)$ とします。つ
 このとき
 
 $$
-x c = q d c + r c = q (A + e) + r c = q A + (q e + r c).
+x c = q d c + r c = q (m + e) + r c = q m + (q e + r c).
 $$
 
-$y:=q e + r c$ とおくと、もし $0 \le y < A$ ならば $(x c) \texttt{//} A = q = x \texttt{//} d$ となり証明が完了します。そこで $y$ を $d$ 倍して
+$y:=q e + r c$ とおくと、もし $0 \le y < m$ ならば $(x c) \texttt{//} m = q = x \texttt{//} d$ となり証明が完了します。そこで $y$ を $d$ 倍して
 
 $$
-f(x):=y d = (q e + r c)d = (x - r)e + r(A + e) = e x + A r
+f(x):=y d = (q e + r c)d = (x - r)e + r(m + e) = e x + m r
 $$
 
 として $x$ が $[0, M]$ を動いたときの $f(x)$ の最大値 $B:=\max f(x)$ を考えましょう。
@@ -144,26 +144,26 @@ $(q_0, r_0):=\mathrm{divmod}(M, d)$ とします。
 
 $x$ が0から $M$ まで増えるとき、$r$ は $[0, d-1]$ の範囲を繰り返します。
 $M_d$ は $x\texttt{\%} d$ が $d-1$ になるときの最大の $x$ でした。
-$A$ と $e$ は0以上の定数なので $f(x)$ が最大値を取るのは $(x,r)=(M_d,d-1)$ か $(M,r_0)$ のどちらかです。
+$m$ と $e$ は0以上の定数なので $f(x)$ が最大値を取るのは $(x,r)=(M_d,d-1)$ か $(M,r_0)$ のどちらかです。
 
 ### $M_d=M$ のとき
-$r_0 = d-1$ なので $B=f(M_d) = e M_d + A (d-1)$.
-仮定 $e M_d < A$ より $B < A + A d - A = A d$. よって $\max(y) = \max f(x)/d = A$ が示せました。
+$r_0 = d-1$ なので $B=f(M_d) = e M_d + m (d-1)$.
+仮定 $e M_d < m$ より $B < m + m d - m = m d$. よって $\max(y) = \max f(x)/d = m$ が示せました。
 
 ### $M_d < M$ のとき
-最大値をとる候補は2個 $B_1:=f(M_d)=e M_d + A(d-1)$ か $B_2:=f(M)= eM + A r_0$ です。
+最大値をとる候補は2個 $B_1:=f(M_d)=e M_d + m(d-1)$ か $B_2:=f(M)= eM + m r_0$ です。
 $B_1$ は $M_d=M$ のときと同じなので $B_2$ を考えます。$B_2 < B_1$ を示せば $B=\max(B_1,B_2)=B_1$ となります。
 
 $M_d < M$ つまり $r_0 \le d-2$ かつ $M= M_d + 1 + r_0$ を代入すると
 
 $$
 \begin{align*}
-B_1-B_2&=(d-1-r_0)A - e(M - M_d)=(d-1-r_0)A - e(1 + r_0)\\
-& \ge (d-1-(d-2)) A - e(1 + d-2) = A - e d + e \ge d(c - e) \ge 0.
+B_1-B_2&=(d-1-r_0)m - e(M - M_d)=(d-1-r_0)m - e(1 + r_0)\\
+& \ge (d-1-(d-2)) m - e(1 + d-2) = m - e d + e \ge d(c - e) \ge 0.
 \end{align*}
 $$
 
-$c \ge e$ は $e M_d < A$ と $d-1 \le M_d$ から $e(d-1) < A = c d - e$ から従います。
-いずれのときも $B=\max f(x) = f(M_d) < A d$ が示せました。
+$c \ge e$ は $e M_d < m$ と $d-1 \le M_d$ から $e(d-1) < m = c d - e$ から従います。
+いずれのときも $B=\max f(x) = f(M_d) < m d$ が示せました。
 
 長くなってのでひとまずここまで。

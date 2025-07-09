@@ -99,7 +99,7 @@ div7:
 x64のdiv7の`613566757`もAArch64のdiv7の`18725+(9362<<16)`に等しく、同じ定数除算最適化手法を用いていることが伺われます。
 
 ## 定数の求め方
-今回は["Integer division by constatns: optimal bounds" (Lemire, Barlett, Kaser, 2020)](https://arxiv.org/abs/2012.12369)を参考にしつつ、定式化しましょう。
+今回は["Integer division by constatns: optimal bounds" (Lemire, Barlett, Kaser, 2020)](https://arxiv.org/abs/2012.12369)を参考にしつつ、定式化しましょう（今回紹介する定理は論文とは見かけが異なりますが同値なものです）。
 
 まず記号を準備します。$M$ を1以上の整数、割る数 $d \in [1, M]$ を定数とします。
 非負の整数 $a$, $b$ に対して $a$ を $b$ で割った余りを $a \texttt{\%} b$ と書きます。

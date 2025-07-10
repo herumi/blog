@@ -159,11 +159,11 @@ $M_d < M$ つまり $r_0 \le d-2$ かつ $M= M_d + 1 + r_0$ を代入すると
 $$
 \begin{align*}
 B_1-B_2&=(d-1-r_0)A - e(M - M_d)=(d-1-r_0)A - e(1 + r_0)\\
-& \ge (d-1-(d-2)) A - e(1 + d-2) = A - e d + e \ge d(c - e) \ge 0.
+& \ge (d-1-(d-2)) A - e(1 + d-2) = A - e d + e \ge d(c - e) > 0.
 \end{align*}
 $$
 
-$c \ge e$ は $e M_d < A$ と $d-1 \le M_d$ から $e(d-1) < A = c d - e$ から従います。
+$c > e$ は $e M_d < A$ と $d-1 \le M_d$ から $e(d-1) < A = c d - e$ から従います。
 いずれのときも $B=\max f(x) = f(M_d) < A d$ が示せました。
 
 またこの定理により、$M_d$ という値が重要な定数であることが分かりました。

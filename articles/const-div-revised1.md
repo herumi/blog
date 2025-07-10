@@ -18,19 +18,19 @@ $$
 n \texttt{//} d := \mathrm{floor}(n/d).
 $$
 
-大抵のCPUは整数の論理右シフト命令を持ち、それにより2べきの整数 $m=2^a$ による除算は高速に実行できます。
+大抵のCPUは整数の論理右シフト命令を持ち、それにより2べきの整数 $A=2^a$ による除算は高速に実行できます。
 
 $$
 n \texttt{//} 2^a = n \texttt{>>} a.
 $$
 
-そこで前もって $1/d$ に近くなるような整数 $c$ と2べきの整数 $m$ を選びます。
+そこで前もって $1/d$ に近くなるような整数 $c$ と2べきの整数 $A$ を選びます。
 
 $$
-1/d \sim c / m.
+1/d \sim c / A.
 $$
 
-そして $n \texttt{//} d \sim (n \times c)/m = (n \times c)\texttt{>>}a$ と除算を乗算1回と右シフト1回に変換するのが定数除算のアイデアです。
+そして $n \texttt{//} d \sim (n \times c)/A = (n \times c)\texttt{>>}a$ と除算を乗算1回と右シフト1回に変換するのが定数除算のアイデアです。
 1970年代から提案され, Barret Reductionと呼ばれる手法の論文  "Implementing the Rivest Shamir and Adleman Public Key Encryption Algorithm on a Standard Digital Signal Processor"(Barret, CRYPTO'86) が有名です。
 近似なのでどううまく $c$ や $a$ をとると誤差が小さくなるかがポイントです。
 そして["Division by Invariant Integers using Multiplication"(Granlund, Montgomery, SIGPLAN 1994)](https://gmplib.org/~tege/divcnst-pldi94.pdf) とその改善版『Hacker's Delight 1st. edition』(Warren, 2002)アルゴリズムがGCC/Clang/Visual Studioなどのコンパイラに組み込まれています（と思われます）。
@@ -112,13 +112,13 @@ $$
 なぜ、こんな数字を定義するかはこの後説明します。
 
 **定理**
-整数 $m \ge d$ をとり、$c :=  \mathrm{ceil}(m/d)=(m+d-1) \texttt{//} d$, $e := d c - m$ とします。
-もし $e M_d < m$ ならば全ての整数 $x \in [0, M]$ について $x \texttt{//} d = (x c)\texttt{//}m$ が成り立つ。
+整数 $A \ge d$ をとり、$c :=  \mathrm{ceil}(A/d)=(A+d-1) \texttt{//} d$, $e := d c - A$ とします。
+もし $e M_d < A$ ならば全ての整数 $x \in [0, M]$ について $x \texttt{//} d = (x c)\texttt{//}A$ が成り立つ。
 
 **解説**
-まず $e$ の構成法から $0 \le e \le d-1 < m$ です。
-$1/d = c/(m+e)$ なので $1/d$ を $c/m$ で近似したときの誤差的なものが $e$ です。
-その $e$ に対して $e M_d < m$ という条件が成り立つ2べきの $m$ が見つかれば、定数除算を乗算+シフト演算に置き換えられるということです。
+まず $e$ の構成法から $0 \le e \le d-1 < A$ です。
+$1/d = c/(A+e)$ なので $1/d$ を $c/A$ で近似したときの誤差的なものが $e$ です。
+その $e$ に対して $e M_d < A$ という条件が成り立つ2べきの $A$ が見つかれば、定数除算を乗算+シフト演算に置き換えられるということです。
 まず定理の証明をしましょう。
 
 **証明**
@@ -126,13 +126,13 @@ $x \in [0, M]$ に対して $(q, r) := \mathrm{divmod}(x, d)$ とします。つ
 このとき
 
 $$
-x c = q d c + r c = q (m + e) + r c = q m + (q e + r c).
+x c = q d c + r c = q (A + e) + r c = q A + (q e + r c).
 $$
 
-$y:=q e + r c$ とおくと、もし $0 \le y < m$ ならば $(x c) \texttt{//} m = q = x \texttt{//} d$ となり証明が完了します。そこで $y$ を $d$ 倍して
+$y:=q e + r c$ とおくと、もし $0 \le y < A$ ならば $(x c) \texttt{//} A = q = x \texttt{//} d$ となり証明が完了します。そこで $y$ を $d$ 倍して
 
 $$
-f(x):=y d = (q e + r c)d = (x - r)e + r(m + e) = e x + m r
+f(x):=y d = (q e + r c)d = (x - r)e + r(A + e) = e x + A r
 $$
 
 として $x$ が $[0, M]$ を動いたときの $f(x)$ の最大値 $B:=\max f(x)$ を考えましょう。
@@ -144,27 +144,27 @@ $(q_0, r_0):=\mathrm{divmod}(M, d)$ とします。
 
 $x$ が0から $M$ まで増えるとき、$r$ は $[0, d-1]$ の範囲を繰り返します。
 $M_d$ は $x\texttt{\%} d$ が $d-1$ になるときの最大の $x$ でした。
-$m$ と $e$ は0以上の定数なので $f(x)$ が最大値を取るのは $(x,r)=(M_d,d-1)$ か $(M,r_0)$ のどちらかです。
+$A$ と $e$ は0以上の定数なので $f(x)$ が最大値を取るのは $(x,r)=(M_d,d-1)$ か $(M,r_0)$ のどちらかです。
 
 ### $M_d=M$ のとき
-$r_0 = d-1$ なので $B=f(M_d) = e M_d + m (d-1)$.
-仮定 $e M_d < m$ より $B < m + m d - m = m d$. よって $\max(y) = \max f(x)/d = m$ が示せました。
+$r_0 = d-1$ なので $B=f(M_d) = e M_d + A (d-1)$.
+仮定 $e M_d < A$ より $B < A + A d - A = A d$. よって $\max(y) = \max f(x)/d = A$ が示せました。
 
 ### $M_d < M$ のとき
-最大値をとる候補は2個 $B_1:=f(M_d)=e M_d + m(d-1)$ か $B_2:=f(M)= eM + m r_0$ です。
+最大値をとる候補は2個 $B_1:=f(M_d)=e M_d + A(d-1)$ か $B_2:=f(M)= eM + A r_0$ です。
 $B_1$ は $M_d=M$ のときと同じなので $B_2$ を考えます。$B_2 < B_1$ を示せば $B=\max(B_1,B_2)=B_1$ となります。
 
 $M_d < M$ つまり $r_0 \le d-2$ かつ $M= M_d + 1 + r_0$ を代入すると
 
 $$
 \begin{align*}
-B_1-B_2&=(d-1-r_0)m - e(M - M_d)=(d-1-r_0)m - e(1 + r_0)\\
-& \ge (d-1-(d-2)) m - e(1 + d-2) = m - e d + e \ge d(c - e) \ge 0.
+B_1-B_2&=(d-1-r_0)A - e(M - M_d)=(d-1-r_0)A - e(1 + r_0)\\
+& \ge (d-1-(d-2)) A - e(1 + d-2) = A - e d + e \ge d(c - e) \ge 0.
 \end{align*}
 $$
 
-$c \ge e$ は $e M_d < m$ と $d-1 \le M_d$ から $e(d-1) < m = c d - e$ から従います。
-いずれのときも $B=\max f(x) = f(M_d) < m d$ が示せました。
+$c \ge e$ は $e M_d < A$ と $d-1 \le M_d$ から $e(d-1) < A = c d - e$ から従います。
+いずれのときも $B=\max f(x) = f(M_d) < A d$ が示せました。
 
 またこの定理により、$M_d$ という値が重要な定数であることが分かりました。
 

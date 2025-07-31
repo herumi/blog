@@ -10,6 +10,9 @@ published: true
 除算を避けるために[Montgomery乗算](https://zenn.dev/herumi/articles/finite-field-03-mul)を紹介していましたが、除算が必要になる場面はどうしてもあります。
 ここでは手始めにuint32_tを対象としたコンパイラに組み込まれている定数除算最適化アルゴリズムを紹介します。
 
+- [定数除算最適化再考1（このページ）](https://zenn.dev/herumi/articles/const-div-revised1)
+- [定数除算最適化再考2](https://zenn.dev/herumi/articles/const-div-revised2)
+
 ## 定数除算の最適化のアイデア
 `uint32_t`などの符号なし整数 $n$ を同じく符号なし整数 $d$ で除算することを考えます。このとき余りは切り捨てます。
 ここではPythonの除算記号`//`を使って $n \texttt{//} d$ と書くことにします。

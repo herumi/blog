@@ -38,7 +38,7 @@ $A$ は $d$ より大きい2べきの整数から始めればよいので $a=\ma
 static const uint32_t M = 0xffffffff;
 bool init(uint32_t d)
 {
-    const uint32_t M_d = M - ((M+1)%d);
+    const uint32_t M_d = M - uint32_t((uint64_t(M)+1)%d);
     assert(d < 0x80000000);
     for (uint32_t a = ceil_ilog2(d); a < 64; a++) {
         uint64_t A = uint64_t(1) << a;

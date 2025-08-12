@@ -12,6 +12,7 @@ published: true
 
 - [定数除算最適化再考1（このページ）](https://zenn.dev/herumi/articles/const-div-revised1)
 - [定数除算最適化再考2](https://zenn.dev/herumi/articles/const-div-revised2)
+- [定数除算最適化再考3 コンパイラを越えろ](https://zenn.dev/herumi/articles/const-div-revised3)
 
 ## 定数除算の最適化のアイデア
 `uint32_t`などの符号なし整数 $n$ を同じく符号なし整数 $d$ で除算することを考えます。このとき余りは切り捨てます。

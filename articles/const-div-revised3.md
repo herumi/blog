@@ -7,7 +7,8 @@ published: true
 ---
 ## 初めに
 整数の定数除算最適化の続きです。
-今回は[前回](https://zenn.dev/herumi/articles/const-div-revised2)紹介した最適化コンパイラの生成するコードを改善する話です。
+今回は[前回](https://zenn.dev/herumi/articles/const-div-revised2)紹介した最適化コンパイラの生成するコードを改善します。
+[Kernel/VM探検隊@東京 No18](https://kernelvm.connpass.com/event/355100/)で発表した[定数整数除算最適化再考 ](https://speakerdeck.com/herumi/constant-integer-division-faster-than-compiler-generated-code)の詳細な話です。
 
 $d > 2^{30}$ のときは1回の比較、$d$ が2の巾のときは右シフト、$c$ が32ビットに入るとき(e.g. $d=3$)は乗算+右シフトでこれ以上は改善できないので残りの $c$ が33ビットのとき(e.g. $d=7$)を考えます。
 数えたところ $2^{31}$ 個中23%が今回の対象になります。

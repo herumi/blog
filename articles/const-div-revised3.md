@@ -191,7 +191,7 @@ x64版と同じくmul32が一番よいということが分かりました。
 ```cpp
 uint32_t div7opti(uint32_t x)
 {
-    uint64_t v = x * uint64_t(c);
+    uint64_t v = x * uint64_t(c & 0xffffffff);
     v >>= 32;
     v += x;
     v >>= a  - 32;

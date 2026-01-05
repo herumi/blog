@@ -63,6 +63,7 @@ void check2()
 
 Linuxは `-fopenmp` のみでOKですが、Macは `-Xpreprocessor -fopenmp` としなければなりません。順序を変えて `-fopenmp -Xpreprocessor` とするとエラーになります。またリンカオプションも必要です。
 Windowsはデフォルトの `/openmp` だけだと古いバージョンになるので `/openmp:llvm` をつけます（それでも古いのですが）。
+つけると `for` ループの変数が符号なしでもエラーにならないことをさっき知りました。
 
 手元のXeon w9-3495Xで `check1` と `check2` を実行したところ次のようになりました。
 

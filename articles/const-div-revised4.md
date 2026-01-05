@@ -63,6 +63,7 @@ $$
 
 ```cpp
 uint32_t udiv7(uint32_t x) {
+  typedef __attribute__((mode(TI))) unsigned int uint128_t;
   uint128_t cs = uint128_t(c) << (64 - a);
   return (uint32_t)((x * cs) >> 64);
 }

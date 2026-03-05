@@ -8,6 +8,7 @@ published: true
 ## 初めに
 NOPとはNo Operationというx86における何もしない命令です。
 ここでは多種多様なNOPを紹介します。
+※記事のタイトルは昔[ネタスライド](https://speakerdeck.com/herumi/the-nops-you-dont-know)を公開したときのものを流用。
 
 ## 1バイトの何もしない命令
 太古の8086時代からxchg r1, r2というレジスタr1とr2の中身を交換する命令 (exchange) がありました。xchgはr1とr2が同じレジスタのときは同じレジスタを入れ換えるので実質何もしません（フラグも変更しない）。
@@ -160,7 +161,8 @@ endbr64|F3 0F 1E FAh
 
 CETが有効なときにcall/jmpの間接ジャンプ先がこの命令でないと#CP(control protection exception)が発生します。CET非対応CPUではendbr64はnopとして扱われるので、CETが有効なときはセキュリティ機構が働き、無効なときは何もしないという動作になります。
 
-Intel MPX(Memory Protection Extensions)という配列境界を実行時にチェックする仕組みでbndldkといった命令があり、非対応CPUではnopになるのですが、そもそもあまり普及しなかったためdeprecatedになってしまいました。
+他にはIntel MPX(Memory Protection Extensions)という配列境界を実行時にチェックする仕組みが追加されたこともあります。
+bndldxなどの命令で、非対応CPUではやはりnopになるのですが、あまり普及しなかったため2019年にdeprecatedになってしまいました。
 
 ### 最近のprefetch系
 命令の先読みをより細かく制御するためのprefetchit0, prefetchit1がGranite Rapids (2024)で対応されました。

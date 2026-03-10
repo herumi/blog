@@ -74,7 +74,7 @@ test:
    xorl    %ecx, %ecx
    movl    $2938661835, %edx               # imm = 0xAF286BCB
    .p2align    4, 0x90
- ..lp:
+ .lp:
    movl    %ecx, %esi
    xorl    %eax, %esi
    # ↓ここから
@@ -111,7 +111,7 @@ test:
    xorl    %edi, %eax
    incl    %ecx
    cmpl    $1000000000, %ecx               # imm = 0x3B9ACA00
-   jne ..lp
+   jne .lp
 ```
 
 遅いdiv命令を避けて、乗算と加減算やビットシフトの組み合わせのなかなか複雑なコードが生成されています。次は改良版です。
@@ -124,7 +124,7 @@ test:
     movabsq $970881267157434368, %rdi       # imm = 0xD79435E58000000
     movabsq $172399477334736896, %r8        # imm = 0x2647C6946000000
     .p2align    4
-..lp:
+.lp:
     movl    %ecx, %edx
     xorl    %eax, %edx
     mulxq   %rsi, %r9, %r9 # x/7に対応
@@ -139,7 +139,7 @@ test:
     xorl    %r10d, %eax
     incl    %ecx
     cmpl    $1000000000, %ecx
-    jne ..lp
+    jne .lp
 ```
 最初のコードで「↓ここから...↑ここまで」の部分がmulxq命令1個に置き換わり、ループ内で分岐処理以外が28命令だったものが12命令に減りました。
 

@@ -12,7 +12,7 @@ published: true
 記事全体の一覧は[有限体の実装一覧](https://zenn.dev/herumi/articles/finite-field-01-add#%E6%9C%89%E9%99%90%E4%BD%93%E3%81%AE%E5%AE%9F%E8%A3%85%E4%B8%80%E8%A6%A7)参照。
 
 ## 記号の復習
-$p$は$N$ 個の`uint64_t`で表現できる素数, $M=2^{64}$, $M' M - p' p = 1$ となる整数 $0 < M' < p$, $0 < p' < M$ を選んでおく。
+$p$は$N$ 個の`uint64_t`で表現できる素数, $M=2^{64}$, $M' := M^{-1} \pmod{p}$, $p':=(-p)^{-1} \pmod{M}$ となる整数 $0 < M' < p$, $0 < p' < M$ を選んでおく。
 $Z = M^N \bmod{p}$, $Z' = M'^N \bmod{p}$ とする。$Z Z' \equiv 1 \pmod{p}$ である。
 
 ## 通常の乗算からMontgomery乗算への移行

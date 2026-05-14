@@ -9,7 +9,7 @@ published: true
 ML-KEMは耐量子計算機暗号PQC(Post-Quantum Cryptography)の一つで、2024年NICTで標準化され、既にChrome/Edge/Firefox/Safariなどの主要ブラウザで利用できます。
 ML-KEMは多項式の乗算を多用するのですが、その高速化のためにNTT(Number Theoretic Transform)というFFTに類似の手法が用いられます。
 [mlkem-native](https://github.com/pq-code-package/mlkem-native)はML-KEMの実装の一つで、NTTのAVX2などによる最適化実装を提供しています。
-ここではそこで用いられている手法を解説します。
+ここではNTTではなく、そこで用いられているSIMD実装向けMontgomeryzy乗算の最適化手法を解説します。
 
 ## Montgomery乗算の基本
 ML-KEMでは素数 $p=3329$ の有限体 $𝔽_p=\{0, 1, \dots, p-1\}$ における乗算 $a b \bmod{p}$ ( $a, b ∈ 𝔽_p$ ) が頻出します。

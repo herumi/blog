@@ -150,4 +150,4 @@ vpsubw %ymm\x,%ymm\b,%ymm\b
 .endm
 ```
 
-次回はAArch64で使われているテクニックを解説します。
+次回はAArch64で使われているテクニックを解説します。[ML-KEMのNTTにおけるMontgomery乗算の最適化手法詳解2](https://zenn.dev/herumi/articles/ml-kem-montgomery2)

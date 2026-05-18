@@ -54,7 +54,7 @@ $|x/(R/2)|<1$ なので $|t_1-xy/p|≦ε_1+ε_2≦1/2+1/2=1$.
 
 ## AArch64での実装
 AArch64のSIMD命令にはAVXの `vpmulhrsw` に相当する命令として `sqrdmulh` があります（ $x=y=-32768$ のときの挙動は異なるが今回はそのような値は入力されない）。
-また AVXとことなり整数に対する積和演算を搭載するため、`mls(t2, t1, p) = t2 - t1 * p` を用いるとAVXより1命令減らせて
+また AVXと異なり整数に対する積和演算を搭載するため、`mls(t2, t1, p) = t2 - t1 * p` を用いるとAVXより1命令減らせて
 
 ```cpp
 int modp1_aarch64(int x, int y, int z) {
@@ -74,7 +74,7 @@ int mls(int acc, int x, int y) {
 }
 ```
 
-とできます。
+とできます。AVXにも整数の積和演算命令があったらよかったですね。
 
 ## 実装実験
 [mlkem-native](https://github.com/pq-code-package/mlkem-native)の実装は、現在AArch64は今回紹介した方法、AVXは前回紹介した方法を採用しています。

@@ -3,7 +3,7 @@ title: "最近のIntel CPUは複数の連続する即値加減算命令をフュ
 emoji: "📖"
 type: "tech"
 topics: ["x64", "asm", "optimizer", "fusion"]
-published: false
+published: true
 ---
 ## はじめに
 一見、タイトルはなんのこと? と思われるかもしれませんが、そう呼びたくなる現象があるのをつい最近（2026年8月）知りました。面白かったのでその紹介をします。なお、かなり専門的な話となりますのであしからず。

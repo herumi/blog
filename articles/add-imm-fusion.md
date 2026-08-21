@@ -30,6 +30,7 @@ L(lpL);
 
 *f0()のadd 1回あたりにかかったtscを計測する*
 ```cpp
+typedef void (*Func)();
 double measure(Func f)
 {
   Clock clk; // rdtscを読み出すラッパークラス

@@ -9,7 +9,7 @@ published: false
 一見、タイトルはなんのこと? と思われるかもしれませんが、そう呼びたくなる現象があるのをつい最近（2026年8月）知りました。面白かったのでその紹介をします。なお、かなり専門的な話となりますのであしからず。
 
 ## 命令のレイテンシを測定する
-プログラムの最適化の作業の中でx64のタイムスタンプカウンターtscを取得する命令rdtscを使ってマイクロベンチマークをいろいろとっていました。現在、rdtscはCPUの定格ベース周波数を基準としたtscを測定します。
+プログラムの最適化の作業の中でx64のタイムスタンプカウンターtscを取得する命令rdtscを使ってマイクロベンチマークをいろいろとっていました。現在、rdtscはCPUのある固定周波数を基準としたtscを測定します。
 私はCPUをフルで回したときの周波数に対するクロックサイクル（以下cycと略記）を測定したかったので、次の方法をとりました。
 
 まず、add(rax, rax)みたいな1cycかかると分かっている命令を並べてそれにかかったtscを測定します。
@@ -42,10 +42,10 @@ double rate = measure(f0) / UNROLL;
 ```
 
 連続するadd(rax, rax)は依存関係があるので必ず1cycかかります。それをUNROLL(=8)回並べてdec(ecx); / jnz(lpL);でループします。
-dec+jnzはプリデコードの段階でマクロフュージョンされて1μopになります。addとは同時実行されるのでtscを測定するときは無視できます。
-ループ全体でかかったtscをループ回数とアンロール回数で割れば、結局measureで返される値rateはadd 1命令にかかった定格ベースでのtscです。
+dec+jnzはマクロフュージョンされて1μopになります。addとは同時実行されるのでtscを測定するときは無視できます。
+ループ全体でかかったtscをループ回数とアンロール回数で割れば、結局measureで返される値rateはadd 1命令にかかった固定周波数でのtscです。
 
-たとえば、定格周波数が2GHzで実行時に4GHzで動いていればrate = 2/4 = 0.5となります。逆に言えば、その後rdtscで測定したtscをrateで割れば稼働時の周波数におけるcycをえられます。このようにしてimul(rax, rax);をN回ループするcycを測定すると1命令あたり2.97とでました（多少変動します）。仕様上は3cycなので検算できているのが分かります([cyc-mul-addi.cpp](https://github.com/herumi/misc/blob/main/cyc-mul-addi.cpp))。
+たとえば、固定周波数が2GHzで実行時に4GHzで動いていればrate = 2/4 = 0.5となります。逆に言えば、その後rdtscで測定したtscをrateで割れば稼働時の周波数におけるcycをえられます。このようにしてimul(rax, rax);をN回ループするcycを測定すると1命令あたり2.97とでました（多少変動します）。仕様上は3cycなので検算できているのが分かります([cyc-mul-addi.cpp](https://github.com/herumi/misc/blob/main/cyc-mul-addi.cpp))。
 
 ## 現象に遭遇したきっかけ
 さて、本題です。Sapphire Rapids(w9-3495X)でいろいろなベンチマークをとっているときに
@@ -63,7 +63,7 @@ for (int i = 0; i < 8; i++) add(rax, 1);
 ![](/images/golden-cove-arch.png)
 
 x64の命令はμopにデコードされた後、μop Queueに入ります。この段階ではマクロフューズされた命令(dec+jnz)はペアのまま流れます。
-RAT (Register Alias Table)はOut-of-Orderで必要な資源を確保(allocate)し、raxなどの論理レジスタを物理（仮想）レジスタに割り当てるrenameを行います。movやxor R, Rなどを削除するMove EliminationやZero idiomもRATで行われます。そしてプログラムの実行順序を管理するROB(Reorder Buffer)に登録します。
+RAT (Register Alias Table)はraxなどの論理レジスタと内部の物理レジスタとの対応を管理するrenameを行います。movやxor R, Rなどを削除するMove EliminationやZero idiomもRATで行われます。そしてAllocate/Renameでプログラムの実行順序を管理するROB(Reorder Buffer)に登録します。
 同時にOut-of-Orderのために命令をスケジューラであるRS(Reservation Station)にも登録します。RSは空いてるポートにμopを供給（ディスパッチ）します。
 最後に実行ポートの結果を物理レジスタに反映し、ROBに完了の合図を送ってリタイアさせます。
 
@@ -108,7 +108,7 @@ inst_retired.macro_fused       |マクロ融合した命令数| 1.00          | 
 サイクル/イテレーション        |1ループあたりのcyc| 7.94          | 3.02             |-4.92
 
 (B)はaddi x 16と(A)よりも8個分add命令が多いのでinstructions, uops_retired.slots, uops_issued.anyが+8なのは正しいです。
-ところが実行ポートで実際に処理した回数uops_executed.threadは本来8増えているはずなのに逆に(A)よりも4少ないです。つまり全体では12個分のaddiが実行ポートにいかずにRATの中で消えています。
+ところが実行ポートで実際に処理した回数uops_executed.threadは本来8増えているはずなのに逆に(A)よりも4少ないです。つまり全体では12個分のaddiが実行ポートに渡っていません。Allocate/Renameの段階で除去されていると考えられます。
 
 uops_executed=5ということはdec+jnzを除けばaddにかかっている処理は4です。それなのに1ループあたり3cycしかかかっていないのは不思議ですね。Golden CoveのAllocate幅は6（前述のIntel最適化マニュアルp.2-10の「Wider machine: 5→6 wide allocation」）なので17μopは17/6 = 2.83cycで処理されます。フロントエンドが律速になっているのかもしれません。
 
@@ -141,7 +141,7 @@ imm=1, 2, 127, 1023, 1024はadd(rax, imm)のimmを変えたもので値が増え
  lea(rax, ptr[r9+7]); // rax = r9 + 7
  ```
 
-このような依存関係が連鎖しているものでも2cycで動いているということはCPU内部でレジスタリネーミングされた後にフュージョンしているのだろうと思われます。
+このような依存関係が連鎖しているものでも2cycで動いているということはレジスタリネーミングしていてもフュージョンできるのだろうと思われます。
 
 ## ヘテロアーキテクチャでの結果
 Alder LakeやArrow LakeなどはP-coreとE-coreが混在するハイブリッドアーキテクチャです。これらでどのような結果になるか試してみました。
@@ -154,7 +154,7 @@ Windowsマシンなのでベンチマークは
 ```
 start /b /wait /affinity <番号> <実行ファイル>
 ```
-という形でとりました。`<番号>`は0x1(P-core), 0x8(E-core), 0x4000(LP E-core)を指定しました。
+という形でとりました。`<番号>`は0x1(P-core), 0x8(E-core), 0x4000(LP E-core)を指定しました。実験の詳細は[add-imm-renamer.cpp](https://github.com/herumi/misc/blob/main/add-imm-renamer.cpp)を見ていただくとして概要をまとめると次のようになります。
 
 *ヘテロアーキテクチャでの測定結果*
 

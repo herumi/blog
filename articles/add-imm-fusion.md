@@ -90,23 +90,27 @@ RATを通った回数、実行ポートの回数、ROBで処理した回数な�
 perf stat -e '{instructions,uops_issued.any,uops_executed.thread,uops_retired.slots,inst_retired.macro_fused}:u' ./a.out <mode>
 ```
 
-(A)ではaddx8のループを10億回を1セットとして、CPUのwarmupに1回+rateの計測に5回+本来の測定1回で計7回です。1ループあたり10億回回ります。(B)では(A)のaddx8ループが6回+本来の測定addix16のループ1回です。
+(A)ではaddx8のループを1セットとして、CPUのwarmupに1回+rateの計測に5回+本来の測定1回で計7回です。1ループあたり10億回回ります。したがって「(A)のperfの結果/(7 x 10億)」が一つのイテレーションあたりの値になります。
+実際instructionsは70001837791だったので7e9でわると10となり、addx8の命令数は「add x 8 + dec x 1 + jnz x 1」で10命令あり、正しいことが分かります。
 
-したがって「(A)のperfの結果/(7 x 10億)」が一つのイテレーションの値になります。実際instructionsは70001837791だったので7e9でわると10となり、addx8の命令数は「add x 8 + dec x 1 + jnz x 1」で10命令あり、正しいことが分かります。
-(B)の場合は「((B)の結果 - (A)の結果 x 6/7)/10億回」で一つあたりのカウンターがでます。
+(B)では(A)のaddx8ループが6回と本来の測定addix16のループ1回です。したがって「(B)の結果/10億-(A)の各イテレーションの値x6」が一つのイテレーションの値となります｡
 
-表にすると次のようになりました。
+手元では測定していたのですが32bitレジスタに対する加算`add(eax, 1);x8`のループ(C: mode 5)も追加しました。フュージョンには関係が無かったのでいれてませんでした。
+
+結果を表にすると次のようになりました。
 
 *perfによるSapphire Rapids(Golden Cove)での実行結果を1ループあたりのcycとしてまとめたもの*
 
-カウンタ|意味|(A) addx8|(B)addix16|差
--|-|-|-|-
-instructions                   |命令数| 10.00         | 18.00            |+8
-uops_retired.slots|リタイアしたスロット数| 9.00          | 17.03            |+8
-uops_issued.any|RATで発行された(fused)μop数| 9.00          | 17.03            |+8
-uops_executed.thread|実行ポートに渡ったμop数| 9.00          | 5.07             |-4
-inst_retired.macro_fused       |マクロ融合した命令数| 1.00          | 1.00             |0
-サイクル/イテレーション        |1ループあたりのcyc| 7.94          | 3.02             |-4.92
+カウンタ|意味|(A) addx8|(C)add32ix8|(B)addix16|(B)-(A)
+-|-|-|-|-|-
+instructions                   |命令数| 10|10         | 18            |+8
+uops_retired.slots|リタイアしたスロット数| 9|9          | 17            |+8
+uops_issued.any|RATで発行された(fused)μop数| 9|9          | 17            |+8
+uops_executed.thread|実行ポートに渡ったμop数| 9|9          |  5             |-4
+inst_retired.macro_fused       |マクロ融合した命令数| 1|1|1| 1
+サイクル/イテレーション        |1ループあたりのcyc| 7.94|7.98          | 3.02             |-4.92
+
+(A)と(C)の結果はほぼ同一でした。つまり想定される状況です。
 
 (B)はaddi x 16と(A)よりも8個分add命令が多いのでinstructions, uops_retired.slots, uops_issued.anyが+8なのは正しいです。
 ところが実行ポートで実際に処理した回数uops_executed.threadは本来8増えているはずなのに逆に(A)よりも4少ないです。つまり全体では12個分のaddiが実行ポートに渡っていません。Allocate/Renameの段階で除去されていると考えられます。

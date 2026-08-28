@@ -1,4 +1,4 @@
-# articles/add-imm-fusion2.md の測定結果を描画して images/fusion-plot{1,2}.png に保存する
+# articles/add-imm-fusion2.md の測定結果を描画して images/*.png に保存する
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -71,10 +71,52 @@ _,   _, issued2, executed2, cyc2 = transpose(mulAdd)
 
 model = [(n + 2) / 6 for n in lpN]  # Allocate 6uops/cyc のモデル値
 
-# 1枚目: 1イテレーションあたりの cyc
+# fusion-add.png
+fig2, ax2 = plt.subplots(figsize=(7, 5))
+# add only は青系、imul + add は赤系で揃える
+blueLight, blue, blueDark = '#9ecae1', '#4292c6', '#08306b'
+warmLight, warm, warmDark = '#fdae6b', '#e6550d', '#cb181d'
+
+lines = []  # 凡例は add only の3本を先に、次に imul + add の3本を並べる
+lines += ax2.plot(lpN, issued1, 'o--', color=blueLight, label='add only: uops_issued')
+lines += ax2.plot(lpN, executed1, 's-', color=blueDark, label='add only: uops_executed')
+ax2.set_xlabel('lpN')
+ax2.set_ylabel('uops / iteration')
+ax2.set_title('uops issued vs executed (add only)')
+ax2.set_xticks(range(0, 25, 2))
+ax2.grid(alpha=0.3)
+
+ax2r = ax2.twinx()  # 右側の縦軸に cyc
+lines += ax2r.plot(lpN, cyc1, '^-', color=blue, label='add only: cyc')
+ax2r.set_ylabel('cyc / iteration')
+ax2r.set_ylim(0, 5)
+
+def putLegend():
+  ax2r.legend(lines, [x.get_label() for x in lines], loc='upper left')
+
+putLegend()
+fig2.tight_layout()
+fig2.savefig('images/fusion-add.png', dpi=120)
+print('save images/fusion-add.png')
+
+# fusion-add-mul.png
+ax2r.set_ylim(0, 5)
+lines += ax2.plot(lpN, issued2, 'o--', color=warmLight, label='imul + add: uops_issued')
+lines += ax2.plot(lpN, executed2, 's-', color=warmDark, label='imul + add: uops_executed')
+lines += ax2r.plot(lpN, cyc2, 'v-', color=warm, label='imul + add: cyc')
+ax2.set_title('uops issued vs executed')
+putLegend()
+fig2.tight_layout()
+fig2.savefig('images/fusion-add-mul.png', dpi=120)
+print('save images/fusion-add-mul.png')
+
+# fusion-cycle.png
 fig1, ax1 = plt.subplots(figsize=(7, 5))
-ax1.plot(lpN, cyc1, 'o-', label='add only')
-ax1.plot(lpN, cyc2, 's-', label='imul + add')
+ax1.plot(lpN, cyc1, '^-', color=blue, label='add only: cyc')
+# imul + add の lpN と add only の lpN+1 は同じ uops 数なので、
+# 比較用に add only を1つ左にずらした系列も描く
+ax1.plot(lpN[:-1], cyc1[1:], '^--', color=blueLight, label='add only at lpN+1: cyc')
+ax1.plot(lpN, cyc2, 'v-', color=warm, label='imul + add: cyc')
 ax1.plot(lpN, model, 'k--', label='(lpN+2)/6 (alloc 6uops/cyc)')
 ax1.axhline(3, color='gray', ls=':', lw=1, label='imul latency 3')
 ax1.set_xlabel('lpN')
@@ -84,21 +126,5 @@ ax1.set_xticks(range(0, 25, 2))
 ax1.grid(alpha=0.3)
 ax1.legend()
 fig1.tight_layout()
-fig1.savefig('images/fusion-plot1.png', dpi=120)
-print('save images/fusion-plot1.png')
-
-# 2枚目: uops の issued と executed
-fig2, ax2 = plt.subplots(figsize=(7, 5))
-ax2.plot(lpN, executed1, 'o-', label='add only: uops_executed')
-ax2.plot(lpN, executed2, 's-', label='imul + add: uops_executed')
-ax2.plot(lpN, issued1, 'o--', color='C0', alpha=0.5, label='add only: uops_issued')
-ax2.plot(lpN, issued2, 's--', color='C1', alpha=0.5, label='imul + add: uops_issued')
-ax2.set_xlabel('lpN')
-ax2.set_ylabel('uops / iteration')
-ax2.set_title('uops issued vs executed')
-ax2.set_xticks(range(0, 25, 2))
-ax2.grid(alpha=0.3)
-ax2.legend()
-fig2.tight_layout()
-fig2.savefig('images/fusion-plot2.png', dpi=120)
-print('save images/fusion-plot2.png')
+fig1.savefig('images/fusion-cycle.png', dpi=120)
+print('save images/fusion-cycle.png')

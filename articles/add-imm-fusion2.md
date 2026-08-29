@@ -3,7 +3,7 @@ title: "Intel CPUではimulの後ろに16個のaddを置いても3cycだった"
 emoji: "📖"
 type: "tech"
 topics: ["x64", "asm", "optimizer", "fusion"]
-published: false
+published: true
 ---
 ## はじめに
 [前回の記事](https://zenn.dev/herumi/articles/add-imm-fusion)で、最近のIntel CPUが連続する即値加算命令（add imm）をAllocate/Renamerの段階(RAT)で処理して実行ポートに渡すμopの数を減らす現象（ここではフュージョンと呼びます）を紹介しました。
@@ -125,4 +125,4 @@ cyc = max(imulのレイテンシ3, addのみで同じμop数のときの値≒(l
 ## まとめ
 - フュージョンされたadd immは実行ポートに渡らないだけでなく、imulに対する依存連鎖より遅くなりませんでした。レイテンシ3のimul 1個について、単独なら3cycかかる16個のaddの連鎖がまるごと隠れます。
 - ループ全体の速度はレイテンシとAllocate帯域6μops/cycのmaxで説明できそうです。imulの場合、増加に転じる位置（lpN=17）も帯域モデルの予想通りでした。
-- 前回「どこまで性能向上に役立つのか分からない」と書きましたが様々な場面で現れる「演算の最後のオフセット計算」で効果がありそうです。
+- 前回「どこまで性能向上に役立つのか分からない」と書きましたが様々な場面で現れる「演算の最後のオフセット計算」で効果があるのかもしれません。

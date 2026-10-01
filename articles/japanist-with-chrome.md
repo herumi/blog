@@ -30,6 +30,7 @@ Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -
 元に戻すときはDisableをEnableにして実行します。
 
 2026年10月現在は、こうするとJapanistで変換できるようになります。ただ将来も動作し続けるかは全く不明です。
+ASLRのエントロピーを減らしたくないという方は後半を読んでください。
 
 ## Claude DesktopでJapanistを使う
 こちらは前節の方法を使っても動きませんでした。Claude Desktopが利用しているElectronが2GiB以下の領域を使ってしまうからのようです。

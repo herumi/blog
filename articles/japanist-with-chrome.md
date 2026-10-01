@@ -34,7 +34,7 @@ Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -
 ## Claude DesktopでJapanistを使う
 こちらは前節の方法を使っても動きませんでした。Claude Desktopが利用しているElectronが2GiB以下の領域を使ってしまうからのようです。
 それなら、exeをsuspend状態で起動し、JapanistのDLLを2GiB未満に配置してからresumeすればなんとかならないか、というアイデアの元に対策したのが次の方法です。
-なかなかややこしいですが、2週間ほどClaude Desktopを使って問題なく動作しています。
+なかなかややこしい手順ですが、DLLの中身は見ずにできたのでよかったです。2週間ほどClaude Desktopを使って問題なく動作しています。
 
 ### やり方
 1. [Visual Studio Community 18](https://visualstudio.microsoft.com/ja/free-developer-offers/)をinstallします。
@@ -46,7 +46,7 @@ Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -
 icacls "C:\Program Files\Japanist10\x64\CMD" /grant "%USERNAME%:(M)"
 ```
 
-3. Visual Studioのコマンドプロンプトを開き[herumi/blog](https://github.com/herumi/blog/)をcloneして`blog/src/japanist`に移動します。
+3. Visual Studioのコマンドプロンプトを開き[herumi/blog](https://github.com/herumi/blog/)をcloneして[blog/src/japanist](https://github.com/herumi/blog/tree/main/src/japanist)に移動します。
 
 ```bat
 git clone https://github.com/herumi/blog
@@ -75,7 +75,7 @@ powershell -ExecutionPolicy Bypass -File install.ps1
 
 ### 起動
 **Claude Desktopアプリを完全に終了した状態**で`launcher.exe`を起動するとClaude Desktopが起動します。Japanistが使えることを確認してください。
-以降はClaude Desktop本体の代わりに`launcher.exe`を使います。利用中にClaude Desktopが自動起動した場合はlauncher経由でないのでJapanistを使おうとすると落ちます。一度終了してからlauncherを実行してください。
+以降はClaude Desktop本体の代わりに`launcher.exe`を使います。利用中にClaude Desktopが更新されて自動起動した場合は**launcher経由でないのでJapanistを使おうとすると落ちます**。一度終了してからlauncherを実行してください。
 
 ダミーの`fjicnv.dll`はlauncher経由でないプロセスでは単に`fjicnv_real.dll`をロードして呼び出しを転送するだけなので、Edgeやその他のアプリのJapanistには影響しません。
 

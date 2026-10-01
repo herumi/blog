@@ -1,0 +1,3 @@
+LIBRARY fjicnv
+EXPORTS
+    otwc0003_5000gTop @1

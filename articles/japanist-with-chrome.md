@@ -3,7 +3,7 @@ title: "Edge/Chrome/Claude DesktopでJapanistを使う"
 emoji: "📖"
 type: "tech"
 topics: ["windows", "Japanist", "Edge", "Chrome", "Claude"]
-published: false
+published: true
 ---
 ## はじめに
 2026年8月初頭からWindowsのMicrosoft Edge上で日本語IMEのJapanist 10を使うと落ちるようになりました。Chromeも同様に落ちます。9月中頃にはClaude Desktopでも落ちるようになりました。

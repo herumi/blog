@@ -21,7 +21,7 @@ DLLを2GiB未満に配置できればとりあえず動きます。そのため�
 そのためには管理者権限でPowerShellを開いて
 
 ```ps
-Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -Name edge.exe -Disable HighEntropy'
+Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -Name msedge.exe -Disable HighEntropy'
 Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -Name chrome.exe -Disable HighEntropy'
 ```
 

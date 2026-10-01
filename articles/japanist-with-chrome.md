@@ -25,7 +25,7 @@ Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -
 Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -Name chrome.exe -Disable HighEntropy'
 ```
 
-と入力します。HiEntropyをDisableにしてもイメージ ASLR、DEP、CFG等は有効です。
+と入力します。HighEntropyをDisableにしてもイメージ ASLR、DEP、CFG等は有効です。
 ただエントロピーが19ビットから8ビットに減るので攻撃されるリスクは若干リスクはあがります。それを念頭においてください。
 元に戻すときはDisableをEnableにして実行します。
 
@@ -35,6 +35,7 @@ Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -
 こちらは前節の方法を使っても動きませんでした。Claude Desktopが利用しているElectronが2GiB以下の領域を使ってしまうからのようです。
 それなら、exeをsuspend状態で起動し、JapanistのDLLを2GiB未満に配置してからresumeすればなんとかならないか、というアイデアの元に対策したのが次の方法です。
 なかなかややこしい手順ですが、DLLの中身は見ずにできたのでよかったです。2週間ほどClaude Desktopを使って問題なく動作しています。
+なお、こちらも当然ですがバージョンアップである日突然使えなくなることはありえますのでご注意ください。
 
 ### やり方
 1. [Visual Studio Community 18](https://visualstudio.microsoft.com/ja/free-developer-offers/)をinstallします。
@@ -130,6 +131,13 @@ sequenceDiagram
 ```
 
 - `launcher.exe`はClaude Desktopをsuspend状態で起動し、Electronがアドレス空間を埋める前に`fjicnv.dll`の優先ベース`0x15000000`を予約してから再開します。launcherの仕事はこれだけで、起動後はすぐ終了します。
-- `fjicnv.dll`（shim）は本来の`fjicnv.dll`と同じ場所に置かれる差し込みDLLで、exportしているのは`otwc0003_5000gTop`だけです。初回に呼ばれたときに予約した領域解放し、直後に`fjicnv_real.dll`をロードします。
+- `fjicnv.dll`（shim）は本来の`fjicnv.dll`と同じ場所に置かれる差し込みDLLで、exportしているのは`otwc0003_5000gTop`だけです。初回に呼ばれたときに予約した領域を解放し、直後に`fjicnv_real.dll`をロードします。
 - `fjicnv_real.dll`は本来の`fjicnv.dll`からDYNAMIC_BASE（ASLR）フラグを落としたコピーです。フラグが無いので、空いていれば必ず優先ベース`0x15000000`に配置され、2GiB未満の条件を満たします。
 - （launcher経由でない）一般のプロセスは予約が無いので、shimは単に`fjicnv_real.dll`をロードして転送するだけです。
+
+## 追記
+Edge/Chromeで低エントロピー設定をしたくない人はClaude Desktopと同じ方法でできるようにしました。
+`launcher.exe [edge|chrome]`とオプションを指定して起動するとHighEntropyのままでもJapanistを使えます(2026/10/1現在)。
+ただし、`chrome://settings/system`を開いて「Google Chrome を閉じた際にバックグラウンドアプリの処理を続行する」をoffにしておかないとlauncher経由になりません。
+また、Chromeを起動していないときにURLをクリックして開いてもlauncher経由になりません。
+デスクトップに置いたChromeのアイコンやタスクバーのピンを`launcher.exe chrome`などにするとよいでしょう。

@@ -19,6 +19,7 @@ shim のエクスポート定義。otwc0003_5000gTop@1だけを公開する。bu
 
 - build.bat
 ビルドスクリプト。fjicnv.dllとlauncher.exeを生成する。
+ビルド済みのfjicnv.dll(shim)とlauncher.exeを同梱したのでbuild.batはしなくてもよい。
 
 ## 配置・運用スクリプト(PowerShell、管理者で実行)
 事前に`C:\Program Files\Japanist10\x64\CMD`に書き込み権限を付与しておく。

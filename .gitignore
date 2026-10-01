@@ -3,3 +3,7 @@ CVS
 *.ilk
 *.obj
 *.pdb
+!src/japanist/launcher.exe
+src/japanist/fjicnv_real.dll
+src/japanist/*.exp
+src/japanist/*.lib

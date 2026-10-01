@@ -42,6 +42,9 @@ ASLRのエントロピーを減らしたくないという方は後半を読ん�
 1. [Visual Studio Community 18](https://visualstudio.microsoft.com/ja/free-developer-offers/)をinstallします。
 生成物をGitHubに置いてもよいのですがダウンロード時に多分ブロックされてしまうのでご自身でビルドしてください。
 
+**追記** launcher.exeとダミーのfjicnv.dll(shim)を追加したのでVisual Studioをインストールしなくても大丈夫かもしれません。
+が、実行時にブロックされたら、やはりご自身でビルドしてください。
+
 2. `C:\Program Files\Japanist10\x64\CMD`は通常ユーザーには書き込み権限がないので、管理者権限のコマンドプロンプトで次を実行して書き込めるようにします。
 
 ```bat

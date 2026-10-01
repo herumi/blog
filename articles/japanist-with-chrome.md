@@ -29,11 +29,11 @@ Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -
 ただエントロピーが19ビットから8ビットに減るので攻撃されるリスクは若干リスクはあがります。それを念頭においてください。
 元に戻すときはDisableをEnableにして実行します。
 
-2026年10月現在は、こうするとJapanistで変換できるようになります。ただ将来も動作し続けるかは全く不明です。
+2026年10月現在、こうするとJapanistで変換できるようになります。ただ将来も動作し続けるかは全く不明です。
 ASLRのエントロピーを減らしたくないという方は後半を読んでください。
 
 ## Claude DesktopでJapanistを使う
-こちらは前節の方法を使っても動きませんでした。Claude Desktopが利用しているElectronが2GiB以下の領域を使ってしまうからのようです。
+Claude Desktopは前節の方法を使っても動きませんでした。Claude Desktopが利用しているElectronが2GiB以下の領域を使ってしまうからのようです。
 それなら、exeをsuspend状態で起動し、JapanistのDLLを2GiB未満に配置してからresumeすればなんとかならないか、というアイデアの元に対策したのが次の方法です。
 なかなかややこしい手順ですが、DLLの中身は見ずにできたのでよかったです。2週間ほどClaude Desktopを使って問題なく動作しています。
 なお、こちらも当然ですがバージョンアップである日突然使えなくなることはありえますのでご注意ください。
@@ -142,6 +142,6 @@ sequenceDiagram
 ## 追記
 Edge/Chromeで低エントロピー設定をしたくない人はClaude Desktopと同じ方法でできるようにしました。
 `launcher.exe [edge|chrome]`とオプションを指定して起動するとHighEntropyのままでもJapanistを使えます(2026/10/1現在)。
-ただし、`chrome://settings/system`を開いて「Google Chrome を閉じた際にバックグラウンドアプリの処理を続行する」をoffにしておかないとlauncher経由になりません。
+ただし、`chrome://settings/system`を開いて「Google Chrome を閉じた際にバックグラウンドアプリの処理を続行する」をoffにしておかないと終了してもChromeが起動したままなのでlauncher経由になりません。
 また、Chromeを起動していないときにURLをクリックして開いてもlauncher経由になりません。
 デスクトップに置いたChromeのアイコンやタスクバーのピンを`launcher.exe chrome`などにするとよいでしょう。

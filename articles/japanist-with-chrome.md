@@ -26,7 +26,7 @@ Start-Process pwsh -Verb RunAs -ArgumentList '-Command','Set-ProcessMitigation -
 ```
 
 と入力します。HighEntropyをDisableにしてもイメージ ASLR、DEP、CFG等は有効です。
-ただエントロピーが19ビットから8ビットに減るので攻撃されるリスクは若干リスクはあがります。それを念頭においてください。
+ただエントロピーが19ビットから8ビットに減るので攻撃されるリスクは若干あがります。それを念頭においてください。
 元に戻すときはDisableをEnableにして実行します。
 
 2026年10月現在、こうするとJapanistで変換できるようになります。ただ将来も動作し続けるかは全く不明です。

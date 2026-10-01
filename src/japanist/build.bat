@@ -9,7 +9,7 @@ cl /nologo /utf-8 /W3 /O2 /LD fjicnv_shim.c /link /DEF:fjicnv.def /OUT:fjicnv.dl
 if errorlevel 1 goto :err
 
 echo === building launcher.exe ===
-cl /nologo /utf-8 /W3 /O2 launcher.c /link /OUT:launcher.exe shell32.lib user32.lib
+cl /nologo /utf-8 /W3 /O2 launcher.c /link /OUT:launcher.exe shell32.lib user32.lib advapi32.lib
 if errorlevel 1 goto :err
 
 echo === done ===

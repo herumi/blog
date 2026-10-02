@@ -143,5 +143,6 @@ sequenceDiagram
 Edge/Chromeで低エントロピー設定をしたくない人はClaude Desktopと同じ方法でできるようにしました。
 `launcher.exe [edge|chrome]`とオプションを指定して起動するとHighEntropyのままでもJapanistを使えます(2026/10/1現在)。
 ただし、`chrome://settings/system`を開いて「Google Chrome を閉じた際にバックグラウンドアプリの処理を続行する」をoffにしておかないと終了してもChromeが起動したままなのでlauncher経由になりません。
+Edgeも同様に`edge://settings/system`を開いて「スタートアップブースト」やバックグラウンド実行をoffにしておく必要があると思います。
 また、Chromeを起動していないときにURLをクリックして開いてもlauncher経由になりません。
 デスクトップに置いたChromeのアイコンやタスクバーのピンを`launcher.exe chrome`などにするとよいでしょう。

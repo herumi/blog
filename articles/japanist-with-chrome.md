@@ -39,7 +39,7 @@ Claude Desktopは前節の方法を使っても動きませんでした。Claude
 なお、こちらも当然ですがバージョンアップである日突然使えなくなることはありえますのでご注意ください。
 
 ### やり方
-1. [Visual Studio Community 18](https://visualstudio.microsoft.com/ja/free-developer-offers/)をinstallします。
+1. [Visual Studio Community 18](https://visualstudio.microsoft.com/ja/free-developer-offers/)をインストールします。
 生成物をGitHubに置いてもよいのですがダウンロード時に多分ブロックされてしまうのでご自身でビルドしてください。
 
 **追記** launcher.exeとダミーのfjicnv.dll(shim)を追加したのでVisual Studioをインストールしなくても大丈夫かもしれません。

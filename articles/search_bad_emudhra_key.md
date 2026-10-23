@@ -33,9 +33,17 @@ https://github.com/herumi/blog/blob/103aeaa7741f7da77cf38ce47e0c03a33b6f070c/src
 その部分だけ取り出して[bad.pem](https://github.com/herumi/blog/blob/main/src/ecc/bad.pem)に保存しました。
 このファイルから実際の楕円曲線の点を取り出します。
 
+opensslコマンドを使って
+
+```
+>openssl x509 -in bad.pem -noout -pubkey | openssl ec -pubin -text
+```
+
+とすると中身が読める形にしてくれます。
+
 https://github.com/herumi/blog/blob/103aeaa7741f7da77cf38ce47e0c03a33b6f070c/src/ecc/search_key.py#L7-L26
 
-更にその中の
+この中の
 
 ```
 pub:

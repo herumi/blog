@@ -83,7 +83,7 @@ NIST CURVE: P-384
   P = init('NIST_P384')
 ```
 
-曲線のパラメータは
+有限体 $𝔽_p$ 上 $y^2=x^3+ax+b$ で定義された曲線のパラメータ $p$, $a$, $b$ は
 
 https://github.com/herumi/blog/blob/103aeaa7741f7da77cf38ce47e0c03a33b6f070c/src/ecc/curve.py#L30-L37
 
